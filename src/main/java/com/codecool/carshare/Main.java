@@ -1,3 +1,6 @@
+package com.codecool.carshare;
+
+import com.codecool.carshare.model.Vehicle;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
