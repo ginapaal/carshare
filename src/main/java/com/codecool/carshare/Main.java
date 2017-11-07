@@ -12,6 +12,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -22,9 +23,8 @@ public class Main {
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
         staticFileLocation("/public");
         port(8888);
-
-        //call root
-        get("/", (Request req, Response res) -> new ThymeleafTemplateEngine().render(new ModelAndView(new HashMap<>(), "index")));
+        
+        get("/a", (Request req, Response res) -> new ThymeleafTemplateEngine().render(new ModelAndView(new HashMap<>(), "index")));
 
         Vehicle vehicle = new Vehicle();
         Vehicle vehicle1 = new Vehicle("Jármű2");
