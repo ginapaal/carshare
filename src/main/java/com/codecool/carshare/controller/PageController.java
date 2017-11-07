@@ -12,6 +12,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,15 +32,26 @@ public class PageController {
 
             String username = req.queryParams("username");
             String email = req.queryParams("email");
-            String password = req.queryParams("password");
+            String passwordHash = securePassword(req.queryParams("password"));
 
-            Customer user = new Customer(username, email, password);
+            Customer user = new Customer(username, email, passwordHash);
             persist(user);
 
             return renderTemplate(params, "login");
         }
 
         return renderTemplate(params, "register");
+    }
+
+    private static String securePassword(String password) {
+        String passwordHash;
+        try {
+            passwordHash = SecurePassword.generateStrongPasswordHash(password);
+            return passwordHash;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static void persist(Customer user) {
@@ -51,6 +64,11 @@ public class PageController {
         transaction.commit();
         em.close();
         emf.close();
+    }
+
+    public static String login(Request req, Response res) {
+
+        return renderTemplate(new HashMap(), "login");
     }
 
     private static String renderTemplate(Map model, String template) {

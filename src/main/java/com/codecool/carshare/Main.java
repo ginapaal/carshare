@@ -36,7 +36,7 @@ public class Main {
 
         Vehicle vehicle = new Vehicle();
         Vehicle vehicle1 = new Vehicle("Jármű2");
-        Customer user = new Customer("gergo", "email@email.com", "aaa");
+        Customer user = new Customer("gergo", "email@email.com", SecurePassword.generateStrongPasswordHash("aaa"));
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
