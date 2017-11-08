@@ -2,7 +2,7 @@ package com.codecool.carshare;
 
 import com.codecool.carshare.controller.PageController;
 import com.codecool.carshare.model.Customer;
-import com.codecool.carshare.model.SecurePassword;
+import com.codecool.carshare.utility.SecurePassword;
 import com.codecool.carshare.model.Vehicle;
 import spark.ModelAndView;
 import spark.Request;

@@ -1,4 +1,4 @@
-package com.codecool.carshare.model;
+package com.codecool.carshare.utility;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

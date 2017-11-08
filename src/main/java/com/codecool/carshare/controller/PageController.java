@@ -1,7 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.Customer;
-import com.codecool.carshare.model.SecurePassword;
+import com.codecool.carshare.utility.SecurePassword;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
