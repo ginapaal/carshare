@@ -10,7 +10,6 @@ public class DataManager {
     public static EntityManagerFactory getEntityManagerFactory() {
         if (emf == null) {
             emf = Persistence.createEntityManagerFactory("carsharePU");
-            return emf;
         }
         return emf;
     }
