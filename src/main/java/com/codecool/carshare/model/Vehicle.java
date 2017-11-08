@@ -9,7 +9,12 @@ import javax.persistence.*;
     ),
     @NamedQuery(
             name = "Vehicle.getByType",
-            query = "SELECT v FROM Vehicle v WHERE vehicleType = :type" //TODO
+            query = "SELECT v FROM Vehicle v WHERE vehicleType = :type"
+    ),
+
+    @NamedQuery(
+            name = "Vehicle.getById",
+            query = "SELECT v FROM Vehicle v WHERE id = :vehicleId"
     )
 })
 @Entity
