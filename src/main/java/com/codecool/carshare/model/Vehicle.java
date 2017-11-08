@@ -24,15 +24,18 @@ public class Vehicle {
     @Enumerated
     private VehicleType vehicleType;
 
+    private String picture;
+
     public Vehicle(){
 
     }
 
-    public Vehicle (String name, int year, int numOfSeats, VehicleType vehicleType) {
+    public Vehicle (String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
+        this.picture = piclink;
     }
 
     public int getId() {

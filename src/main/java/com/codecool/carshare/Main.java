@@ -37,6 +37,9 @@ public class Main {
         post("/login", PageController::login);
         get("/logout", PageController::logout);
         get("/", PageController::renderVehicles);
+        get("/upload", PageController::uploadVehicle);
+        post("/upload", PageController::uploadVehicle);
+        get("/profile", PageController::owner);
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
@@ -49,11 +52,11 @@ public class Main {
     public static void populateTestData(EntityManager entityManager) {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor));
-        entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor));
-        entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car));
-        entityManager.persist(new Vehicle("Kitt", 1980, 4, Car));
-        entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike));
+        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "link"));
+        entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "link"));
+        entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "link"));
+        entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "link"));
+        entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
 
         transaction.commit();
     }
