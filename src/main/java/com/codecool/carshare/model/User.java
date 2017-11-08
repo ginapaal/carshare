@@ -4,6 +4,13 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedQueries({
+        @NamedQuery(
+                name = "User.getPasswordHash",
+                query = "SELECT passwordHash FROM User WHERE name = :name"
+        )
+})
+
 @Entity
 @Table(name="Users")
 public class User {

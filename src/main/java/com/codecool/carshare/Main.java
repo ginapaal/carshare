@@ -3,23 +3,16 @@ package com.codecool.carshare;
 import com.codecool.carshare.controller.PageController;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.template.thymeleaf.ThymeleafTemplateEngine;
+import com.codecool.carshare.utility.DataManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.HashMap;
 
-import static com.codecool.carshare.model.VehicleType.Bike;
-import static com.codecool.carshare.model.VehicleType.Car;
-import static com.codecool.carshare.model.VehicleType.Motor;
+import static com.codecool.carshare.model.VehicleType.*;
 import static spark.Spark.*;
 
 public class Main {
@@ -31,7 +24,7 @@ public class Main {
         staticFileLocation("/public");
         port(8888);
 
-        get("/a", (Request req, Response res) -> new ThymeleafTemplateEngine().render(new ModelAndView(new HashMap<>(), "index")));
+        //routes
         get("/register", PageController::register);
         post("/register", PageController::register);
         get("/login", PageController::login);
@@ -42,10 +35,8 @@ public class Main {
         post("/upload", PageController::uploadVehicle);
         get("/profile", PageController::owner);
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
-        EntityTransaction transaction = em.getTransaction();
-
         populateTestData(em);
 
     }
@@ -56,9 +47,9 @@ public class Main {
         owner.addVehicle(vehicle);
         vehicle.setOwner(owner);
 
-
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
+
         entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "link"));
         entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "link"));
         entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "link"));
