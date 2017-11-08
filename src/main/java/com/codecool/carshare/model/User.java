@@ -8,6 +8,10 @@ import java.util.List;
         @NamedQuery(
                 name = "User.getPasswordHash",
                 query = "SELECT passwordHash FROM User WHERE name = :name"
+        ),
+        @NamedQuery(
+                name = "User.getUserByName",
+                query = "SELECT u FROM User u WHERE name = :name"
         )
 })
 
@@ -44,5 +48,17 @@ public class User {
 
     public void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
