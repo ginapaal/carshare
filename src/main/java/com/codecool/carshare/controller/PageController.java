@@ -42,12 +42,19 @@ public class PageController {
 
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
+        String name = req.queryParams("username");
+        String password = req.queryParams("password");
+
+        if (req.session().attribute("user") != null) {
+            System.out.println(req.session().attribute("user") + " are already logged in");
+            res.redirect("/a");
+            return "";
+        }
+
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
 
-            String name = req.queryParams("username");
-            String password = req.queryParams("password");
             String storedPassword = getPasswordByName(name);
 
             if (password.equals("")) {
@@ -57,12 +64,20 @@ public class PageController {
             }
 
             if (SecurePassword.validatePassword(password, storedPassword)) {
+                req.session().attribute("user", name);
                 res.redirect("/a");
                 return "";
             }
         }
 
         return renderTemplate(params, "login");
+    }
+
+    public static String logout(Request req, Response res) {
+        System.out.println(req.session().attribute("user") + " logged out");
+        req.session().removeAttribute("user");
+        res.redirect("/login");
+        return "";
     }
 
     private static String getPasswordByName(String name) {
