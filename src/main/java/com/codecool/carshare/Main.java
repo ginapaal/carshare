@@ -1,8 +1,6 @@
 package com.codecool.carshare;
 
 import com.codecool.carshare.controller.PageController;
-import com.codecool.carshare.model.Customer;
-import com.codecool.carshare.utility.SecurePassword;
 import com.codecool.carshare.model.Vehicle;
 import spark.ModelAndView;
 import spark.Request;
@@ -36,7 +34,7 @@ public class Main {
 
         Vehicle vehicle = new Vehicle();
         Vehicle vehicle1 = new Vehicle("Jármű2");
-        Customer user = new Customer("gergo", "email@email.com", SecurePassword.generateStrongPasswordHash("aaa"));
+//        Customer user = new Customer("gergo", "email2@email.com", SecurePassword.generateStrongPasswordHash("aaa"));
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
@@ -45,7 +43,7 @@ public class Main {
         transaction.begin();
         em.persist(vehicle);
         em.persist(vehicle1);
-        em.persist(user);
+//        em.persist(user);
         transaction.commit();
         em.close();
         emf.close();

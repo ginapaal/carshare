@@ -7,10 +7,7 @@ import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -19,7 +16,7 @@ import java.util.Map;
 
 public class PageController {
 
-    public static String register(Request req, Response res) throws IOException {
+    public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 
         Map<String, String> params = new HashMap<>();
 
@@ -32,7 +29,7 @@ public class PageController {
 
             String username = req.queryParams("username");
             String email = req.queryParams("email");
-            String passwordHash = securePassword(req.queryParams("password"));
+            String passwordHash = SecurePassword.createHash(req.queryParams("password"));
 
             Customer user = new Customer(username, email, passwordHash);
             persist(user);
@@ -43,16 +40,42 @@ public class PageController {
         return renderTemplate(params, "register");
     }
 
-    private static String securePassword(String password) {
-        String passwordHash;
-        try {
-            passwordHash = SecurePassword.generateStrongPasswordHash(password);
-            return passwordHash;
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+    public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        Map<String, String> params = new HashMap<>();
+
+        if (req.requestMethod().equalsIgnoreCase("POST")) {
+
+            String name = req.queryParams("username");
+            String password = req.queryParams("password");
+            String storedPassword = getPasswordByName(name);
+
+            if (password.equals("")) {
+                System.out.println("username or password is null - redirect");
+                res.redirect("/login");
+                return "";
+            }
+
+            if (SecurePassword.validatePassword(password, storedPassword)) {
+                res.redirect("/a");
+                return "";
+            }
         }
-        return null;
+
+        return renderTemplate(params, "login");
     }
+
+    private static String getPasswordByName(String name) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+        EntityManager em = emf.createEntityManager();
+        String storedPassword = (String) em.createQuery("SELECT passwordHash FROM Customer WHERE name = :name")
+                .setParameter("name", name)
+                .getSingleResult();
+        em.close();
+        emf.close();
+        return storedPassword;
+    }
+
 
     private static void persist(Customer user) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
@@ -64,11 +87,6 @@ public class PageController {
         transaction.commit();
         em.close();
         emf.close();
-    }
-
-    public static String login(Request req, Response res) {
-
-        return renderTemplate(new HashMap(), "login");
     }
 
     private static String renderTemplate(Map model, String template) {
