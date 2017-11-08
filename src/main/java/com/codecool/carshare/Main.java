@@ -1,6 +1,7 @@
 package com.codecool.carshare;
 
 import com.codecool.carshare.controller.PageController;
+import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import spark.ModelAndView;
 import spark.Request;
@@ -50,6 +51,12 @@ public class Main {
     }
 
     public static void populateTestData(EntityManager entityManager) {
+        User owner = new User();
+        Vehicle vehicle = new Vehicle();
+        owner.addVehicle(vehicle);
+        vehicle.setOwner(owner);
+
+
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "link"));
@@ -57,6 +64,8 @@ public class Main {
         entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "link"));
         entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "link"));
         entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
+        entityManager.persist(owner);
+        entityManager.persist(vehicle);
 
         transaction.commit();
     }

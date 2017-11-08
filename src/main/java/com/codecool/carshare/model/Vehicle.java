@@ -24,6 +24,9 @@ public class Vehicle {
     @Enumerated
     private VehicleType vehicleType;
 
+    @ManyToOne
+    private User owner;
+
     private String picture;
 
     public Vehicle(){
@@ -56,5 +59,9 @@ public class Vehicle {
 
     public int getNumOfSeats() {
         return numOfSeats;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }
