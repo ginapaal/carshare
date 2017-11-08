@@ -16,11 +16,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 
+import static com.codecool.carshare.model.VehicleType.Bike;
+import static com.codecool.carshare.model.VehicleType.Car;
+import static com.codecool.carshare.model.VehicleType.Motor;
 import static spark.Spark.*;
 
 public class Main {
 
     public static void main(String[] args) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+
         //default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
         staticFileLocation("/public");
@@ -32,21 +36,25 @@ public class Main {
         get("/login", PageController::login);
         post("/login", PageController::login);
         get("/logout", PageController::logout);
-
-        Vehicle vehicle = new Vehicle();
-        Vehicle vehicle1 = new Vehicle("Jármű2");
-//        User user = new User("gergo", "email2@email.com", SecurePassword.generateStrongPasswordHash("aaa"));
+        get("/", PageController::renderVehicles);
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
+        populateTestData(em);
+
+    }
+
+    public static void populateTestData(EntityManager entityManager) {
+        EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-        em.persist(vehicle);
-        em.persist(vehicle1);
-//        em.persist(user);
+        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor));
+        entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor));
+        entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car));
+        entityManager.persist(new Vehicle("Kitt", 1980, 4, Car));
+        entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike));
+
         transaction.commit();
-        em.close();
-        emf.close();
     }
 }

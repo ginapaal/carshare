@@ -1,0 +1,69 @@
+body {
+    margin: 0;
+}
+
+.header {
+    margin: 0;
+    background: #6da5ff;
+    height: 150px;
+    text-align: center;
+    border-bottom: 25px solid #DDDDDD;
+}
+
+.filters {
+    margin: 20px 100px;
+    text-align: center;
+}
+
+.filterbutton {
+    margin: 0;
+    font-size: 1.2em;
+    font-family: "Ume Gothic";
+    color: #DDDDDD;
+    background: #6da5ff;
+    border: solid 2px #DDDDDD;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 5px 20px;
+}
+
+.filterbutton:hover {
+    color: #6da5ff;
+    background: #DDDDDD;
+    border-color: #6da5ff;
+}
+
+#headertext {
+    margin: inherit;
+    font-size: 5em;
+    color: #DDDDDD;
+    font-family: "Andale Mono";
+    padding-top: 30px;
+}
+
+.vehiclecontainer {
+    background: #6da5ff;
+    padding: 20px 20px;
+    margin: 30px 100px;
+    border: 2px solid #DDDDDD;
+    border-radius: 5px;
+}
+
+.vehiclename {
+    font-size: 2em;
+    color: #DDDDDD;
+    font-family: "Ubuntu Mono";
+}
+
+.vehicleyear {
+    color: #DDDDDD;
+    float: right;
+}
+
+.headeranchor {
+    text-decoration: none;
+}
+
+.headeranchor:active {
+    text-decoration: none;
+}

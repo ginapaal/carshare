@@ -1,6 +1,8 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.Vehicle;
+import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.utility.SecurePassword;
 import spark.ModelAndView;
 import spark.Request;
@@ -11,10 +13,37 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PageController {
+
+    public static String renderVehicles(Request req, Response res) {
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+        EntityManager em = emf.createEntityManager();
+
+        String filterString = req.queryParams("type");
+        VehicleType type = VehicleType.getTypeFromString(filterString);
+        List results;
+        if (type != null) {
+            Query filterQuery = em.createNamedQuery("Vehicle.getByType", Vehicle.class).setParameter("type", type);
+            results = filterQuery.getResultList();
+        }
+        else {
+            results = em.createNamedQuery("Vehicle.getAll", Vehicle.class).getResultList();
+        }
+        HashMap<String, List> params = new HashMap<>();
+        params.put("types", Arrays.asList(VehicleType.values()));
+        params.put("vehicles", results);
+
+        em.close();
+        emf.close();
+
+        return renderTemplate(params, "index");
+    }
 
     public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 
