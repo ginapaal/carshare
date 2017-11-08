@@ -26,6 +26,7 @@ public class PageController {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
+        HashMap<String, Object> params = new HashMap<>();
         String filterString = req.queryParams("type");
         VehicleType type = VehicleType.getTypeFromString(filterString);
         List results;
@@ -35,7 +36,11 @@ public class PageController {
         } else {
             results = em.createNamedQuery("Vehicle.getAll", Vehicle.class).getResultList();
         }
-        HashMap<String, List> params = new HashMap<>();
+        String username;
+        if ((username = req.session().attribute("user")) != null) {
+            User user = getUserByName(username);
+            params.put("user", user);
+        }
         params.put("types", Arrays.asList(VehicleType.values()));
         params.put("vehicles", results);
 
@@ -57,10 +62,11 @@ public class PageController {
 
             String username = req.queryParams("username");
             String email = req.queryParams("email");
+            String password = req.queryParams("password");
+            String confirmPassword = req.queryParams("confirm-password");
             String passwordHash = SecurePassword.createHash(req.queryParams("password"));
-            String confirmPasswordHash = SecurePassword.createHash(req.queryParams("confirm-password"));
 
-            if (passwordHash.equals(confirmPasswordHash)) {
+            if (password.equals(confirmPassword)) {
                 User user = new User(username, email, passwordHash);
                 persist(user);
                 return renderTemplate(params, "login");
@@ -107,8 +113,7 @@ public class PageController {
             return "";
         }
 
-        Map<String, String> params = new HashMap<>();
-
+        Map<String, User> params = new HashMap<>();
         if (req.requestMethod().equalsIgnoreCase("POST")) {
 
             String storedPassword;
@@ -125,7 +130,7 @@ public class PageController {
                 req.session().attribute("user", name);
                 System.out.println(req.session().attribute("user") + " logged in");
                 res.redirect("/");
-                return "";
+                return null;
             }
         }
 
@@ -154,6 +159,19 @@ public class PageController {
         return null;
     }
 
+    private static User getUserByName(String name) {
+        EntityManager em = DataManager.getEntityManagerFactory().createEntityManager();
+        try {
+            User user = (User) em.createNamedQuery("User.getUserByName")
+                    .setParameter("name", name)
+                    .getSingleResult();
+            em.close();
+            return user;
+        } catch (NoResultException e) {
+            System.out.println("No such a user in db");
+        }
+        return null;
+    }
 
     private static void persist(Object object) {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
