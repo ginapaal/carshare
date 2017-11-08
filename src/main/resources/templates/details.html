@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="author" content="Codecool" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/mainpage.css" />
+    <link rel="stylesheet" type="text/css" href="/css/mainpage.css" />
 
     <title>Carshare</title>
 </head>
@@ -16,14 +16,10 @@
         </a>
     </div>
     <div class="container">
-        <div class="filters">
-            <a class="filterbutton" th:each="type : ${types}" th:href="'/?type='+${type.string}" th:text="${type.string}"></a>
-        </div>
-
-        <div th:each="vehicle : ${vehicles}">
+        <div>
             <div class="row">
                 <div class="well vehiclecontainer">
-                    <a class="vehiclename col-md-8" th:text="${vehicle.name}" th:href="'/vehicles/'+${vehicle.id}"></a>
+                    <a class="vehiclename col-md-8" th:text="${vehicle.name}"></a>
                     <p class ="vehicleyear col-md-4" th:text="${vehicle.year}">
                     </p>
                 </div>
