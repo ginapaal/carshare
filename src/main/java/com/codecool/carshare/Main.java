@@ -34,6 +34,7 @@ public class Main {
         get("/upload", PageController::uploadVehicle);
         post("/upload", PageController::uploadVehicle);
         get("/profile", PageController::owner);
+        get("/vehicles/:id", PageController::details);
 
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
