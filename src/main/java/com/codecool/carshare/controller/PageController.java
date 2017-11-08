@@ -69,6 +69,32 @@ public class PageController {
         return renderTemplate(params, "register");
     }
 
+    public static String uploadVehicle(Request req, Response res) {
+        Map params = new HashMap();
+
+        if (req.requestMethod().equalsIgnoreCase("POST")) {
+            String name = req.queryParams("name");
+            String year = req.queryParams("year");
+            String seats = req.queryParams("numofseats");
+            String type = req.queryParams("type");
+            System.out.println(type);
+            String description = req.queryParams("description");
+            String piclink = req.queryParams("piclink");
+
+            VehicleType vehicleType = VehicleType.getTypeFromString(type);
+
+            int yearInt = Integer.parseInt(year);
+            int numofSeats = Integer.parseInt(seats);
+
+            Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink);
+            persist(vehicle);
+
+            res.redirect("/profile");
+        }
+
+        return renderTemplate(params, "upload");
+    }
+
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         String name = req.queryParams("username");
@@ -121,19 +147,35 @@ public class PageController {
     }
 
 
-    private static void persist(User user) {
+    private static void persist(Object object) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
         transaction.begin();
-        em.persist(user);
+        em.persist(object);
         transaction.commit();
         em.close();
         emf.close();
     }
 
+//    private static void persistV(Vehicle vehicle) {
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+//        EntityManager em = emf.createEntityManager();
+//        EntityTransaction transaction = em.getTransaction();
+//
+//        transaction.begin();
+//        em.persist(vehicle);
+//        transaction.commit();
+//        em.close();
+//        emf.close();
+//    }
+
     private static String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
+    }
+
+    public static String owner(Request request, Response response) {
+        return renderTemplate(new HashMap(), "userProfile");
     }
 }
