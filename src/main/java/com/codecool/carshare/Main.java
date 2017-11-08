@@ -31,10 +31,11 @@ public class Main {
         post("/register", PageController::register);
         get("/login", PageController::login);
         post("/login", PageController::login);
+        get("/logout", PageController::logout);
 
         Vehicle vehicle = new Vehicle();
         Vehicle vehicle1 = new Vehicle("Jármű2");
-//        Customer user = new Customer("gergo", "email2@email.com", SecurePassword.generateStrongPasswordHash("aaa"));
+//        User user = new User("gergo", "email2@email.com", SecurePassword.generateStrongPasswordHash("aaa"));
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();

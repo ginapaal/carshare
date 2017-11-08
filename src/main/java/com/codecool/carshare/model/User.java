@@ -3,7 +3,8 @@ package com.codecool.carshare.model;
 import javax.persistence.*;
 
 @Entity
-public class Customer {
+@Table(name="Users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +18,9 @@ public class Customer {
 
     private String passwordHash;
 
-    public Customer(){}
+    public User(){}
 
-    public Customer(String name, String email, String passwordHash) {
+    public User(String name, String email, String passwordHash) {
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;

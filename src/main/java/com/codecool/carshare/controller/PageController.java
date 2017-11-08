@@ -1,6 +1,6 @@
 package com.codecool.carshare.controller;
 
-import com.codecool.carshare.model.Customer;
+import com.codecool.carshare.model.User;
 import com.codecool.carshare.utility.SecurePassword;
 import spark.ModelAndView;
 import spark.Request;
@@ -31,7 +31,7 @@ public class PageController {
             String email = req.queryParams("email");
             String passwordHash = SecurePassword.createHash(req.queryParams("password"));
 
-            Customer user = new Customer(username, email, passwordHash);
+            User user = new User(username, email, passwordHash);
             persist(user);
 
             return renderTemplate(params, "login");
@@ -68,7 +68,7 @@ public class PageController {
     private static String getPasswordByName(String name) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
-        String storedPassword = (String) em.createQuery("SELECT passwordHash FROM Customer WHERE name = :name")
+        String storedPassword = (String) em.createQuery("SELECT passwordHash FROM User WHERE name = :name")
                 .setParameter("name", name)
                 .getSingleResult();
         em.close();
@@ -77,7 +77,7 @@ public class PageController {
     }
 
 
-    private static void persist(Customer user) {
+    private static void persist(User user) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
