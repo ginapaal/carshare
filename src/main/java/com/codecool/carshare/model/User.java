@@ -2,6 +2,13 @@ package com.codecool.carshare.model;
 
 import javax.persistence.*;
 
+@NamedQueries({
+        @NamedQuery(
+                name = "User.getPasswordHash",
+                query = "SELECT passwordHash FROM User WHERE name = :name"
+        )
+})
+
 @Entity
 @Table(name="Users")
 public class User {

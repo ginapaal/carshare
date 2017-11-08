@@ -3,6 +3,7 @@ package com.codecool.carshare.controller;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
+import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
 import spark.ModelAndView;
 import spark.Request;
@@ -22,7 +23,7 @@ public class PageController {
 
     public static String renderVehicles(Request req, Response res) {
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
         String filterString = req.queryParams("type");
@@ -31,8 +32,7 @@ public class PageController {
         if (type != null) {
             Query filterQuery = em.createNamedQuery("Vehicle.getByType", Vehicle.class).setParameter("type", type);
             results = filterQuery.getResultList();
-        }
-        else {
+        } else {
             results = em.createNamedQuery("Vehicle.getAll", Vehicle.class).getResultList();
         }
         HashMap<String, List> params = new HashMap<>();
@@ -40,7 +40,6 @@ public class PageController {
         params.put("vehicles", results);
 
         em.close();
-        emf.close();
 
         return renderTemplate(params, "index");
     }
@@ -59,11 +58,13 @@ public class PageController {
             String username = req.queryParams("username");
             String email = req.queryParams("email");
             String passwordHash = SecurePassword.createHash(req.queryParams("password"));
+            String confirmPasswordHash = SecurePassword.createHash(req.queryParams("confirm-password"));
 
-            User user = new User(username, email, passwordHash);
-            persist(user);
-
-            return renderTemplate(params, "login");
+            if (passwordHash.equals(confirmPasswordHash)) {
+                User user = new User(username, email, passwordHash);
+                persist(user);
+                return renderTemplate(params, "login");
+            }
         }
 
         return renderTemplate(params, "register");
@@ -76,7 +77,7 @@ public class PageController {
 
         if (req.session().attribute("user") != null) {
             System.out.println(req.session().attribute("user") + " are already logged in");
-            res.redirect("/a");
+            res.redirect("/");
             return "";
         }
 
@@ -84,17 +85,20 @@ public class PageController {
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
 
-            String storedPassword = getPasswordByName(name);
+            String storedPassword;
 
             if (password.equals("")) {
                 System.out.println("username or password is null - redirect");
                 res.redirect("/login");
                 return "";
+            } else {
+                storedPassword = getPasswordByName(name);
             }
 
-            if (SecurePassword.validatePassword(password, storedPassword)) {
+            if (storedPassword != null && SecurePassword.validatePassword(password, storedPassword)) {
                 req.session().attribute("user", name);
-                res.redirect("/a");
+                System.out.println(req.session().attribute("user") + " logged in");
+                res.redirect("/");
                 return "";
             }
         }
@@ -110,19 +114,23 @@ public class PageController {
     }
 
     private static String getPasswordByName(String name) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
-        String storedPassword = (String) em.createQuery("SELECT passwordHash FROM User WHERE name = :name")
-                .setParameter("name", name)
-                .getSingleResult();
-        em.close();
-        emf.close();
-        return storedPassword;
+        try {
+            String storedPassword = (String) em.createNamedQuery("User.getPasswordHash")
+                    .setParameter("name", name)
+                    .getSingleResult();
+            em.close();
+            return storedPassword;
+        } catch (NoResultException e) {
+            System.out.println("No such a user in db");
+        }
+        return null;
     }
 
 
     private static void persist(User user) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
@@ -130,7 +138,6 @@ public class PageController {
         em.persist(user);
         transaction.commit();
         em.close();
-        emf.close();
     }
 
     private static String renderTemplate(Map model, String template) {
