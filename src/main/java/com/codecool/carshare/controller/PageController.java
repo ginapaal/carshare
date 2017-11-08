@@ -77,16 +77,17 @@ public class PageController {
             String year = req.queryParams("year");
             String seats = req.queryParams("numofseats");
             String type = req.queryParams("type");
+            System.out.println(type);
             String description = req.queryParams("description");
             String piclink = req.queryParams("piclink");
 
             VehicleType vehicleType = VehicleType.getTypeFromString(type);
-            System.out.println(vehicleType);
+
             int yearInt = Integer.parseInt(year);
             int numofSeats = Integer.parseInt(seats);
 
             Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink);
-            persistV(vehicle);
+            persist(vehicle);
 
             res.redirect("/profile");
         }
@@ -146,29 +147,29 @@ public class PageController {
     }
 
 
-    private static void persist(User user) {
+    private static void persist(Object object) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
         transaction.begin();
-        em.persist(user);
+        em.persist(object);
         transaction.commit();
         em.close();
         emf.close();
     }
 
-    private static void persistV(Vehicle vehicle) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction transaction = em.getTransaction();
-
-        transaction.begin();
-        em.persist(vehicle);
-        transaction.commit();
-        em.close();
-        emf.close();
-    }
+//    private static void persistV(Vehicle vehicle) {
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+//        EntityManager em = emf.createEntityManager();
+//        EntityTransaction transaction = em.getTransaction();
+//
+//        transaction.begin();
+//        em.persist(vehicle);
+//        transaction.commit();
+//        em.close();
+//        emf.close();
+//    }
 
     private static String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
