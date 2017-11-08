@@ -1,20 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta name="author" content="Codecool" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/mainpage.css" />
-
-    <title>Carshare</title>
+    <head th:replace="header :: head">
 </head>
 
 <body>
-    <div class="header">
-        <a class="headeranchor" href="/">
-            <h1 id="headertext">Carshare</h1>
-        </a>
-    </div>
+    <nav th:replace="header :: nav"></nav>
     <div class="container">
         <div class="filters">
             <a class="filterbutton" th:each="type : ${types}" th:href="'/?type='+${type.string}" th:text="${type.string}"></a>
