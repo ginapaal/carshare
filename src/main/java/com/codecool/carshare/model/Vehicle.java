@@ -34,6 +34,8 @@ public class Vehicle {
 
     private String picture;
 
+    private boolean isAvailable;
+
     public Vehicle(){
 
     }
@@ -44,6 +46,7 @@ public class Vehicle {
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
         this.picture = piclink;
+        this.isAvailable = true;
     }
 
     public int getId() {
@@ -68,5 +71,9 @@ public class Vehicle {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public String getPicture() {
+        return picture;
     }
 }
