@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PageController {
 
@@ -70,20 +68,21 @@ public class PageController {
     }
 
     public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+        if (userLoggedIn(req, res)) return "";
 
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
 
-            String username = req.queryParams("username").toLowerCase().trim();
-            String email = req.queryParams("email");
+            String name = convertField(req.queryParams("username"));
+            String email = convertField(req.queryParams("email"));
             String password = req.queryParams("password");
             String confirmPassword = req.queryParams("confirm-password");
 
-            if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
+            if (name.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
                 System.out.println("One ore more field is empty");
                 params.put("errorMessage", "All fields are required");
-                params.put("username", username);
+                params.put("username", name);
                 params.put("email", email);
                 return renderTemplate(params, "register");
             }
@@ -91,12 +90,12 @@ public class PageController {
             String passwordHash = SecurePassword.createHash(password);
 
             if (password.equals(confirmPassword)) {
-                User user = new User(username, email, passwordHash);
+                User user = new User(name, email, passwordHash);
                 persist(user);
-                return renderTemplate(params, "login");
+                return loginUser(req, res, name);
             } else {
                 params.put("errorMessage", "Confirm password");
-                params.put("username", username);
+                params.put("username", name);
                 params.put("email", email);
                 params.put("focus", "password");
             }
@@ -106,19 +105,13 @@ public class PageController {
     }
 
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
-
-        String name = req.queryParams("username");
-        String password = req.queryParams("password");
-
-        if (req.session().attribute("user") != null) {
-            System.out.println(req.session().attribute("user") + " are already logged in");
-            res.redirect("/");
-            return "";
-        }
+        if (userLoggedIn(req, res)) return "";
 
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
+            String name = convertField(req.queryParams("username"));
+            String password = req.queryParams("password");
 
             String storedPassword;
 
@@ -131,10 +124,7 @@ public class PageController {
             }
 
             if (storedPassword != null && SecurePassword.isPasswordValid(password, storedPassword)) {
-                req.session().attribute("user", name);
-                System.out.println(req.session().attribute("user") + " logged in");
-                res.redirect("/");
-                return "";
+                return loginUser(req, res, name);
             } else {
                 params.put("errorMessage", "Invalid username or password");
             }
@@ -183,5 +173,25 @@ public class PageController {
 
     public static String owner(Request request, Response response) {
         return renderTemplate(new HashMap(), "userProfile");
+    }
+
+    private static String convertField(String string) {
+        return string.toLowerCase().trim().replaceAll("\\s+", "");
+    }
+
+    private static boolean userLoggedIn(Request req, Response res) {
+        if (req.session().attribute("user") != null) {
+            System.out.println(req.session().attribute("user") + " are already logged in");
+            res.redirect("/");
+            return true;
+        }
+        return false;
+    }
+
+    private static String loginUser(Request req, Response res, String name) {
+        req.session().attribute("user", name);
+        System.out.println(req.session().attribute("user") + " logged in");
+        res.redirect("/");
+        return "";
     }
 }
