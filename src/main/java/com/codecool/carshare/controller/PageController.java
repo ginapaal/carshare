@@ -44,6 +44,24 @@ public class PageController {
         return renderTemplate(params, "index");
     }
 
+
+    public static String details(Request req, Response res) {
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+
+        Map<String, Vehicle> params = new HashMap();
+        int vehicleId = Integer.valueOf(req.params("id")) ;
+
+
+        Vehicle resultVehicle = em.createNamedQuery("Vehicle.getById", Vehicle.class)
+                .setParameter("vehicleId", vehicleId).getSingleResult();
+
+        params.put("vehicle", resultVehicle);
+        return renderTemplate(params, "details");
+
+    }
+
+
     public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 
         Map<String, String> params = new HashMap<>();
@@ -95,6 +113,7 @@ public class PageController {
 
         return renderTemplate(params, "upload");
     }
+
 
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
 

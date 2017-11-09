@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+}
+
+.header {
+    margin: 0;
+    background: #6da5ff;
+    height: 150px;
+    text-align: center;
+    border-bottom: 25px solid #DDDDDD;
+}
+
+.headeranchor {
+    text-decoration: none;
+}
+
+.headeranchor:active {
+    text-decoration: none;
+}
+
+#headertext {
+    margin: inherit;
+    font-size: 5em;
+    color: #DDDDDD;
+    font-family: "Andale Mono";
+    padding-top: 30px;
+}
+
+.vehiclecontainer {
+    background: #6da5ff;
+    padding: 20px 20px;
+    margin: 30px 100px;
+    border: 2px solid #DDDDDD;
+    border-radius: 5px;
+}
+
+.vehicledetail {
+    font-size: 2em;
+    color: #DDDDDD;
+    font-family: "Ubuntu Mono";
+}
+
+.float {
+    float: right;
+}
+
