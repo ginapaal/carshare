@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="en" xmlsn="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="header :: head">
 </head>
 <body>
-    <h1> I'M USER PROFILE </h1>
+
+<div class="container">
+    <div class="row">
+        <aside class="sidebar col col-lg-4">
+            <div>
+                <img margin="auto" width=300px height="300px" name="profilepic" src="/default_pic.jpg"/>
+                <div>
+                    <h3 th:text="${user.name}"> Name here </h3>
+                </div>
+                <div>
+                    <form action="/upload">
+                        <input type="submit" value="Upload new vehicle" />
+                    </form>
+                </div>
+            </div>
+        </aside>
+        <article class="col-lg-8">
+            <h1> My vehicles </h1>
+            <div class="item col-xs-12 col-lg-4" th:each="vehicle : ${user.vehicles}">
+                <div class="thumbnail">
+                    <img class="vehicle_image" src="http://placehold.it/400x250/000/fff"/>
+                    <p th:text="${vehicle.name}"></p>
+                    <p th:text="'Year: ' + ${vehicle.year}"></p>
+                    <p th:text="'Number of seats: ' + ${vehicle.numOfSeats}"></p>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</div>
 </body>
 </html>

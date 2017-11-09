@@ -132,6 +132,16 @@ public class PageController {
         return renderTemplate(params, "login");
     }
 
+    public static String owner(Request request, Response response) {
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+        HashMap<String, User> params = new HashMap<>();
+        User result = em.createNamedQuery("User.getSpecUser", User.class).getSingleResult();
+        List vehicles = result.getVehicles();
+        params.put("user", result);
+        return renderTemplate(params, "userProfile");
+    }
+
     public static String logout(Request req, Response res) {
         System.out.println(req.session().attribute("user") + " logged out");
         req.session().removeAttribute("user");
@@ -169,9 +179,5 @@ public class PageController {
 
     private static String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
-    }
-
-    public static String owner(Request request, Response response) {
-        return renderTemplate(new HashMap(), "userProfile");
     }
 }

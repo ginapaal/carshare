@@ -3,14 +3,18 @@ package com.codecool.carshare.model;
 import javax.persistence.*;
 
 @NamedQueries({
-    @NamedQuery(
-            name = "Vehicle.getAll",
-            query = "SELECT v FROM Vehicle v"
-    ),
-    @NamedQuery(
-            name = "Vehicle.getByType",
-            query = "SELECT v FROM Vehicle v WHERE vehicleType = :type" //TODO
-    )
+        @NamedQuery(
+                name = "Vehicle.getAll",
+                query = "SELECT v FROM Vehicle v"
+        ),
+        @NamedQuery(
+                name = "Vehicle.getByType",
+                query = "SELECT v FROM Vehicle v WHERE vehicleType = :type" //TODO
+        ),
+        @NamedQuery(
+                name = "Vehicle.getByOwner",
+                query = "SELECT v FROM Vehicle v WHERE v.owner = :owner_id"
+        )
 })
 @Entity
 public class Vehicle {
@@ -29,11 +33,13 @@ public class Vehicle {
 
     private String picture;
 
-    public Vehicle(){
+    private boolean isAvailable = true;
+
+    public Vehicle() {
 
     }
 
-    public Vehicle (String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
@@ -63,5 +69,13 @@ public class Vehicle {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

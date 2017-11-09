@@ -14,6 +14,7 @@ import java.security.spec.InvalidKeySpecException;
 
 import static com.codecool.carshare.model.VehicleType.*;
 import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Main {
 
@@ -39,13 +40,21 @@ public class Main {
         EntityManager em = emf.createEntityManager();
         populateTestData(em);
 
+        enableDebugScreen();
+
     }
 
     public static void populateTestData(EntityManager entityManager) {
-        User owner = new User();
-        Vehicle vehicle = new Vehicle();
+        User owner = new User("Ödönke", "odon@tokodon.hu", "pw");
+        Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "kép");
+        Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "kép");
+        Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "kép");
         owner.addVehicle(vehicle);
+        owner.addVehicle(vehicle1);
+        owner.addVehicle(vehicle2);
         vehicle.setOwner(owner);
+        vehicle1.setOwner(owner);
+        vehicle2.setOwner(owner);
 
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -57,6 +66,8 @@ public class Main {
         entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
         entityManager.persist(owner);
         entityManager.persist(vehicle);
+        entityManager.persist(vehicle1);
+        entityManager.persist(vehicle2);
 
         transaction.commit();
     }
