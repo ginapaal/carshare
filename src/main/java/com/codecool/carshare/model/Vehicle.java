@@ -19,6 +19,7 @@ public class Vehicle {
     private int id;
 
     private String name;
+    private String description;
     private int year;
     private int numOfSeats;
     @Enumerated
@@ -33,12 +34,13 @@ public class Vehicle {
 
     }
 
-    public Vehicle (String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
+    public Vehicle (String name, int year, int numOfSeats, VehicleType vehicleType, String piclink, String description) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
         this.picture = piclink;
+        this.description = description;
     }
 
     public int getId() {
@@ -63,5 +65,13 @@ public class Vehicle {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public String getPicture() {
+        return this.picture;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

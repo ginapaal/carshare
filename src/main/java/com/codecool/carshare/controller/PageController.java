@@ -92,15 +92,15 @@ public class PageController {
             VehicleType vehicleType = VehicleType.getTypeFromString(type);
 
             int yearInt = Integer.parseInt(year);
-            int numofSeats = Integer.parseInt(seats);
+            int numOfSeats = Integer.parseInt(seats);
 
-            Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink);
+            Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, description);
             persist(vehicle);
 
-            res.redirect("/profile");
+            res.redirect("/");
         }
 
-        String username= req.session().attribute("user");
+        String username = req.session().attribute("user");
         if (username != null) {
             User user = getUserByName(username);
             params.put("user", user);

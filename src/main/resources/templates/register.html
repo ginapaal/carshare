@@ -1,24 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8" />
-    <meta name="author" content="Team NoIDEA"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<head th:replace="header :: head">
 
-    <title>Carshare</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-
-</head>
 
 <body>
-
-    <div class="jumbotron text-center">
-        <h1>Carshare</h1>
-        <p>Share Your Car - Save The World</p>
-    </div>
-
+    <nav th:replace="header :: nav"></nav>
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">

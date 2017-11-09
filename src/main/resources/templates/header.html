@@ -30,17 +30,13 @@
 
 <nav th:fragment="nav" id="navigationbar" class="navbar navbar-default">
     <div class="container-fluid">
-        <div class="row">
-            <div class="navbar-header">
-                <a class="navbar-brand" id="logo" href="/"> Carshare </a>
-            </div>
+        <div class="row navbrand">
+            <a id="logo" href="/"> Carshare </a>
         </div>
-        <div class="row">
-            <div class="container userfunc-container">
+        <div class="row navcontent">
+            <div class="userfunc-container pull-right">
                 <div th:if="${user}" class="loggedin-container">
-                    <a th:href="'/users/'+${user.id}">
-                        <p id="userfunc-username" th:text="${user.name}"></p>
-                    </a>
+                    <a id="userfunc-username" th:text="${user.name}" th:href="'/users/'+${user.id}"></a>
                     <a href="/upload"><button class="upload-button btn btn-primary">Upload vehicle</button></a>
                     <a href="/logout"><button class="logout-button btn btn-info">Logout</button></a>
                 </div>

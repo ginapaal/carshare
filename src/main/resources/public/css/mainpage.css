@@ -42,28 +42,86 @@ body {
 }
 
 .vehiclecontainer {
-    background: #6da5ff;
-    padding: 20px 20px;
-    margin: 30px 100px;
-    border: 2px solid #DDDDDD;
-    border-radius: 5px;
+    height: 300px;
+    background: #eeeeee;
+    padding: 25px 20px;
+    margin: 30px 10px 10px 10px;
+    border: 2px solid #0061ff;
+    border-radius: 3px;
+}
+
+.vehiclename, .vehicleyear, .vehicledescription {
+    color: #00415d;
 }
 
 .vehiclename {
     font-size: 2em;
-    color: #DDDDDD;
     font-family: "Ubuntu Mono";
 }
 
+.vehiclename:hover {
+    text-decoration: none;
+}
+
 .vehicleyear {
-    color: #DDDDDD;
+    float: right;
+    display: inline;
+}
+
+.vehicleimage {
+    width: 300px;
+    height: 220px;
+    margin: 10px 10px 20px 0;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+}
+
+.vehicledatacontainer {
+    padding: 0;
+}
+
+#logo {
+    width: 50%;
+    font-size: 3.5em;
+    color: #0061ff;
+    float: none;
+    font-family: "Abyssinica SIL";
+    text-decoration: none;
+}
+
+#logo:active, #logo:hover {
+    text-decoration: none;
+}
+
+.userfunc-container {
+    padding: 7px 5px;
+    text-align: right;
     float: right;
 }
 
-.headeranchor {
+#userfunc-username {
+    padding-top: 5px;
+    color: #DDDDDD;
+    font-size: 1.3em;
+    font-weight: bold;
     text-decoration: none;
+    padding-right: 15px;
 }
 
-.headeranchor:active {
-    text-decoration: none;
+#userfunc-username:hover {
+    text-decoration: underline;
+}
+
+.navbrand {
+    padding-top: 25px;
+    text-align: center;
+    height: 130px;
+}
+
+.navcontent {
+    background-color: #5681ff;
+}
+
+#navigationbar {
+    background: #DDDDDD;
 }
