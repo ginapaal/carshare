@@ -140,37 +140,32 @@ public class PageController {
     }
 
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        String name = req.queryParams("username");
-        String password = req.queryParams("password");
-
-        if (req.session().attribute("user") != null) {
-            System.out.println(req.session().attribute("user") + " are already logged in");
-            res.redirect("/");
-            return "";
-        }
+        if (userLoggedIn(req, res)) return "";
 
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
+            String name = convertField(req.queryParams("username"));
+            String password = req.queryParams("password");
 
             String storedPassword;
 
-            if (password.equals("")) {
-                System.out.println("username or password is null - redirect");
-                res.redirect("/login");
-                return "";
+            if (password.equals("") || name.equals("")) {
+                System.out.println("One ore more field is empty");
+                params.put("errorMessage", "All fields are required");
+                return renderTemplate(params, "login");
             } else {
                 storedPassword = getPasswordByName(name);
             }
 
-            if (storedPassword != null && SecurePassword.validatePassword(password, storedPassword)) {
-                req.session().attribute("user", name);
-                System.out.println(req.session().attribute("user") + " logged in");
-                res.redirect("/");
-                return "";
+            if (storedPassword != null && SecurePassword.isPasswordValid(password, storedPassword)) {
+                return loginUser(req, res, name);
+            } else {
+                params.put("errorMessage", "Invalid username or password");
             }
         }
-      return renderTemplate(params, "login");
+
+        return renderTemplate(params, "login");
     }
 
     public static String owner(Request request, Response response) {
@@ -249,10 +244,6 @@ public class PageController {
 
     private static String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
-    }
-  
-    public static String owner(Request request, Response response) {
-        return renderTemplate(new HashMap(), "userProfile");
     }
 
     private static String convertField(String string) {
