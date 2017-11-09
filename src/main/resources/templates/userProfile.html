@@ -8,7 +8,16 @@
     <div class="row">
         <aside class="sidebar col col-lg-4">
             <div>
-                <img margin="auto" width=300px height="300px" name="profilepic" src="/default_pic.jpg"/>
+
+                    <img margin="auto" width=300px height="300px" name="profilepic"
+                         th:attr="src=${profilePicture.profilePicture}"/>
+
+                <div th:unless="${profilePicture.profilePicture} == '/default_picture.jpg'">
+                    <form action="/profile", method="post">
+                        <input type="text" name="profilePicture" placeholder="Upload your profile picture's link">
+                        <input type="submit" value="I want to upload this">
+                    </form>
+                </div>
                 <div>
                     <h3 th:text="${user.name}"> Name here </h3>
                 </div>
@@ -17,6 +26,7 @@
                         <input type="submit" value="Upload new vehicle"/>
                     </form>
                 </div>
+
             </div>
         </aside>
         <article class="col-lg-8">

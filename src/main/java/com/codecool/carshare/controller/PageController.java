@@ -1,6 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.utility.DataManager;
@@ -83,6 +84,13 @@ public class PageController {
 
     public static String uploadVehicle(Request req, Response res) {
         Map params = new HashMap();
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+        String userName = req.session().attribute("user");
+        User user = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+
+
+        params.put("user", user);
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = req.queryParams("name");
@@ -97,26 +105,21 @@ public class PageController {
 
             int yearInt = Integer.parseInt(year);
             int numofSeats = Integer.parseInt(seats);
-            EntityManagerFactory emf = DataManager.getEntityManagerFactory();
-            EntityManager em = emf.createEntityManager();
+
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Date startDateF = df.parse(startDate);
                 Date endDateF = df.parse(endDate);
                 Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink, startDateF, endDateF);
-                String userName= req.session().attribute("user");
-                User user = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
                 vehicle.setOwner(user);
                 persist(vehicle);
-
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
             res.redirect("/profile");
         }
-
         return renderTemplate(params, "upload");
     }
 
@@ -159,10 +162,25 @@ public class PageController {
     public static String owner(Request request, Response response) {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
-        HashMap<String, User> params = new HashMap<>();
-        String userName= request.session().attribute("user");
+        HashMap<String, Object> params = new HashMap<>();
+        String userName = request.session().attribute("user");
         User result = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+        int userId = result.getId();
 
+        if (request.requestMethod().equalsIgnoreCase("POST")) {
+            String profilePicture = request.queryParams("profilePicture");
+            UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
+            userProfilePicture.setUser(result);
+            persist(userProfilePicture);
+        }
+        try {
+            UserProfilePicture profilePicture = em.createNamedQuery("getUsersProfPic", UserProfilePicture.class).setParameter("user_id", userId).getSingleResult();
+            params.put("profilePicture", profilePicture);
+        } catch (NoResultException e) {
+            UserProfilePicture defaultPicture = new UserProfilePicture();
+            defaultPicture.setProfilePicture("/default_pic.jpg");
+            params.put("profilePicture", defaultPicture);
+        }
         params.put("user", result);
         return renderTemplate(params, "userProfile");
     }

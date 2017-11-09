@@ -28,17 +28,20 @@ public class Vehicle {
     private String name;
     private int year;
     private int numOfSeats;
+
     @Enumerated
     private VehicleType vehicleType;
 
     @ManyToOne
     private User owner;
 
-    private String picture;
 
     private Date startDate;
     private Date endDate;
 
+    private String picture;
+
+    @Transient
     private boolean isAvailable;
 
     public Vehicle() {

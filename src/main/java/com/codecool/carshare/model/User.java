@@ -31,6 +31,9 @@ public class User {
 
     private String passwordHash;
 
+    @OneToOne(mappedBy = "user")
+    private UserProfilePicture profilePicture;
+
     @OneToMany(mappedBy = "owner")
     List<Vehicle> vehicles = new ArrayList<>();
 
