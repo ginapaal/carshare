@@ -60,5 +60,6 @@ public class Main {
         entityManager.persist(vehicle);
 
         transaction.commit();
+        
     }
 }

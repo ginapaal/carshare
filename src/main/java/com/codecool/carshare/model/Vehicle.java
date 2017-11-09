@@ -45,7 +45,7 @@ public class Vehicle {
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
-        this.picture = piclink;
+        this.picture = "http://www.junkcarcashout.com/files/3114/1875/9328/when_it_is_time_to_sell_your_car.jpg";
         this.isAvailable = true;
     }
 
@@ -75,5 +75,8 @@ public class Vehicle {
 
     public String getPicture() {
         return picture;
+    }
+    public boolean isAvailable() {
+        return isAvailable;
     }
 }
