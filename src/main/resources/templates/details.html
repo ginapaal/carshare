@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Codecool" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/detailspage.css" >
+
+    <title>Carshare</title>
+</head>
+
+<body>
+    <div class="header">
+        <a class="headeranchor" href="/">
+            <h1 id="headertext">Carshare</h1>
+        </a>
+    </div>
+    <div>
+        <div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Name: </div>
+                <div class="vehicledetail col-md-6 text-right" th:text="${vehicle.name}">Name</div>
+            </div>
+            <div class="well row vehiclecontainer text-left">
+                <img th:src="${vehicle.picture}" alt="Vehicle Picture">
+            </div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Type: </div>
+                <div class="vehicledetail float col-md-6" th:text="${vehicle.vehicleType}">Type</div>
+            </div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Year: </div>
+                <div class="vehicledetail float col-md-4" th:text="${vehicle.year}">Year</div>
+            </div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Number of seats: </div>
+                <div class="vehicledetail float col-md-4" th:text="${vehicle.numOfSeats}">Number of seats</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

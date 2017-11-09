@@ -1,6 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.utility.DataManager;
@@ -14,6 +15,10 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class PageController {
@@ -41,48 +46,39 @@ public class PageController {
         return renderTemplate(params, "index");
     }
 
-    public static String uploadVehicle(Request req, Response res) {
-        Map<String, String> params = new HashMap<>();
 
-        if (req.requestMethod().equalsIgnoreCase("POST")) {
-            String name = req.queryParams("name");
-            String year = req.queryParams("year");
-            String seats = req.queryParams("numofseats");
-            String type = req.queryParams("type");
-            System.out.println(type);
-            String description = req.queryParams("description");
-            String piclink = req.queryParams("piclink");
+    public static String details(Request req, Response res) {
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
 
-            VehicleType vehicleType = VehicleType.getTypeFromString(type);
+        Map<String, Vehicle> params = new HashMap();
+        int vehicleId = Integer.valueOf(req.params("id")) ;
 
-            int yearInt = Integer.parseInt(year);
-            int numofSeats = Integer.parseInt(seats);
 
-            Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink);
-            persist(vehicle);
+        Vehicle resultVehicle = em.createNamedQuery("Vehicle.getById", Vehicle.class)
+                .setParameter("vehicleId", vehicleId).getSingleResult();
 
-            res.redirect("/profile");
-        }
+        params.put("vehicle", resultVehicle);
+        return renderTemplate(params, "details");
 
-        return renderTemplate(params, "upload");
     }
 
+
     public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        if (userLoggedIn(req, res)) return "";
 
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
 
-            String name = convertField(req.queryParams("username"));
-            String email = convertField(req.queryParams("email"));
+            String username = req.queryParams("username").toLowerCase().trim();
+            String email = req.queryParams("email");
             String password = req.queryParams("password");
             String confirmPassword = req.queryParams("confirm-password");
 
-            if (name.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
+            if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
                 System.out.println("One ore more field is empty");
                 params.put("errorMessage", "All fields are required");
-                params.put("username", name);
+                params.put("username", username);
                 params.put("email", email);
                 return renderTemplate(params, "register");
             }
@@ -90,12 +86,12 @@ public class PageController {
             String passwordHash = SecurePassword.createHash(password);
 
             if (password.equals(confirmPassword)) {
-                User user = new User(name, email, passwordHash);
+                User user = new User(username, email, passwordHash);
                 persist(user);
-                return loginUser(req, res, name);
+                return renderTemplate(params, "login");
             } else {
                 params.put("errorMessage", "Confirm password");
-                params.put("username", name);
+                params.put("username", username);
                 params.put("email", email);
                 params.put("focus", "password");
             }
@@ -104,33 +100,103 @@ public class PageController {
         return renderTemplate(params, "register");
     }
 
+    public static String uploadVehicle(Request req, Response res) {
+        Map params = new HashMap();
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+        String userName = req.session().attribute("user");
+        User user = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+        params.put("user", user);
+
+        if (req.requestMethod().equalsIgnoreCase("POST")) {
+            String name = req.queryParams("name");
+            String year = req.queryParams("year");
+            String seats = req.queryParams("numofseats");
+            String type = req.queryParams("type");
+            String piclink = req.queryParams("piclink");
+            String startDate = req.queryParams("startDate");
+            String endDate = req.queryParams("endDate");
+
+            VehicleType vehicleType = VehicleType.getTypeFromString(type);
+
+            int yearInt = Integer.parseInt(year);
+            int numofSeats = Integer.parseInt(seats);
+
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date startDateF = df.parse(startDate);
+                Date endDateF = df.parse(endDate);
+                Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink, startDateF, endDateF);
+                vehicle.setOwner(user);
+                persist(vehicle);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            res.redirect("/profile");
+        }
+        return renderTemplate(params, "upload");
+    }
+
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        if (userLoggedIn(req, res)) return "";
+        String name = req.queryParams("username");
+        String password = req.queryParams("password");
+
+        if (req.session().attribute("user") != null) {
+            System.out.println(req.session().attribute("user") + " are already logged in");
+            res.redirect("/");
+            return "";
+        }
 
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
-            String name = convertField(req.queryParams("username"));
-            String password = req.queryParams("password");
 
             String storedPassword;
 
-            if (password.equals("") || name.equals("")) {
-                System.out.println("One ore more field is empty");
-                params.put("errorMessage", "All fields are required");
-                return renderTemplate(params, "login");
+            if (password.equals("")) {
+                System.out.println("username or password is null - redirect");
+                res.redirect("/login");
+                return "";
             } else {
                 storedPassword = getPasswordByName(name);
             }
 
-            if (storedPassword != null && SecurePassword.isPasswordValid(password, storedPassword)) {
-                return loginUser(req, res, name);
-            } else {
-                params.put("errorMessage", "Invalid username or password");
+            if (storedPassword != null && SecurePassword.validatePassword(password, storedPassword)) {
+                req.session().attribute("user", name);
+                System.out.println(req.session().attribute("user") + " logged in");
+                res.redirect("/");
+                return "";
             }
         }
+      return renderTemplate(params, "login");
+    }
 
-        return renderTemplate(params, "login");
+    public static String owner(Request request, Response response) {
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+        HashMap<String, Object> params = new HashMap<>();
+        String userName = request.session().attribute("user");
+        User result = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+        int userId = result.getId();
+
+        if (request.requestMethod().equalsIgnoreCase("POST")) {
+            String profilePicture = request.queryParams("profilePicture");
+            UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
+            userProfilePicture.setUser(result);
+            persist(userProfilePicture);
+        }
+        try {
+            UserProfilePicture profilePicture = em.createNamedQuery("getUsersProfPic", UserProfilePicture.class).setParameter("user_id", userId).getSingleResult();
+            params.put("profilePicture", profilePicture);
+        } catch (NoResultException e) {
+            UserProfilePicture defaultPicture = new UserProfilePicture();
+            defaultPicture.setProfilePicture("/default_pic.jpg");
+            params.put("profilePicture", defaultPicture);
+        }
+        params.put("user", result);
+        return renderTemplate(params, "userProfile");
     }
 
     public static String logout(Request req, Response res) {
@@ -155,6 +221,20 @@ public class PageController {
         return null;
     }
 
+    private static User getUserByName(String name) {
+        EntityManager em = DataManager.getEntityManagerFactory().createEntityManager();
+        try {
+            User user = (User) em.createNamedQuery("User.getSpecUser")
+                    .setParameter("name", name)
+                    .getSingleResult();
+            em.close();
+            return user;
+        } catch (NoResultException e) {
+            System.out.println("No such a user in db");
+        }
+        return null;
+    }
+
 
     private static void persist(Object object) {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
@@ -170,7 +250,7 @@ public class PageController {
     private static String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
     }
-
+  
     public static String owner(Request request, Response response) {
         return renderTemplate(new HashMap(), "userProfile");
     }
@@ -194,4 +274,5 @@ public class PageController {
         res.redirect("/");
         return "";
     }
+
 }
