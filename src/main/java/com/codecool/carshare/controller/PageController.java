@@ -18,7 +18,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class PageController {
@@ -28,6 +27,7 @@ public class PageController {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
+        HashMap<String, Object> params = new HashMap<>();
         String filterString = req.queryParams("type");
         VehicleType type = VehicleType.getTypeFromString(filterString);
         List results;
@@ -37,7 +37,12 @@ public class PageController {
         } else {
             results = em.createNamedQuery("Vehicle.getAll", Vehicle.class).getResultList();
         }
-        HashMap<String, List> params = new HashMap<>();
+
+        String username = req.session().attribute("user");
+        if (username != null) {
+            User user = getUserByName(username);
+            params.put("user", user);
+        }
         params.put("types", Arrays.asList(VehicleType.values()));
         params.put("vehicles", results);
 
@@ -51,8 +56,8 @@ public class PageController {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
-        Map<String, Vehicle> params = new HashMap();
-        int vehicleId = Integer.valueOf(req.params("id")) ;
+        Map<String, Vehicle> params = new HashMap<>();
+        int vehicleId = Integer.valueOf(req.params("id"));
 
 
         Vehicle resultVehicle = em.createNamedQuery("Vehicle.getById", Vehicle.class)
@@ -88,7 +93,7 @@ public class PageController {
             if (password.equals(confirmPassword)) {
                 User user = new User(username, email, passwordHash);
                 persist(user);
-                return renderTemplate(params, "login");
+                return loginUser(req, res, username);
             } else {
                 params.put("errorMessage", "Confirm password");
                 params.put("username", username);
@@ -101,12 +106,12 @@ public class PageController {
     }
 
     public static String uploadVehicle(Request req, Response res) {
-        Map params = new HashMap();
-        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
-        EntityManager em = emf.createEntityManager();
-        String userName = req.session().attribute("user");
-        User user = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
-        params.put("user", user);
+        Map<String, Object> params = new HashMap<>();
+        String username = req.session().attribute("user");
+        if (username != null) {
+            User user = getUserByName(username);
+            params.put("user", user);
+        }
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = req.queryParams("name");
@@ -116,6 +121,8 @@ public class PageController {
             String piclink = req.queryParams("piclink");
             String startDate = req.queryParams("startDate");
             String endDate = req.queryParams("endDate");
+            User user = getUserByName(name);
+
 
             VehicleType vehicleType = VehicleType.getTypeFromString(type);
 
@@ -136,14 +143,14 @@ public class PageController {
 
             res.redirect("/profile");
         }
+
         return renderTemplate(params, "upload");
     }
 
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (userLoggedIn(req, res)) return "";
 
-        Map<String, String> params = new HashMap<>();
-
+        Map<String, Object> params = new HashMap<>();
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = convertField(req.queryParams("username"));
             String password = req.queryParams("password");
@@ -163,6 +170,7 @@ public class PageController {
             } else {
                 params.put("errorMessage", "Invalid username or password");
             }
+
         }
 
         return renderTemplate(params, "login");
@@ -172,9 +180,12 @@ public class PageController {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
         HashMap<String, Object> params = new HashMap<>();
-        String userName = request.session().attribute("user");
-        User result = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
-        int userId = result.getId();
+        String username = request.session().attribute("user");
+        User result = getUserByName(username);
+        int userId = 0;
+        if (result != null) {
+            userId = result.getId();
+        }
 
         if (request.requestMethod().equalsIgnoreCase("POST")) {
             String profilePicture = request.queryParams("profilePicture");
@@ -219,7 +230,9 @@ public class PageController {
     private static User getUserByName(String name) {
         EntityManager em = DataManager.getEntityManagerFactory().createEntityManager();
         try {
-            User user = (User) em.createNamedQuery("User.getSpecUser")
+
+            User user = (User) em.createNamedQuery("User.getUserByName")
+
                     .setParameter("name", name)
                     .getSingleResult();
             em.close();
@@ -229,7 +242,6 @@ public class PageController {
         }
         return null;
     }
-
 
     private static void persist(Object object) {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();

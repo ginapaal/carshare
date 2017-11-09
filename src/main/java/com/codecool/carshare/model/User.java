@@ -10,13 +10,13 @@ import java.util.List;
                 query = "SELECT passwordHash FROM User WHERE name = :name"
         ),
         @NamedQuery(
-                name="User.getSpecUser",
-                query = "SELECT u FROM User u WHERE u.name=:name"
+                name = "User.getUserByName",
+                query = "SELECT u FROM User u WHERE name = :name"
         )
 })
 
 @Entity
-@Table(name="Users")
+@Table(name = "Users")
 public class User {
 
     @Id
@@ -34,10 +34,11 @@ public class User {
     @OneToOne(mappedBy = "user")
     private UserProfilePicture profilePicture;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     List<Vehicle> vehicles = new ArrayList<>();
 
-    public User(){}
+    public User() {
+    }
 
     public User(String name, String email, String passwordHash) {
         this.name = name;

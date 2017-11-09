@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlsn="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="header :: head">
-</head>
+<head th:replace="header :: head"></head>
 <body>
-
 <div class="container">
     <div class="row">
         <aside class="sidebar col col-lg-4">
             <div>
 
-                    <img margin="auto" width=300px height="300px" name="profilepic"
-                         th:attr="src=${profilePicture.profilePicture}"/>
+                <img margin="auto" width=300px height="300px" name="profilepic"
+                         th:attr="src=${profilePicture.profilePicture}">
 
                 <div th:unless="${profilePicture.profilePicture} == '/default_picture.jpg'">
                     <form action="/profile", method="post">
@@ -23,7 +21,7 @@
                 </div>
                 <div>
                     <form action="/upload">
-                        <input type="submit" value="Upload new vehicle"/>
+                        <input type="submit" value="Upload new vehicle">
                     </form>
                 </div>
 
@@ -34,7 +32,7 @@
             <div class="col-lg-4" th:each="vehicle : ${user.vehicles}">
                 <div th:if="${vehicle} != null">
                     <img class="vehicle_image" src="http://placehold.it/400x250/000/fff"
-                         th:attr="src=${vehicle.picture}" width="200px"/>
+                         th:attr="src=${vehicle.picture}" width="200px">
                     <p th:text="${vehicle.name}"></p>
                     <p th:text="'Year: ' + ${vehicle.year}"></p>
                     <p th:text="'Number of seats: ' + ${vehicle.numOfSeats}"></p>
@@ -42,7 +40,6 @@
             </div>
         </article>
     </div>
-
 </div>
 </body>
 </html>

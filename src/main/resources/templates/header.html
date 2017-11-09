@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlsn="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head">
+
     <meta charset="utf-8">
     <meta name="author" content="no-IDEa">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,21 +28,29 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/mainpage.css">
 
-
 </head>
 
-<nav th:fragment="nav" class="navbar navbar-default navbar-fixed-top">
+<nav th:fragment="nav" id="navigationbar" class="navbar navbar-default">
     <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand logo" href="/"> Share yo ride </a>
+        <div class="row">
+            <div class="navbar-header">
+                <a class="navbar-brand" id="logo" href="/"> Carshare </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="container userfunc-container">
+                <div th:if="${user}" class="loggedin-container">
+                    <a th:href="'/users/'+${user.id}">
+                        <p id="userfunc-username" th:text="${user.name}"></p>
+                    </a>
+                    <a href="/upload"><button class="upload-button btn btn-primary">Upload vehicle</button></a>
+                    <a href="/logout"><button class="logout-button btn btn-info">Logout</button></a>
+                </div>
+                <div th:unless="${user}" class="login-container">
+                    <a href="/register"><button class="register-button btn btn-success">Register</button></a>
+                    <a href="/login"><button class="login-button btn btn-success">Log in</button></a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

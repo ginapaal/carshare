@@ -34,12 +34,13 @@ public class Main {
         get("/login", PageController::login);
         post("/login", PageController::login);
         get("/logout", PageController::logout);
-        get("/", PageController::renderVehicles);
         get("/upload", PageController::uploadVehicle);
         post("/upload", PageController::uploadVehicle);
         get("/profile", PageController::owner);
-        get("/vehicles/:id", PageController::details);
         post("/profile", PageController::owner);
+        get("/vehicles/:id", PageController::details);
+        get("/users/:id", PageController::owner);
+        get("/", PageController::renderVehicles);
 
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
