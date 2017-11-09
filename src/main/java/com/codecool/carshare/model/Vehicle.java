@@ -1,6 +1,9 @@
 package com.codecool.carshare.model;
 
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @NamedQueries({
         @NamedQuery(
@@ -33,18 +36,23 @@ public class Vehicle {
 
     private String picture;
 
-    private boolean isAvailable = true;
+    private Date startDate;
+    private Date endDate;
+
+    private boolean isAvailable;
 
     public Vehicle() {
 
     }
 
-    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink, Date startDate, Date endDate) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
         this.picture = piclink;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getId() {
@@ -77,5 +85,17 @@ public class Vehicle {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public void isAvailable(Date startDate, Date endDate){
+        
     }
 }

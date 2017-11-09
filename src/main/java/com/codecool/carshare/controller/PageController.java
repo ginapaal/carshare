@@ -14,10 +14,11 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class PageController {
 
@@ -78,17 +79,24 @@ public class PageController {
             String year = req.queryParams("year");
             String seats = req.queryParams("numofseats");
             String type = req.queryParams("type");
-            System.out.println(type);
-            String description = req.queryParams("description");
             String piclink = req.queryParams("piclink");
+            String startDate = req.queryParams("startDate");
+            String endDate = req.queryParams("endDate");
 
             VehicleType vehicleType = VehicleType.getTypeFromString(type);
 
             int yearInt = Integer.parseInt(year);
             int numofSeats = Integer.parseInt(seats);
 
-            Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink);
-            persist(vehicle);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date startDateF = df.parse(startDate);
+                Date endDateF = df.parse(endDate);
+                Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink, startDateF, endDateF);
+                persist(vehicle);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             res.redirect("/profile");
         }

@@ -14,16 +14,17 @@
                 </div>
                 <div>
                     <form action="/upload">
-                        <input type="submit" value="Upload new vehicle" />
+                        <input type="submit" value="Upload new vehicle"/>
                     </form>
                 </div>
             </div>
         </aside>
         <article class="col-lg-8">
             <h1> My vehicles </h1>
-            <div class="item col-xs-12 col-lg-4" th:each="vehicle : ${user.vehicles}">
-                <div class="thumbnail">
-                    <img class="vehicle_image" src="http://placehold.it/400x250/000/fff"/>
+            <div class="col-lg-4" th:each="vehicle : ${user.vehicles}">
+                <div th:if="${vehicle} != null">
+                    <img class="vehicle_image" src="http://placehold.it/400x250/000/fff"
+                         th:attr="src=${vehicle.picture}" width="200px"/>
                     <p th:text="${vehicle.name}"></p>
                     <p th:text="'Year: ' + ${vehicle.year}"></p>
                     <p th:text="'Number of seats: ' + ${vehicle.numOfSeats}"></p>

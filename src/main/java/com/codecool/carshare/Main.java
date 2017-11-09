@@ -4,6 +4,7 @@ import com.codecool.carshare.controller.PageController;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.utility.DataManager;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -45,30 +46,30 @@ public class Main {
     }
 
     public static void populateTestData(EntityManager entityManager) {
-        User owner = new User("Ödönke", "odon@tokodon.hu", "pw");
-        Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "kép");
-        Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "kép");
-        Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "kép");
-        owner.addVehicle(vehicle);
-        owner.addVehicle(vehicle1);
-        owner.addVehicle(vehicle2);
-        vehicle.setOwner(owner);
-        vehicle1.setOwner(owner);
-        vehicle2.setOwner(owner);
 
+        User owner = new User("Ödönke", "odon@tokodon.hu", "pw");
+        //Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png", new DateTime(), new DateTime());
+//        Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+//        Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+//        Vehicle vehicle3 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+//        owner.addVehicle(vehicle);
+//        owner.addVehicle(vehicle1);
+//        owner.addVehicle(vehicle2);
+//        owner.addVehicle(vehicle3);
+//        vehicle.setOwner(owner);
+//        vehicle1.setOwner(owner);
+//        vehicle2.setOwner(owner);
+//        vehicle3.setOwner(owner);
+//
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-
-        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "link"));
-        entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "link"));
-        entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "link"));
-        entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "link"));
-        entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
+//
         entityManager.persist(owner);
-        entityManager.persist(vehicle);
-        entityManager.persist(vehicle1);
-        entityManager.persist(vehicle2);
-
+//        entityManager.persist(vehicle);
+//        entityManager.persist(vehicle1);
+//        entityManager.persist(vehicle2);
+//        entityManager.persist(vehicle3);
+//
         transaction.commit();
     }
 }
