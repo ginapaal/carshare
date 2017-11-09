@@ -4,6 +4,7 @@ import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
+import com.codecool.carshare.model.email.WelcomeMail;
 import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
 import spark.ModelAndView;
@@ -81,13 +82,19 @@ public class PageController {
             String password = req.queryParams("password");
             String confirmPassword = req.queryParams("confirm-password");
 
+
             if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
                 System.out.println("One ore more field is empty");
                 params.put("errorMessage", "All fields are required");
                 params.put("username", username);
                 params.put("email", email);
+
                 return renderTemplate(params, "register");
             }
+            
+            // send welcome mail to registered e-mail address
+            WelcomeMail welcomeMail = new WelcomeMail();
+            welcomeMail.sendEmail(email, username);
 
             String passwordHash = SecurePassword.createHash(password);
 
