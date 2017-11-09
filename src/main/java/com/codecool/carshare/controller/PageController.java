@@ -24,7 +24,6 @@ import java.util.*;
 
 public class PageController {
     private static UserProfilePicture profilePictureLink;
-    private static String userName;
     private static String emailAddress;
 
     public static String renderVehicles(Request req, Response res) {
@@ -61,16 +60,22 @@ public class PageController {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
-        Map<String, Vehicle> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         int vehicleId = Integer.valueOf(req.params("id"));
 
+        String username = req.session().attribute("user");
+        if (username != null) {
+            User user = getUserByName(username);
+            params.put("user", user);
+            emailAddress = user.getEmail();
+        }
 
         Vehicle resultVehicle = em.createNamedQuery("Vehicle.getById", Vehicle.class)
                 .setParameter("vehicleId", vehicleId).getSingleResult();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             ReservationMail reservationMail = new ReservationMail();
-            reservationMail.sendEmail(emailAddress, userName);
+            reservationMail.sendEmail(emailAddress, username);
             res.redirect("/");
         }
 
@@ -90,10 +95,6 @@ public class PageController {
             String email = req.queryParams("email");
             String password = req.queryParams("password");
             String confirmPassword = req.queryParams("confirm-password");
-
-            // save data for sending further emails
-            userName = username;
-            emailAddress = email;
 
             if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
                 System.out.println("One ore more field is empty");
@@ -209,9 +210,14 @@ public class PageController {
         }
         if (request.requestMethod().equalsIgnoreCase("POST")) {
             String profilePicture = request.queryParams("profilePicture");
-            UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
-            userProfilePicture.setUser(result);
-            persist(userProfilePicture);
+            if (!profilePicture.equals("")) {
+                UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
+                userProfilePicture.setUser(result);
+                persist(userProfilePicture);
+            } else {
+                response.redirect("/user/" + userId);
+                return "";
+            }
         }
         try {
             UserProfilePicture profilePicture = em.createNamedQuery("getUsersProfPic", UserProfilePicture.class).setParameter("user_id", userId).getSingleResult();

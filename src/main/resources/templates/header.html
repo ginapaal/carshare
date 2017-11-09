@@ -25,8 +25,7 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
-    <link rel="stylesheet" type="text/css" href="/css/mainpage.css">
-    <link rel="stylesheet" type="text/css" href="/css/detailspage.css" >
+
     <script src="/js/app.js"></script>
 </head>
 
@@ -38,9 +37,9 @@
         <div class="row navcontent">
             <div class="userfunc-container pull-right">
                 <div th:if="${user}" class="loggedin-container">
-                    <a id="userfunc-username" th:text="${user.name}" th:href="'/users/'+${user.id}"></a>
-                    <a href="/upload"><button class="upload-button btn btn-primary">Upload vehicle</button></a>
-                    <a href="/logout"><button class="logout-button btn btn-info">Logout</button></a>
+                    <a id="userfunc-username" th:text="${user.name}" th:href="'/user/' + ${user.id}"></a>
+                    <a href="/upload"><button class="upload-button btn btn-info">Upload vehicle</button></a>
+                    <a href="/logout"><button class="logout-button btn btn-primary">Logout</button></a>
                 </div>
                 <div th:unless="${user}" class="login-container">
                     <a href="/register"><button class="register-button btn btn-success">Register</button></a>

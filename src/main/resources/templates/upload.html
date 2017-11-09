@@ -3,30 +3,30 @@
 <head th:replace="header :: head"></head>
 <body>
 <nav th:replace="header :: nav"></nav>
-<div class="jumbotron text-center">
-    <h1> Upload new vehicle </h1>
-</div>
-<div class="container fluid">
+<div class="container fluid text-center-sm">
+    <div class="">
+        <h1> Upload new vehicle </h1>
+    </div>
     <div class="row">
-        <aside class="sidebar col col-lg-2">
-            <img width="125px" height="125px" th:attr="src=${profilePicture.profilePicture}">
-            <h2 th:text="${user.name}"> My name </h2>
-            <h4> My messages </h4>
-            <h4> My contacts </h4>
-            <h4> My reviews </h4>
-        </aside>
-        <article class="row list-group col col-lg-10">
-            <form action="/upload" method="post">
+        <form action="/upload" method="post">
+            <div class="sidebar col col-sm-2">
+                <img width="125px" height="125px" th:attr="src=${profilePicture.profilePicture}">
+                <h2 th:text="${user.name}"> My name </h2>
+                <h4> My messages </h4>
+                <h4> My contacts </h4>
+                <h4> My reviews </h4>
+            </div>
+            <div class="col-sm-5 upload-form">
                 <div>
-                    <h3> Enter the name of your vehicle </h3>
-                    <input name="name" type="text" placeholder="Name of vehicle">
+                    <h3> Name of your vehicle </h3>
+                    <input name="name" type="text" class="upload-input" placeholder="Name of vehicle">
                 </div>
                 <div>
-                    <h3> Enter year </h3>
-                    <input name="year" placeholder="Year">
+                    <h3> Year </h3>
+                    <input name="year" type="text" class="upload-input" placeholder="Year">
                 </div>
                 <div>
-                    <h3> Enter number of seats </h3>
+                    <h3> Number of seats </h3>
                     <select name = "numofseats" th:default="4">
                         <option>1</option>
                         <option>2</option>
@@ -38,27 +38,34 @@
                     </select>
                 </div>
                 <div>
-                    <h3> Select the type of your vehicle </h3>
+                    <h3> Type of your vehicle </h3>
                     <select name="type">
                         <option value="Bike"> Bike</option>
                         <option value="Car"> Car</option>
                         <option value="Motor"> Motorcycle</option>
                     </select>
                 </div>
+            </div>
+            <div class="col-sm-5 upload-form">
                 <div>
-                    <h3> Set availability </h3>
-                    <p> Start date </p>
-                    <input name="startDate" type="date">
-                    <p> End date </p>
-                    <input name="endDate" type="date">
+                    <h3> Availability </h3>
+                    <label for="startDate"> Start date </label>
+                    <input name="startDate" id="startDate" class="upload-input" type="date">
+                    <label for="endDate"> End date </label>
+                    <input name="endDate" id="endDate" class="upload-input" type="date">
                 </div>
                 <div>
                     <h3>Upload a pic</h3>
-                    <input name="piclink" type="text" placeholder="Copy the URL of your picture here">
-                    <input type="submit">
+                    <input name="piclink" type="text" class="upload-input" placeholder="Copy the URL of your picture here">
                 </div>
-            </form>
-        </article>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <input type="submit" class="btn btn-info upload-vehicle-button">
+        </div>
     </div>
 </div>
 </body>

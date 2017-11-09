@@ -1,8 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,500,700|Roboto:300,400,700&subset=latin-ext');
+
 body {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    background-color: #eee;
+    background-color: #ddd;
+    font-weight: 400;
+    font-family: "Roboto", sans-serif;
 }
 
 .jumbotron {
@@ -10,10 +14,170 @@ body {
     color: #333;
 }
 
+input[type],
+select {
+    padding: 5px;
+}
+
 .error-message {
     color: darkred;
     margin-top: 30px;
     margin-bottom: 0;
+}
+
+/* Main page styles
+ ******************/
+
+.header {
+    margin: 0;
+    background: #6da5ff;
+    height: 150px;
+    text-align: center;
+    border-bottom: 25px solid #DDDDDD;
+}
+
+.filters {
+    margin: 20px 100px;
+    text-align: center;
+}
+
+.filterbutton {
+    margin: 0;
+    font-size: 1.2em;
+    font-family: "Roboto", sans-serif;
+    color: #fff;
+    background-color: #53A3CD;
+    border: solid 2px #DDDDDD;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 5px 20px;
+}
+
+.filterbutton:hover {
+    color: #6da5ff;
+    background: #eee;
+    border-color: #6da5ff;
+    text-decoration: none;
+}
+
+#headertext {
+    margin: inherit;
+    font-size: 5em;
+    color: #DDDDDD;
+    font-family: "Roboto", sans-serif;
+    padding-top: 30px;
+}
+
+.vehiclecontainer {
+    background: #fff;
+    padding: 20px 20px;
+    margin: 30px 100px;
+    /*border: 2px solid #0061ff;*/
+    box-shadow: 0 0 10px #999;
+    border-radius: 5px;
+}
+
+.vehiclename, .vehicleyear, .vehicledescription {
+    /*color: #00415d;*/
+    color: #555;
+}
+
+.vehiclename {
+    font-size: 2em;
+    font-family: "Roboto", sans-serif;
+}
+
+.vehiclename:hover {
+    text-decoration: none;
+}
+
+.vehicleyear {
+    float: right;
+    display: inline;
+}
+
+.vehicleimage {
+    width: 100%;
+    overflow: hidden;
+    margin: 10px 10px 20px 0;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+}
+
+.vehicledatacontainer {
+    padding: 10px;
+}
+
+#logo {
+    width: 50%;
+    font-size: 3.5em;
+    color: #4784b2;
+    float: none;
+    font-weight: 700;
+    font-family: "Raleway", serif;
+    text-decoration: none;
+}
+
+#logo:active, #logo:hover {
+    text-decoration: none;
+}
+
+.userfunc-container {
+    padding: 7px 5px;
+    text-align: right;
+    float: right;
+}
+
+#userfunc-username {
+    padding-top: 5px;
+    color: #DDDDDD;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-decoration: none;
+    padding-right: 15px;
+}
+
+#userfunc-username:hover {
+    text-decoration: underline;
+}
+
+.navbrand {
+    padding-top: 25px;
+    text-align: center;
+    height: 130px;
+}
+
+.navcontent {
+    background-color: #4784b2;
+}
+
+#navigationbar {
+    background: #DDDDDD;
+}
+
+/* Details page styles
+ *********************/
+
+.headeranchor {
+    text-decoration: none;
+}
+
+.headeranchor:active {
+    text-decoration: none;
+}
+
+#headertext {
+    margin-left: 100px;
+    font-size: 3em;
+    color: #555;
+    font-family: "Roboto", sans-serif;
+    padding-top: 30px;
+}
+
+.vehicledetail {
+    font-size: 1.5em;
+    color: #555;
+    font-family: "Roboto", sans-serif;
 }
 
 /* Form styles
@@ -131,4 +295,49 @@ body {
     border: 1px solid #53A3CD;
     background-color: white;
     box-shadow: 0 0 1px 0 #53A3CD;
+}
+
+.picture-link,
+.upload-profile-pic {
+    width: 300px;
+}
+
+.upload-vehicle-button {
+    margin: 16px 0;
+    font-size: 16px;
+    width: 100%;
+}
+
+.upload-input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+label {
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .text-center-sm {
+        margin: 0 auto;
+    }
+    .container {
+        margin: 0 20%;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .container {
+        margin: 0 10%;
+    }
+}
+
+.upload-form, .sidebar {
+    padding: 0 20px;
+}
+
+.reserve-button {
+    margin-left: 100px;
+    font-size: 16px;
 }

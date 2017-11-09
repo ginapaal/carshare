@@ -34,7 +34,7 @@ public class ReservationMail {
             message.setSubject("Successfully reserved a car on Carshare!");
             String text = "<h1>"+name +", you've reserved a car!</h1>";
             text += "<h3> You can discuss about the details with the owner in our message system. </h3>";
-            text += "<p> (Which is not implemented yet </p>";
+            text += "<p> (Which is not implemented yet) </p>";
             text += "<h5> Hope you will find your perfect ride! </h5>";
             text += "<h5> Cheers: no Idea </h5>";
             message.setContent(text, "text/html");
