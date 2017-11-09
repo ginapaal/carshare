@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="author" content="Codecool" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="/css/mainpage.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/detailspage.css" >
 
     <title>Carshare</title>
 </head>
@@ -15,16 +16,30 @@
             <h1 id="headertext">Carshare</h1>
         </a>
     </div>
-    <div class="container">
+    <div>
         <div>
-            <div class="row">
-                <div class="well vehiclecontainer">
-                    <a class="vehiclename col-md-8" th:text="${vehicle.name}"></a>
-                    <p class ="vehicleyear col-md-4" th:text="${vehicle.year}">
-                    </p>
-                </div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Name: </div>
+                <div class="vehicledetail col-md-6 text-right" th:text="${vehicle.name}">Name</div>
+            </div>
+            <div class="well row vehiclecontainer text-left">
+                <img th:src="${vehicle.picture}" alt="Vehicle Picture">
+            </div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Type: </div>
+                <div class="vehicledetail float col-md-6" th:text="${vehicle.vehicleType}">Type</div>
+            </div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Year: </div>
+                <div class="vehicledetail float col-md-4" th:text="${vehicle.year}">Year</div>
+            </div>
+            <div class="well row vehiclecontainer">
+                <div class="vehicledetail col-md-6">Number of seats: </div>
+                <div class="vehicledetail float col-md-4" th:text="${vehicle.numOfSeats}">Number of seats</div>
             </div>
         </div>
     </div>
 </body>
 </html>
+
+
