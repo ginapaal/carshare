@@ -31,7 +31,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    private String name;;
     private int year;
     private int numOfSeats;
 
@@ -60,6 +60,7 @@ public class Vehicle {
         this.vehicleType = vehicleType;
         this.picture = picture;
     }
+
 
     public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink, Date startDate, Date
             endDate) {
@@ -117,4 +118,19 @@ public class Vehicle {
         this.picture = picture;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 }

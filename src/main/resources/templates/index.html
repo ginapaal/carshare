@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="header :: head"></head>
+
 <body>
     <nav th:replace="header :: nav"></nav>
     <div class="container">
@@ -9,11 +11,18 @@
         </div>
 
         <div th:each="vehicle : ${vehicles}">
-            <div class="">
-                <div class="well row vehiclecontainer">
-                    <a class="vehiclename col-md-8" th:text="${vehicle.name}" th:href="'/vehicles/'+${vehicle.id}"></a>
-                    <p class ="vehicleyear col-md-4" th:text="${vehicle.year}">
-                    </p>
+            <div class="row">
+                <div class="well vehiclecontainer">
+                    <div class="col-md-4 vehicledatacontainer">
+                        <a th:href="'/vehicles/' + ${vehicle.id}"><img class="vehicleimage" th:src="${vehicle.picture}"></a>
+                    </div>
+                    <div class="col-md-8 vehicledatacontainer">
+                        <a class="vehiclename" th:text="${vehicle.name}" th:href="'/vehicles/' + ${vehicle.id}"></a>
+                        <p class ="vehicleyear" th:text="${vehicle.year}"></p>
+                        <p>
+                            <a class="seemore" th:href="'/vehicles/' + ${vehicle.id}">See more</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -5,8 +5,6 @@ import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -51,15 +49,12 @@ public class Main {
     }
 
     public static void populateTestData(EntityManager entityManager) throws InvalidKeySpecException, NoSuchAlgorithmException {
-
         User owner = new User("gergo", "valaki@valaki.com", SecurePassword.createHash("pass"));
         User owner2 = new User("Ödönke", "odon@tokodon.hu", SecurePassword.createHash("odon"));
         Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         Vehicle vehicle3 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
-
-        owner.addVehicle(vehicle);
         owner.addVehicle(vehicle1);
         owner.addVehicle(vehicle2);
         owner.addVehicle(vehicle3);
@@ -76,6 +71,7 @@ public class Main {
         entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "link"));
         entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "link"));
         entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
+
         entityManager.persist(owner);
         entityManager.persist(owner2);
         entityManager.persist(vehicle);

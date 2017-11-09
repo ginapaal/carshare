@@ -127,21 +127,19 @@ public class PageController {
             VehicleType vehicleType = VehicleType.getTypeFromString(type);
 
             int yearInt = Integer.parseInt(year);
-            int numofSeats = Integer.parseInt(seats);
-
-
+            int numOfSeats = Integer.parseInt(seats);
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Date startDateF = df.parse(startDate);
                 Date endDateF = df.parse(endDate);
-                Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink, startDateF, endDateF);
+                Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF);
                 vehicle.setOwner(user);
                 persist(vehicle);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            res.redirect("/profile");
+            res.redirect("/");
         }
 
         return renderTemplate(params, "upload");
