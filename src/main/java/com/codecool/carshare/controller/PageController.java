@@ -4,6 +4,7 @@ import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
+import com.codecool.carshare.model.email.ReservationMail;
 import com.codecool.carshare.model.email.WelcomeMail;
 import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
@@ -23,6 +24,8 @@ import java.util.*;
 
 public class PageController {
     private static UserProfilePicture profilePictureLink;
+    private static String userName;
+    private static String emailAddress;
 
     public static String renderVehicles(Request req, Response res) {
 
@@ -65,6 +68,12 @@ public class PageController {
         Vehicle resultVehicle = em.createNamedQuery("Vehicle.getById", Vehicle.class)
                 .setParameter("vehicleId", vehicleId).getSingleResult();
 
+        if (req.requestMethod().equalsIgnoreCase("POST")) {
+            ReservationMail reservationMail = new ReservationMail();
+            reservationMail.sendEmail(emailAddress, userName);
+            res.redirect("/");
+        }
+
         params.put("vehicle", resultVehicle);
         return renderTemplate(params, "details");
 
@@ -82,6 +91,9 @@ public class PageController {
             String password = req.queryParams("password");
             String confirmPassword = req.queryParams("confirm-password");
 
+            // save data for sending further emails
+            userName = username;
+            emailAddress = email;
 
             if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
                 System.out.println("One ore more field is empty");
@@ -91,7 +103,7 @@ public class PageController {
 
                 return renderTemplate(params, "register");
             }
-            
+
             // send welcome mail to registered e-mail address
             WelcomeMail welcomeMail = new WelcomeMail();
             welcomeMail.sendEmail(email, username);
@@ -140,8 +152,11 @@ public class PageController {
                 Date startDateF = df.parse(startDate);
                 Date endDateF = df.parse(endDate);
                 Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF);
+
+                // sets owner to uploaded car
                 User owner = getUserByName(username);
                 vehicle.setOwner(owner);
+
                 persist(vehicle);
             } catch (ParseException e) {
                 e.printStackTrace();
