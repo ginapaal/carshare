@@ -9,7 +9,7 @@
 <div class="container fluid">
     <div class="row">
         <aside class="sidebar col col-lg-2">
-            <img width="125px" height="125px" src="/default_pic.jpg">
+            <img width="125px" height="125px" th:attr="src=${profilePicture.profilePicture}">
             <h2 th:text="${user.name}"> My name </h2>
             <h4> My messages </h4>
             <h4> My contacts </h4>

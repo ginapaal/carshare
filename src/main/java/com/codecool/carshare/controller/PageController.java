@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PageController {
+    private static UserProfilePicture profilePictureLink;
 
     public static String renderVehicles(Request req, Response res) {
 
@@ -106,12 +107,14 @@ public class PageController {
     }
 
     public static String uploadVehicle(Request req, Response res) {
-        Map<String, User> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         String username = req.session().attribute("user");
         if (username != null) {
             User user = getUserByName(username);
             params.put("user", user);
         }
+        params.put("profilePicture", getProfilePictureLink());
+
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = req.queryParams("name");
             String year = req.queryParams("year");
@@ -182,7 +185,6 @@ public class PageController {
         if (result != null) {
             userId = result.getId();
         }
-
         if (request.requestMethod().equalsIgnoreCase("POST")) {
             String profilePicture = request.queryParams("profilePicture");
             UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
@@ -192,14 +194,17 @@ public class PageController {
         try {
             UserProfilePicture profilePicture = em.createNamedQuery("getUsersProfPic", UserProfilePicture.class).setParameter("user_id", userId).getSingleResult();
             params.put("profilePicture", profilePicture);
+            profilePictureLink = profilePicture;
         } catch (NoResultException e) {
             UserProfilePicture defaultPicture = new UserProfilePicture();
             defaultPicture.setProfilePicture("/default_pic.jpg");
             params.put("profilePicture", defaultPicture);
+            profilePictureLink = defaultPicture;
         }
         params.put("user", result);
         return renderTemplate(params, "userProfile");
     }
+
 
     public static String logout(Request req, Response res) {
         System.out.println(req.session().attribute("user") + " logged out");
@@ -273,4 +278,7 @@ public class PageController {
         return "";
     }
 
+    public static UserProfilePicture getProfilePictureLink() {
+        return profilePictureLink;
+    }
 }
