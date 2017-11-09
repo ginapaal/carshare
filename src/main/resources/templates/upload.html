@@ -8,7 +8,7 @@
         <h1> Upload new vehicle </h1>
     </div>
     <div class="row">
-        <form action="/upload" method="post">
+        <form action="/upload" method="post" id="myform">
             <div class="sidebar col col-sm-2">
                 <img width="125px" height="125px" th:attr="src=${profilePicture.profilePicture}">
                 <h2 th:text="${user.name}"> My name </h2>
@@ -64,7 +64,7 @@
     <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-10">
-            <input type="submit" class="btn btn-info upload-vehicle-button">
+            <input type="submit" class="btn btn-info upload-vehicle-button" form="myform">
         </div>
     </div>
 </div>

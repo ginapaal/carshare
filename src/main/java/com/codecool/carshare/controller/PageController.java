@@ -153,11 +153,9 @@ public class PageController {
                 Date startDateF = df.parse(startDate);
                 Date endDateF = df.parse(endDate);
                 Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF);
-
                 // sets owner to uploaded car
                 User owner = getUserByName(username);
                 vehicle.setOwner(owner);
-
                 persist(vehicle);
             } catch (ParseException e) {
                 e.printStackTrace();

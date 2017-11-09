@@ -38,7 +38,6 @@
             <div class="userfunc-container pull-right">
                 <div th:if="${user}" class="loggedin-container">
                     <a id="userfunc-username" th:text="${user.name}" th:href="'/user/' + ${user.id}"></a>
-                    <a href="/upload"><button class="upload-button btn btn-info">Upload vehicle</button></a>
                     <a href="/logout"><button class="logout-button btn btn-primary">Logout</button></a>
                 </div>
                 <div th:unless="${user}" class="login-container">
