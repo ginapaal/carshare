@@ -40,6 +40,9 @@
                 <div class="col-md-8 text-left" th:text="${vehicle.owner.name}">Owner</div>
             </div>
         </div>
+        <form th:action="'/vehicles/'+${vehicle.id}" method="post">
+            <input value="I want this car" type="submit" class="btn btn-default" src="index.html">
+        </form>
     </div>
 
 </body>

@@ -37,6 +37,7 @@ public class Main {
         get("/profile", PageController::owner);
         post("/profile", PageController::owner);
         get("/vehicles/:id", PageController::details);
+        post("/vehicles/:id", PageController::details);
         get("/users/:id", PageController::owner);
         get("/", PageController::renderVehicles);
 
