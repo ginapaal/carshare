@@ -4,6 +4,7 @@ import com.codecool.carshare.controller.PageController;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.utility.DataManager;
+import com.codecool.carshare.utility.SecurePassword;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -41,8 +42,8 @@ public class Main {
 
     }
 
-    public static void populateTestData(EntityManager entityManager) {
-        User owner = new User();
+    public static void populateTestData(EntityManager entityManager) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        User owner = new User("gergo", "valaki@valaki.com", SecurePassword.createHash("pass"));
         Vehicle vehicle = new Vehicle();
         owner.addVehicle(vehicle);
         vehicle.setOwner(owner);

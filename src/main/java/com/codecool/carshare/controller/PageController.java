@@ -14,10 +14,9 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PageController {
 
@@ -44,34 +43,8 @@ public class PageController {
         return renderTemplate(params, "index");
     }
 
-    public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-
-        Map<String, String> params = new HashMap<>();
-
-        if (req.requestMethod().equalsIgnoreCase("POST")) {
-
-            if (req.queryParams("password") == null) {
-                System.out.println("password is null");
-                return renderTemplate(params, "register");
-            }
-
-            String username = req.queryParams("username");
-            String email = req.queryParams("email");
-            String passwordHash = SecurePassword.createHash(req.queryParams("password"));
-            String confirmPasswordHash = SecurePassword.createHash(req.queryParams("confirm-password"));
-
-            if (passwordHash.equals(confirmPasswordHash)) {
-                User user = new User(username, email, passwordHash);
-                persist(user);
-                return renderTemplate(params, "login");
-            }
-        }
-
-        return renderTemplate(params, "register");
-    }
-
     public static String uploadVehicle(Request req, Response res) {
-        Map params = new HashMap();
+        Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = req.queryParams("name");
@@ -96,6 +69,42 @@ public class PageController {
         return renderTemplate(params, "upload");
     }
 
+    public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+        Map<String, String> params = new HashMap<>();
+
+        if (req.requestMethod().equalsIgnoreCase("POST")) {
+
+            String username = req.queryParams("username").toLowerCase().trim();
+            String email = req.queryParams("email");
+            String password = req.queryParams("password");
+            String confirmPassword = req.queryParams("confirm-password");
+
+            if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
+                System.out.println("One ore more field is empty");
+                params.put("errorMessage", "All fields are required");
+                params.put("username", username);
+                params.put("email", email);
+                return renderTemplate(params, "register");
+            }
+
+            String passwordHash = SecurePassword.createHash(password);
+
+            if (password.equals(confirmPassword)) {
+                User user = new User(username, email, passwordHash);
+                persist(user);
+                return renderTemplate(params, "login");
+            } else {
+                params.put("errorMessage", "Confirm password");
+                params.put("username", username);
+                params.put("email", email);
+                params.put("focus", "password");
+            }
+        }
+
+        return renderTemplate(params, "register");
+    }
+
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         String name = req.queryParams("username");
@@ -113,19 +122,21 @@ public class PageController {
 
             String storedPassword;
 
-            if (password.equals("")) {
-                System.out.println("username or password is null - redirect");
-                res.redirect("/login");
-                return "";
+            if (password.equals("") || name.equals("")) {
+                System.out.println("One ore more field is empty");
+                params.put("errorMessage", "All fields are required");
+                return renderTemplate(params, "login");
             } else {
                 storedPassword = getPasswordByName(name);
             }
 
-            if (storedPassword != null && SecurePassword.validatePassword(password, storedPassword)) {
+            if (storedPassword != null && SecurePassword.isPasswordValid(password, storedPassword)) {
                 req.session().attribute("user", name);
                 System.out.println(req.session().attribute("user") + " logged in");
                 res.redirect("/");
                 return "";
+            } else {
+                params.put("errorMessage", "Invalid username or password");
             }
         }
 
@@ -157,7 +168,6 @@ public class PageController {
 
     private static void persist(Object object) {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
-
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
