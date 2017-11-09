@@ -1,6 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.utility.DataManager;
@@ -14,10 +15,11 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class PageController {
 
@@ -68,20 +70,30 @@ public class PageController {
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
 
-            if (req.queryParams("password") == null) {
-                System.out.println("password is null");
+            String username = req.queryParams("username").toLowerCase().trim();
+            String email = req.queryParams("email");
+            String password = req.queryParams("password");
+            String confirmPassword = req.queryParams("confirm-password");
+
+            if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
+                System.out.println("One ore more field is empty");
+                params.put("errorMessage", "All fields are required");
+                params.put("username", username);
+                params.put("email", email);
                 return renderTemplate(params, "register");
             }
 
-            String username = req.queryParams("username");
-            String email = req.queryParams("email");
-            String passwordHash = SecurePassword.createHash(req.queryParams("password"));
-            String confirmPasswordHash = SecurePassword.createHash(req.queryParams("confirm-password"));
+            String passwordHash = SecurePassword.createHash(password);
 
-            if (passwordHash.equals(confirmPasswordHash)) {
+            if (password.equals(confirmPassword)) {
                 User user = new User(username, email, passwordHash);
                 persist(user);
                 return renderTemplate(params, "login");
+            } else {
+                params.put("errorMessage", "Confirm password");
+                params.put("username", username);
+                params.put("email", email);
+                params.put("focus", "password");
             }
         }
 
@@ -90,27 +102,42 @@ public class PageController {
 
     public static String uploadVehicle(Request req, Response res) {
         Map params = new HashMap();
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+        String userName = req.session().attribute("user");
+        User user = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+
+
+        params.put("user", user);
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = req.queryParams("name");
             String year = req.queryParams("year");
             String seats = req.queryParams("numofseats");
             String type = req.queryParams("type");
-            System.out.println(type);
-            String description = req.queryParams("description");
             String piclink = req.queryParams("piclink");
+            String startDate = req.queryParams("startDate");
+            String endDate = req.queryParams("endDate");
 
             VehicleType vehicleType = VehicleType.getTypeFromString(type);
 
             int yearInt = Integer.parseInt(year);
             int numofSeats = Integer.parseInt(seats);
 
-            Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink);
-            persist(vehicle);
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date startDateF = df.parse(startDate);
+                Date endDateF = df.parse(endDate);
+                Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink, startDateF, endDateF);
+                vehicle.setOwner(user);
+                persist(vehicle);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             res.redirect("/profile");
         }
-
         return renderTemplate(params, "upload");
     }
 
@@ -151,6 +178,32 @@ public class PageController {
         return renderTemplate(params, "login");
     }
 
+    public static String owner(Request request, Response response) {
+        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+        HashMap<String, Object> params = new HashMap<>();
+        String userName = request.session().attribute("user");
+        User result = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+        int userId = result.getId();
+
+        if (request.requestMethod().equalsIgnoreCase("POST")) {
+            String profilePicture = request.queryParams("profilePicture");
+            UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
+            userProfilePicture.setUser(result);
+            persist(userProfilePicture);
+        }
+        try {
+            UserProfilePicture profilePicture = em.createNamedQuery("getUsersProfPic", UserProfilePicture.class).setParameter("user_id", userId).getSingleResult();
+            params.put("profilePicture", profilePicture);
+        } catch (NoResultException e) {
+            UserProfilePicture defaultPicture = new UserProfilePicture();
+            defaultPicture.setProfilePicture("/default_pic.jpg");
+            params.put("profilePicture", defaultPicture);
+        }
+        params.put("user", result);
+        return renderTemplate(params, "userProfile");
+    }
+
     public static String logout(Request req, Response res) {
         System.out.println(req.session().attribute("user") + " logged out");
         req.session().removeAttribute("user");
@@ -173,6 +226,20 @@ public class PageController {
         return null;
     }
 
+    private static User getUserByName(String name) {
+        EntityManager em = DataManager.getEntityManagerFactory().createEntityManager();
+        try {
+            User user = (User) em.createNamedQuery("User.getSpecUser")
+                    .setParameter("name", name)
+                    .getSingleResult();
+            em.close();
+            return user;
+        } catch (NoResultException e) {
+            System.out.println("No such a user in db");
+        }
+        return null;
+    }
+
 
     private static void persist(Object object) {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
@@ -188,9 +255,5 @@ public class PageController {
 
     private static String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
-    }
-
-    public static String owner(Request request, Response response) {
-        return renderTemplate(new HashMap(), "userProfile");
     }
 }

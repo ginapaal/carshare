@@ -4,6 +4,8 @@ import com.codecool.carshare.controller.PageController;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.utility.DataManager;
+import com.codecool.carshare.utility.SecurePassword;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +16,7 @@ import java.security.spec.InvalidKeySpecException;
 
 import static com.codecool.carshare.model.VehicleType.*;
 import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Main {
 
@@ -35,18 +38,31 @@ public class Main {
         post("/upload", PageController::uploadVehicle);
         get("/profile", PageController::owner);
         get("/vehicles/:id", PageController::details);
+        post("/profile", PageController::owner);
 
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
         populateTestData(em);
 
+        enableDebugScreen();
+
     }
 
-    public static void populateTestData(EntityManager entityManager) {
-        User owner = new User();
-        Vehicle vehicle = new Vehicle();
+    public static void populateTestData(EntityManager entityManager) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        User owner = new User("Ödönke", "odon@tokodon.hu", SecurePassword.createHash("odon"));
+        Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+        Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+        Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+        Vehicle vehicle3 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         owner.addVehicle(vehicle);
+        owner.addVehicle(vehicle1);
+        owner.addVehicle(vehicle2);
+        owner.addVehicle(vehicle3);
         vehicle.setOwner(owner);
+        vehicle1.setOwner(owner);
+        vehicle2.setOwner(owner);
+        vehicle3.setOwner(owner);
 
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -58,6 +74,9 @@ public class Main {
         entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
         entityManager.persist(owner);
         entityManager.persist(vehicle);
+        entityManager.persist(vehicle1);
+        entityManager.persist(vehicle2);
+        entityManager.persist(vehicle3);
 
         transaction.commit();
     }
