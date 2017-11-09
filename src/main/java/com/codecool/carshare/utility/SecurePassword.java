@@ -63,9 +63,9 @@ public class SecurePassword {
      * @param goodHash the hash of the valid password
      * @return true if the password is correct, false if not
      */
-    public static boolean validatePassword(String password, String goodHash)
+    public static boolean isPasswordValid(String password, String goodHash)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return validatePassword(password.toCharArray(), goodHash);
+        return isPasswordValid(password.toCharArray(), goodHash);
     }
 
     /**
@@ -75,7 +75,7 @@ public class SecurePassword {
      * @param goodHash the hash of the valid password
      * @return true if the password is correct, false if not
      */
-    private static boolean validatePassword(char[] password, String goodHash)
+    private static boolean isPasswordValid(char[] password, String goodHash)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // Decode the hash into its parameters
         String[] params = goodHash.split(":");

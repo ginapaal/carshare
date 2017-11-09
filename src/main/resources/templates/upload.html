@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlsn="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="header :: head">
-</head>
+<head th:replace="header :: head"></head>
 <body>
 <nav th:replace="header :: nav"></nav>
 <div class="jumbotron text-center">
@@ -10,7 +9,7 @@
 <div class="container fluid">
     <div class="row">
         <aside class="sidebar col col-lg-2">
-            <img width="125px" height="125px" src="/default_pic.jpg"/>
+            <img width="125px" height="125px" src="/default_pic.jpg">
             <h2 th:text="${user.name}"> My name </h2>
             <h4> My messages </h4>
             <h4> My contacts </h4>
@@ -20,11 +19,11 @@
             <form action="/upload" method="post">
                 <div>
                     <h3> Enter the name of your vehicle </h3>
-                    <input name="name" type="text" placeholder="Name of vehicle"/>
+                    <input name="name" type="text" placeholder="Name of vehicle">
                 </div>
                 <div>
                     <h3> Enter year </h3>
-                    <input name="year" placeholder="Year"/>
+                    <input name="year" placeholder="Year">
                 </div>
                 <div>
                     <h3> Enter number of seats </h3>
@@ -55,8 +54,8 @@
                 </div>
                 <div>
                     <h3>Upload a pic</h3>
-                    <input name="piclink" type="text" placeholder="Copy the URL of your picture here"/>
-                    <input type="submit"/>
+                    <input name="piclink" type="text" placeholder="Copy the URL of your picture here">
+                    <input type="submit">
                 </div>
             </form>
         </article>

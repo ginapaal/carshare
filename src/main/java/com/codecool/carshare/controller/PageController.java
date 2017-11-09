@@ -106,8 +106,6 @@ public class PageController {
         EntityManager em = emf.createEntityManager();
         String userName = req.session().attribute("user");
         User user = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
-
-
         params.put("user", user);
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
@@ -141,9 +139,7 @@ public class PageController {
         return renderTemplate(params, "upload");
     }
 
-
     public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
-
         String name = req.queryParams("username");
         String password = req.queryParams("password");
 
@@ -174,8 +170,7 @@ public class PageController {
                 return "";
             }
         }
-
-        return renderTemplate(params, "login");
+      return renderTemplate(params, "login");
     }
 
     public static String owner(Request request, Response response) {
@@ -243,7 +238,6 @@ public class PageController {
 
     private static void persist(Object object) {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
-
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
@@ -256,4 +250,29 @@ public class PageController {
     private static String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
     }
+  
+    public static String owner(Request request, Response response) {
+        return renderTemplate(new HashMap(), "userProfile");
+    }
+
+    private static String convertField(String string) {
+        return string.toLowerCase().trim().replaceAll("\\s+", "");
+    }
+
+    private static boolean userLoggedIn(Request req, Response res) {
+        if (req.session().attribute("user") != null) {
+            System.out.println(req.session().attribute("user") + " are already logged in");
+            res.redirect("/");
+            return true;
+        }
+        return false;
+    }
+
+    private static String loginUser(Request req, Response res, String name) {
+        req.session().attribute("user", name);
+        System.out.println(req.session().attribute("user") + " logged in");
+        res.redirect("/");
+        return "";
+    }
+
 }

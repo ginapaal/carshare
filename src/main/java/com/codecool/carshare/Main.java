@@ -7,6 +7,7 @@ import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -50,19 +51,21 @@ public class Main {
 
     public static void populateTestData(EntityManager entityManager) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        User owner = new User("Ödönke", "odon@tokodon.hu", SecurePassword.createHash("odon"));
+        User owner = new User("gergo", "valaki@valaki.com", SecurePassword.createHash("pass"));
+        User owner2 = new User("Ödönke", "odon@tokodon.hu", SecurePassword.createHash("odon"));
         Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         Vehicle vehicle3 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+
         owner.addVehicle(vehicle);
         owner.addVehicle(vehicle1);
         owner.addVehicle(vehicle2);
         owner.addVehicle(vehicle3);
         vehicle.setOwner(owner);
         vehicle1.setOwner(owner);
-        vehicle2.setOwner(owner);
-        vehicle3.setOwner(owner);
+        vehicle2.setOwner(owner2);
+        vehicle3.setOwner(owner2);
 
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -73,6 +76,7 @@ public class Main {
         entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "link"));
         entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
         entityManager.persist(owner);
+        entityManager.persist(owner2);
         entityManager.persist(vehicle);
         entityManager.persist(vehicle1);
         entityManager.persist(vehicle2);
