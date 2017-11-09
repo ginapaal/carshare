@@ -90,6 +90,10 @@ public class User {
         vehicles.add(vehicle);
     }
 
+    public UserProfilePicture getProfilePicture() {
+        return profilePicture;
+    }
+
     @Override
     public String toString() {
         return "User{" +

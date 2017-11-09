@@ -74,6 +74,9 @@ public class PageController {
                 .setParameter("vehicleId", vehicleId).getSingleResult();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
+            if (username == null) {
+                res.redirect("/login");
+            }
             ReservationMail reservationMail = new ReservationMail();
             reservationMail.sendEmail(emailAddress, username);
             res.redirect("/");
@@ -204,13 +207,17 @@ public class PageController {
         HashMap<String, Object> params = new HashMap<>();
         String username = request.session().attribute("user");
         User result = getUserByName(username);
+        String profilePicLink = "";
         int userId = 0;
         if (result != null) {
             userId = result.getId();
+            if (result.getProfilePicture() != null) {
+                profilePicLink = result.getProfilePicture().getProfilePicture();
+            }
         }
         if (request.requestMethod().equalsIgnoreCase("POST")) {
             String profilePicture = request.queryParams("profilePicture");
-            if (!profilePicture.equals("")) {
+            if (!profilePicture.equals("") && !profilePicture.equals(profilePicLink)) {
                 UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
                 userProfilePicture.setUser(result);
                 persist(userProfilePicture);
