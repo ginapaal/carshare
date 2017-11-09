@@ -52,9 +52,9 @@ public class Main {
         User owner = new User("gergo", "valaki@valaki.com", SecurePassword.createHash("pass"));
         User owner2 = new User("Ödönke", "odon@tokodon.hu", SecurePassword.createHash("odon"));
         Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
-        Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
-        Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
-        Vehicle vehicle3 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
+        Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-Aston-Martin-V12-Zagato-Red-Sports-Car-PNG-Image.png");
+        Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 6, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-Bugatti-Chiron-Blue-Car-PNG-Image.png");
+        Vehicle vehicle3 = new Vehicle("Ödönke negyedik kocsija", 1990, 6, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-BMW-M2-Coupe-White-Car-PNG-Image.png");
         owner.addVehicle(vehicle1);
         owner.addVehicle(vehicle2);
         owner.addVehicle(vehicle3);
@@ -66,11 +66,11 @@ public class Main {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "http://static2.fashionbeans.com/wp-content/uploads/2017/08/convertible-cars-top-2-300x200.jpg"));
-        entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "link"));
-        entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "link"));
-        entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "link"));
-        entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "link"));
+        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG5341.png"));
+        entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG3150.png"));
+        entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "https://cache.popcultcha.com.au/media/catalog/product/cache/1/image/1800x/040ec09b1e35df139433887a97daa66f/m/e/metals-batman-v-superman-batmobile-4-inch-01_1.1498484298.png"));
+        entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "http://www.hotwheels-elite.com/diecast-model-cars/images/Image/CATALOGO-A-2010/1-18%20CULT%20CLASSIC%20COLLECTION/X5469%20-%20KITT/X5469_PoP_13_12_w900.png"));
+        entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "http://www.straydogbicycles.com/images/Specialized_Hotrock.png"));
 
         entityManager.persist(owner);
         entityManager.persist(owner2);
