@@ -51,7 +51,7 @@ public class Main {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "link"));
+        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "http://static2.fashionbeans.com/wp-content/uploads/2017/08/convertible-cars-top-2-300x200.jpg"));
         entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "link"));
         entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "link"));
         entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "link"));
