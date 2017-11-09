@@ -106,13 +106,12 @@ public class PageController {
     }
 
     public static String uploadVehicle(Request req, Response res) {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, User> params = new HashMap<>();
         String username = req.session().attribute("user");
         if (username != null) {
             User user = getUserByName(username);
             params.put("user", user);
         }
-
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = req.queryParams("name");
             String year = req.queryParams("year");
@@ -121,8 +120,6 @@ public class PageController {
             String piclink = req.queryParams("piclink");
             String startDate = req.queryParams("startDate");
             String endDate = req.queryParams("endDate");
-            User user = getUserByName(name);
-
 
             VehicleType vehicleType = VehicleType.getTypeFromString(type);
 
@@ -133,7 +130,8 @@ public class PageController {
                 Date startDateF = df.parse(startDate);
                 Date endDateF = df.parse(endDate);
                 Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF);
-                vehicle.setOwner(user);
+                User owner = getUserByName(username);
+                vehicle.setOwner(owner);
                 persist(vehicle);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -230,7 +228,6 @@ public class PageController {
         try {
 
             User user = (User) em.createNamedQuery("User.getUserByName")
-
                     .setParameter("name", name)
                     .getSingleResult();
             em.close();
