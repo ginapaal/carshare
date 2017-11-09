@@ -36,8 +36,9 @@ public class PageController {
         } else {
             results = em.createNamedQuery("Vehicle.getAll", Vehicle.class).getResultList();
         }
-        String username;
-        if ((username = req.session().attribute("user")) != null) {
+
+        String username = req.session().attribute("user");
+        if (username != null) {
             User user = getUserByName(username);
             params.put("user", user);
         }
@@ -77,7 +78,7 @@ public class PageController {
     }
 
     public static String uploadVehicle(Request req, Response res) {
-        Map params = new HashMap();
+        Map<String, User> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = req.queryParams("name");
@@ -99,6 +100,11 @@ public class PageController {
             res.redirect("/profile");
         }
 
+        String username= req.session().attribute("user");
+        if (username != null) {
+            User user = getUserByName(username);
+            params.put("user", user);
+        }
         return renderTemplate(params, "upload");
     }
 
@@ -190,6 +196,12 @@ public class PageController {
     }
 
     public static String owner(Request request, Response response) {
-        return renderTemplate(new HashMap(), "userProfile");
+        Map<String, User> params = new HashMap<>();
+        String username = request.session().attribute("user");
+        if (username != null) {
+            User user = getUserByName(username);
+            params.put("user", user);
+        }
+        return renderTemplate(params, "userProfile");
     }
 }

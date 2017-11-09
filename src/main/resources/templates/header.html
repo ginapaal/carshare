@@ -41,6 +41,7 @@
                     <a th:href="'/users/'+${user.id}">
                         <p id="userfunc-username" th:text="${user.name}"></p>
                     </a>
+                    <a href="/upload"><button class="upload-button btn btn-primary">Upload vehicle</button></a>
                     <a href="/logout"><button class="logout-button btn btn-info">Logout</button></a>
                 </div>
                 <div th:unless="${user}" class="login-container">
