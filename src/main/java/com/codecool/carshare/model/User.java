@@ -11,7 +11,7 @@ import java.util.List;
         ),
         @NamedQuery(
                 name="User.getSpecUser",
-                query = "SELECT u FROM User u WHERE u.name='Ödönke'"
+                query = "SELECT u FROM User u WHERE u.name=:name"
         )
 })
 

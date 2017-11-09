@@ -51,20 +51,30 @@ public class PageController {
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
 
-            if (req.queryParams("password") == null) {
-                System.out.println("password is null");
+            String username = req.queryParams("username").toLowerCase().trim();
+            String email = req.queryParams("email");
+            String password = req.queryParams("password");
+            String confirmPassword = req.queryParams("confirm-password");
+
+            if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
+                System.out.println("One ore more field is empty");
+                params.put("errorMessage", "All fields are required");
+                params.put("username", username);
+                params.put("email", email);
                 return renderTemplate(params, "register");
             }
 
-            String username = req.queryParams("username");
-            String email = req.queryParams("email");
-            String passwordHash = SecurePassword.createHash(req.queryParams("password"));
-            String confirmPasswordHash = SecurePassword.createHash(req.queryParams("confirm-password"));
+            String passwordHash = SecurePassword.createHash(password);
 
-            if (passwordHash.equals(confirmPasswordHash)) {
+            if (password.equals(confirmPassword)) {
                 User user = new User(username, email, passwordHash);
                 persist(user);
                 return renderTemplate(params, "login");
+            } else {
+                params.put("errorMessage", "Confirm password");
+                params.put("username", username);
+                params.put("email", email);
+                params.put("focus", "password");
             }
         }
 
@@ -87,13 +97,19 @@ public class PageController {
 
             int yearInt = Integer.parseInt(year);
             int numofSeats = Integer.parseInt(seats);
+            EntityManagerFactory emf = DataManager.getEntityManagerFactory();
+            EntityManager em = emf.createEntityManager();
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Date startDateF = df.parse(startDate);
                 Date endDateF = df.parse(endDate);
                 Vehicle vehicle = new Vehicle(name, yearInt, numofSeats, vehicleType, piclink, startDateF, endDateF);
+                String userName= req.session().attribute("user");
+                User user = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+                vehicle.setOwner(user);
                 persist(vehicle);
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -144,8 +160,9 @@ public class PageController {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
         HashMap<String, User> params = new HashMap<>();
-        User result = em.createNamedQuery("User.getSpecUser", User.class).getSingleResult();
-        List vehicles = result.getVehicles();
+        String userName= request.session().attribute("user");
+        User result = em.createNamedQuery("User.getSpecUser", User.class).setParameter("name", userName).getSingleResult();
+
         params.put("user", result);
         return renderTemplate(params, "userProfile");
     }
@@ -166,6 +183,20 @@ public class PageController {
                     .getSingleResult();
             em.close();
             return storedPassword;
+        } catch (NoResultException e) {
+            System.out.println("No such a user in db");
+        }
+        return null;
+    }
+
+    private static User getUserByName(String name) {
+        EntityManager em = DataManager.getEntityManagerFactory().createEntityManager();
+        try {
+            User user = (User) em.createNamedQuery("User.getSpecUser")
+                    .setParameter("name", name)
+                    .getSingleResult();
+            em.close();
+            return user;
         } catch (NoResultException e) {
             System.out.println("No such a user in db");
         }

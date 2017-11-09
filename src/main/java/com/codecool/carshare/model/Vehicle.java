@@ -96,6 +96,6 @@ public class Vehicle {
     }
 
     public void isAvailable(Date startDate, Date endDate){
-        
+
     }
 }
