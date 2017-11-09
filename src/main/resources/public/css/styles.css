@@ -1,13 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,500,700|Roboto:300,400,700&subset=latin-ext');
+
 body {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    background-color: #eee;
+    background-color: #ddd;
+    font-weight: 400;
+    font-family: "Roboto", sans-serif;
 }
 
 .jumbotron {
     background-color: #59B2E0;
     color: #333;
+}
+
+input[type],
+select {
+    padding: 5px;
 }
 
 .error-message {
@@ -35,9 +44,9 @@ body {
 .filterbutton {
     margin: 0;
     font-size: 1.2em;
-    font-family: "Ume Gothic", serif;
-    color: #DDDDDD;
-    background: #6da5ff;
+    font-family: "Roboto", sans-serif;
+    color: #fff;
+    background-color: #53A3CD;
     border: solid 2px #DDDDDD;
     border-radius: 5px;
     text-decoration: none;
@@ -46,34 +55,36 @@ body {
 
 .filterbutton:hover {
     color: #6da5ff;
-    background: #DDDDDD;
+    background: #eee;
     border-color: #6da5ff;
+    text-decoration: none;
 }
 
 #headertext {
     margin: inherit;
     font-size: 5em;
     color: #DDDDDD;
-    font-family: "Andale Mono";
+    font-family: "Roboto", sans-serif;
     padding-top: 30px;
 }
 
 .vehiclecontainer {
-    height: 300px;
-    background: #eeeeee;
-    padding: 25px 20px;
-    margin: 30px 10px 10px 10px;
-    border: 2px solid #0061ff;
-    border-radius: 3px;
+    background: #fff;
+    padding: 20px 20px;
+    margin: 30px 100px;
+    /*border: 2px solid #0061ff;*/
+    box-shadow: 0 0 10px #999;
+    border-radius: 5px;
 }
 
 .vehiclename, .vehicleyear, .vehicledescription {
-    color: #00415d;
+    /*color: #00415d;*/
+    color: #555;
 }
 
 .vehiclename {
     font-size: 2em;
-    font-family: "Ubuntu Mono";
+    font-family: "Roboto", sans-serif;
 }
 
 .vehiclename:hover {
@@ -86,23 +97,24 @@ body {
 }
 
 .vehicleimage {
-    width: 300px;
-    height: 220px;
+    width: 100%;
+    overflow: hidden;
     margin: 10px 10px 20px 0;
     border: 1px solid #DDDDDD;
     border-radius: 5px;
 }
 
 .vehicledatacontainer {
-    padding: 0;
+    padding: 10px;
 }
 
 #logo {
     width: 50%;
     font-size: 3.5em;
-    color: #0061ff;
+    color: #4784b2;
     float: none;
-    font-family: "Abyssinica SIL";
+    font-weight: 700;
+    font-family: "Raleway", serif;
     text-decoration: none;
 }
 
@@ -136,7 +148,7 @@ body {
 }
 
 .navcontent {
-    background-color: #5681ff;
+    background-color: #4784b2;
 }
 
 #navigationbar {
@@ -155,24 +167,17 @@ body {
 }
 
 #headertext {
-    margin: inherit;
-    font-size: 5em;
-    color: black;
-    font-family: "Andale Mono";
+    margin-left: 100px;
+    font-size: 3em;
+    color: #555;
+    font-family: "Roboto", sans-serif;
     padding-top: 30px;
 }
 
-.vehiclecontainer {
-    padding: 20px 20px;
-    margin: 30px 100px;
-    border: 2px solid black;
-    border-radius: 5px;
-}
-
 .vehicledetail {
-    font-size: 2em;
-    color: black;
-    font-family: "Ubuntu Mono";
+    font-size: 1.5em;
+    color: #555;
+    font-family: "Roboto", sans-serif;
 }
 
 /* Form styles
@@ -290,4 +295,44 @@ body {
     border: 1px solid #53A3CD;
     background-color: white;
     box-shadow: 0 0 1px 0 #53A3CD;
+}
+
+.picture-link,
+.upload-profile-pic {
+    width: 300px;
+}
+
+.upload-vehicle-button {
+    margin: 16px 0;
+    font-size: 16px;
+    width: 100%;
+}
+
+.upload-input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+label {
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .text-center-sm {
+        margin: 0 auto;
+    }
+    .container {
+        margin: 0 20%;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .container {
+        margin: 0 10%;
+    }
+}
+
+.upload-form, .sidebar {
+    padding: 0 20px;
 }

@@ -12,7 +12,7 @@
 
         <div th:each="vehicle : ${vehicles}">
             <div class="row">
-                <div class="well vehiclecontainer">
+                <div class="well vehiclecontainer clearfix">
                     <div class="col-md-4 vehicledatacontainer">
                         <a th:href="'/vehicles/' + ${vehicle.id}"><img class="vehicleimage" th:src="${vehicle.picture}"></a>
                     </div>

@@ -56,9 +56,14 @@ public class PageController {
         EntityManagerFactory emf = DataManager.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
-        Map<String, Vehicle> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         int vehicleId = Integer.valueOf(req.params("id"));
 
+        String username = req.session().attribute("user");
+        if (username != null) {
+            User user = getUserByName(username);
+            params.put("user", user);
+        }
 
         Vehicle resultVehicle = em.createNamedQuery("Vehicle.getById", Vehicle.class)
                 .setParameter("vehicleId", vehicleId).getSingleResult();
@@ -187,9 +192,14 @@ public class PageController {
 
         if (request.requestMethod().equalsIgnoreCase("POST")) {
             String profilePicture = request.queryParams("profilePicture");
-            UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
-            userProfilePicture.setUser(result);
-            persist(userProfilePicture);
+            if (!profilePicture.equals("")) {
+                UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
+                userProfilePicture.setUser(result);
+                persist(userProfilePicture);
+            } else {
+                response.redirect("/user/" + userId);
+                return "";
+            }
         }
         try {
             UserProfilePicture profilePicture = em.createNamedQuery("getUsersProfPic", UserProfilePicture.class).setParameter("user_id", userId).getSingleResult();
