@@ -45,7 +45,7 @@ public class Vehicle {
     private Date startDate;
     private Date endDate;
 
-    private String picture;
+    private String picture = "http://www.junkcarcashout.com/files/3114/1875/9328/when_it_is_time_to_sell_your_car.jpg";
 
     @Transient
     private boolean isAvailable;
@@ -70,6 +70,7 @@ public class Vehicle {
         this.picture = piclink;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.isAvailable = true;
     }
 
     public int getId() {
@@ -90,6 +91,10 @@ public class Vehicle {
 
     public int getNumOfSeats() {
         return numOfSeats;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public void setOwner(User owner) {

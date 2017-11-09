@@ -84,5 +84,6 @@ public class Main {
         entityManager.persist(vehicle3);
 
         transaction.commit();
+        
     }
 }
