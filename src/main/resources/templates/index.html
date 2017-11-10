@@ -7,7 +7,9 @@
     <nav th:replace="header :: nav"></nav>
     <div class="container">
         <div class="filters">
-            <a class="filterbutton" th:each="type : ${types}" th:href="'/?type='+${type.string}" th:text="${type.string}"></a>
+            <a th:each="type : ${types}"
+               th:class="${selected.equals(type)} ? 'filterbutton activefilter' : 'filterbutton'"
+               th:href="'/?type=' + ${type.string}" th:text="${type.string}"></a>
         </div>
 
         <div th:each="vehicle : ${vehicles}">

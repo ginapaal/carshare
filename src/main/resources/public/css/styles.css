@@ -14,11 +14,6 @@ body {
     color: #333;
 }
 
-input[type],
-select {
-    padding: 5px;
-}
-
 .error-message {
     color: darkred;
     margin-top: 30px;
@@ -37,27 +32,34 @@ select {
 }
 
 .filters {
-    margin: 20px 100px;
+    margin: 20px auto;
     text-align: center;
 }
 
 .filterbutton {
-    margin: 0;
     font-size: 1.2em;
     font-family: "Roboto", sans-serif;
     color: #fff;
     background-color: #53A3CD;
-    border: solid 2px #DDDDDD;
-    border-radius: 5px;
+    border: 2px solid #53A3CD;
+    border-radius: 4px;
     text-decoration: none;
     padding: 5px 20px;
+    margin: 1px;
 }
 
-.filterbutton:hover {
+.filterbutton:hover,
+.filterbutton:focus {
     color: #6da5ff;
-    background: #eee;
-    border-color: #6da5ff;
+    background-color: #eee;
+    border: 2px solid #eee;
     text-decoration: none;
+}
+
+.activefilter {
+    border: 2px solid #6da5ff;
+    background-color: #eee;
+    color: #6da5ff;
 }
 
 #headertext {
@@ -71,10 +73,14 @@ select {
 .vehiclecontainer {
     background: #fff;
     padding: 20px 20px;
-    margin: 30px 100px;
+    margin: 30px 10%;
     /*border: 2px solid #0061ff;*/
-    box-shadow: 0 0 10px #999;
+    box-shadow: 0 0 5px #999;
     border-radius: 5px;
+}
+
+.vehiclecontainer:hover {
+    box-shadow: 0 0 10px #999;
 }
 
 .vehiclename, .vehicleyear, .vehicledescription {
@@ -123,7 +129,7 @@ select {
 }
 
 .userfunc-container {
-    padding: 7px 5px;
+    padding: 10px 10px;
     text-align: right;
     float: right;
 }
@@ -233,14 +239,6 @@ select {
     transition: all 0.1s linear;
 }
 
-/*.panel-login input:hover {*/
-/*outline: none;*/
-/*-webkit-box-shadow: none;*/
-/*-moz-box-shadow: none;*/
-/*box-shadow: none;*/
-/*border-color: #ccc;*/
-/*}*/
-
 .btn-login {
     background-color: #59B2E0;
     outline: none;
@@ -290,7 +288,10 @@ select {
     border-color: #1CA347;
 }
 
-.panel-body input[type]:not([type=submit]):focus {
+/* Custom Styles
+******************/
+
+input[type]:not([type=submit]):focus {
     outline: none;
     border: 1px solid #53A3CD;
     background-color: white;
@@ -298,12 +299,48 @@ select {
 }
 
 .picture-link,
-.upload-profile-pic {
-    width: 300px;
+.user-profile-pic,
+.upload-profile-pic,
+.cancel-profile-pic,
+.change-pic {
+    max-width: 300px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.change-pic {
+    visibility: hidden;
+}
+
+.user-profile-pic-link:hover .change-pic {
+    visibility: visible;
+}
+
+.btn .upload-profile-pic {
+    background-color: #53A3CD;
+}
+
+.picture-link {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
 .upload-vehicle-button {
-    margin: 16px 0;
+    margin: 20px 0;
     font-size: 16px;
     width: 100%;
 }
@@ -313,31 +350,81 @@ select {
     margin-bottom: 10px;
 }
 
+#upload-header {
+    margin-bottom: 50px;
+}
+
 label {
     font-weight: 400;
+}
+
+@media (min-width: 768px) {
+    .upload-form-container {
+        margin: 0;
+    }
 }
 
 @media (max-width: 768px) {
     .text-center-sm {
         margin: 0 auto;
     }
+
+    .text-center-small {
+        text-align: center;
+    }
+
+    .sidebar {
+        margin-bottom: 30px;
+    }
+
     .container {
         margin: 0 20%;
     }
 }
 
 @media (max-width: 400px) {
-
     .container {
         margin: 0 10%;
     }
 }
 
-.upload-form, .sidebar {
-    padding: 0 20px;
-}
-
 .reserve-button {
     margin-left: 100px;
     font-size: 16px;
+}
+
+img.profile-pic {
+    width: 100%;
+    max-width: 125px;
+    max-height: 125px;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+.equal {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -webkit-align-content: flex-end;
+    align-content: flex-end;
+    justify-content: space-around;
+}
+
+.card {
+    color: #333;
+    background-color: #fff;
+    margin: 20px 20px;
+    padding: 20px;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+a.card:hover {
+    text-decoration: none;
+    box-shadow: 0 0 10px #999;
 }
