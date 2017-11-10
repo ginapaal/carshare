@@ -62,14 +62,6 @@ body {
     color: #6da5ff;
 }
 
-#headertext {
-    margin: inherit;
-    font-size: 5em;
-    color: #DDDDDD;
-    font-family: "Roboto", sans-serif;
-    padding-top: 30px;
-}
-
 .vehiclecontainer {
     background: #fff;
     padding: 20px 20px;
@@ -173,11 +165,11 @@ body {
 }
 
 #headertext {
-    margin-left: 100px;
     font-size: 3em;
     color: #555;
     font-family: "Roboto", sans-serif;
-    padding-top: 30px;
+    padding-top: 10px;
+    margin: 0 10%;
 }
 
 .vehicledetail {
@@ -371,6 +363,10 @@ label {
 
     .text-center-small {
         text-align: center;
+    }
+
+    #headertext {
+        margin: 0;
     }
 
     .sidebar {
