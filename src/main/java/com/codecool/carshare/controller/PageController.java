@@ -180,7 +180,7 @@ public class PageController {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            res.redirect("/");
+            res.redirect("/user/" + DataManager.getUserByName(username).getId());
         }
 
         return renderTemplate(params, "upload");
