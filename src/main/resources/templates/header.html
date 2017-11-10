@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlsn="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+
+    <meta charset="utf-8">
+    <meta name="author" content="no-IDEa">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Car share</title>
+
+    <!-- Latest compiled and minified Jquery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+    <script src="/js/app.js"></script>
+</head>
+
+<nav th:fragment="nav" id="navigationbar" class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="row navbrand">
+            <a id="logo" href="/"> Carshare </a>
+        </div>
+        <div class="row navcontent">
+            <div class="userfunc-container pull-right">
+                <div th:if="${user}" class="loggedin-container">
+                    <a id="userfunc-username" th:text="${user.name}" th:href="'/user/' + ${user.id}"></a>
+                    <a href="/upload"><button class="upload-button btn btn-info" th:if="${uploadpage}">Upload vehicle</button></a>
+                    <a href="/logout"><button class="logout-button btn btn-primary">Logout</button></a>
+                </div>
+                <div th:unless="${user}" class="login-container">
+                    <a href="/register"><button class="register-button btn btn-success">Register</button></a>
+                    <a href="/login"><button class="login-button btn btn-success">Log in</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+</html>

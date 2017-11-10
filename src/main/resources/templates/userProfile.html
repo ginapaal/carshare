@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlsn="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="header :: head"></head>
+<body>
+    <nav th:replace="header :: nav"></nav>
+    <div class="container">
+        <div class="row text-center">
+            <aside class="sidebar col col-sm-4 text-center-sm">
+                <div>
+                    <div class="user-profile-pic-link">
+                        <img name="profilepic" class="user-profile-pic" th:attr="src=${profilePicture.profilePicture}">
+                        <div class="overlay">
+                            <button class="btn btn-default change-pic">Change profile picture</button>
+                            <form action="/upload-profile-pic" method="post" class="form">
+                                <input type="text" class="picture-link hidden" name="profilePicture" placeholder="Your profile picture's link">
+                                <input type="submit" class="btn btn-info upload-profile-pic hidden" value="Upload picture">
+                            </form>
+                            <button class="btn btn-default cancel-profile-pic hidden">Cancel</button>
+                        </div>
+                    </div>
+                    <h4> My messages </h4>
+                    <h4> My contacts </h4>
+                    <h4> My reviews </h4>
+                </div>
+            </aside>
+            <h1> [[${user.name}]]'s vehicles </h1>
+            <article class="col col-sm-8 equal">
+                <a th:href="'/vehicles/' + ${vehicle.id}" class="text-center card" th:each="vehicle : ${user.vehicles}">
+                    <div th:if="${vehicle} != null">
+                        <img class="vehicle_image" src="http://placehold.it/400x250/000/fff"
+                             th:attr="src=${vehicle.picture}" width="200px">
+                        <p th:text="${vehicle.name}"></p>
+                        <p th:text="'Year: ' + ${vehicle.year}"></p>
+                        <p th:text="'Number of seats: ' + ${vehicle.numOfSeats}"></p>
+                    </div>
+                </a>
+            </article>
+        </div>
+    </div>
+</body>
+</html>
