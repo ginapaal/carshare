@@ -90,7 +90,7 @@ public class User {
         vehicles.add(vehicle);
     }
 
-    public UserProfilePicture getProfilePicture() {
+    public UserProfilePicture getUserProfilePicture() {
         return profilePicture;
     }
 

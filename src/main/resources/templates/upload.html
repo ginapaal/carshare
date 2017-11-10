@@ -4,69 +4,70 @@
 <body>
 <nav th:replace="header :: nav"></nav>
 <div class="container fluid text-center-sm">
-    <div class="">
-        <h1> Upload new vehicle </h1>
-    </div>
+
     <div class="row">
         <form action="/upload" method="post" id="myform">
-            <div class="sidebar col col-sm-2">
-                <img width="125px" height="125px" th:attr="src=${profilePicture.profilePicture}">
+            <div class="sidebar col col-sm-2 text-center-small">
+                <img class="profile-pic" th:attr="src=${profilePicture.profilePicture}">
                 <h2 th:text="${user.name}"> My name </h2>
                 <h4> My messages </h4>
                 <h4> My contacts </h4>
                 <h4> My reviews </h4>
             </div>
-            <div class="col-sm-5 upload-form">
-                <div>
-                    <h3> Name of your vehicle </h3>
-                    <input name="name" type="text" class="upload-input" placeholder="Name of vehicle">
+            <div class="col-sm-10 row upload-form-container">
+                <div class="col-sm-10 offset-sm-2">
+                    <h1 id="upload-header"> Upload new vehicle </h1>
                 </div>
-                <div>
-                    <h3> Year </h3>
-                    <input name="year" type="text" class="upload-input" placeholder="Year">
+                <div class="col col-sm-6 upload-form">
+                    <div>
+                        <h3> Name of your vehicle </h3>
+                        <input name="name" type="text" class="form-control upload-input" placeholder="Name of vehicle" autofocus required>
+                    </div>
+                    <div>
+                        <h3> Year </h3>
+                        <input name="year" type="text" class="form-control upload-input" placeholder="Year" required>
+                    </div>
+                    <div>
+                        <h3> Number of seats </h3>
+                        <select name = "numofseats" th:default="4" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                        </select>
+                    </div>
+                    <div>
+                        <h3> Type of your vehicle </h3>
+                        <select name="type" class="form-control">
+                            <option value="Bike"> Bike</option>
+                            <option value="Car" selected> Car</option>
+                            <option value="Motor"> Motorcycle</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <h3> Number of seats </h3>
-                    <select name = "numofseats" th:default="4">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                    </select>
+                <div class="col col-sm-6 upload-form2">
+                    <div>
+                        <h3> Availability </h3>
+                        <label for="startDate"> Start date </label>
+                        <input name="startDate" id="startDate" class="form-control upload-input" type="date" required>
+                        <label for="endDate"> End date </label>
+                        <input name="endDate" id="endDate" class="form-control upload-input" type="date" required>
+                    </div>
+                    <div>
+                        <h3>Upload a pic</h3>
+                        <input name="piclink" type="text" class="form-control upload-input" placeholder="Copy the URL of your picture here" required>
+                    </div>
                 </div>
-                <div>
-                    <h3> Type of your vehicle </h3>
-                    <select name="type">
-                        <option value="Bike"> Bike</option>
-                        <option value="Car"> Car</option>
-                        <option value="Motor"> Motorcycle</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-5 upload-form">
-                <div>
-                    <h3> Availability </h3>
-                    <label for="startDate"> Start date </label>
-                    <input name="startDate" id="startDate" class="upload-input" type="date">
-                    <label for="endDate"> End date </label>
-                    <input name="endDate" id="endDate" class="upload-input" type="date">
-                </div>
-                <div>
-                    <h3>Upload a pic</h3>
-                    <input name="piclink" type="text" class="upload-input" placeholder="Copy the URL of your picture here">
+                <div class="col-sm-12">
+                    <input type="submit" class="btn btn-info upload-vehicle-button" form="myform">
                 </div>
             </div>
         </form>
     </div>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-10">
-            <input type="submit" class="btn btn-info upload-vehicle-button" form="myform">
-        </div>
-    </div>
+
 </div>
 </body>
 </html>
