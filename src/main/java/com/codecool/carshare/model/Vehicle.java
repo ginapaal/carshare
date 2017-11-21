@@ -53,22 +53,17 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String picture) {
-        this.name = name;
-        this.year = year;
-        this.numOfSeats = numOfSeats;
-        this.vehicleType = vehicleType;
-        this.picture = picture;
-    }
-
-
-    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink, Date startDate, Date
-            endDate) {
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
         this.picture = piclink;
+    }
+
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink,
+                   Date startDate, Date endDate) {
+        this(name, year, numOfSeats, vehicleType, piclink);
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAvailable = true;

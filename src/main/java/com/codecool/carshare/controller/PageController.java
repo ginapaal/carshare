@@ -23,10 +23,22 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PageController {
-    private static UserProfilePicture profilePictureLink;
-    private static String emailAddress;
 
-    public static String renderVehicles(Request req, Response res) {
+    private static PageController instance = null;
+    private UserProfilePicture profilePictureLink;
+    private String emailAddress;
+
+    private PageController() {
+    }
+
+    public static PageController getInstance() {
+        if (instance == null) {
+            instance = new PageController();
+        }
+        return instance;
+    }
+
+    public String renderVehicles(Request req, Response res) {
         HashMap<String, Object> params = new HashMap<>();
         String filterString = req.queryParams("type");
         VehicleType type = VehicleType.getTypeFromString(filterString);
@@ -48,7 +60,7 @@ public class PageController {
         return renderTemplate(params, "index");
     }
 
-    public static String details(Request req, Response res) {
+    public String details(Request req, Response res) {
         Map<String, Object> params = new HashMap<>();
         int vehicleId = Integer.valueOf(req.params("id"));
 
@@ -77,7 +89,7 @@ public class PageController {
         return renderTemplate(params, "details");
     }
 
-    public static String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+    public String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
@@ -116,7 +128,7 @@ public class PageController {
         return renderTemplate(params, "register");
     }
 
-    public static String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (userLoggedIn(req, res)) return "";
 
         Map<String, Object> params = new HashMap<>();
@@ -144,7 +156,7 @@ public class PageController {
         return renderTemplate(params, "login");
     }
 
-    public static String uploadVehicle(Request req, Response res) {
+    public String uploadVehicle(Request req, Response res) {
         HashMap<String, Object> params = new HashMap<>();
         String username = req.session().attribute("user");
         if (username != null) {
@@ -186,20 +198,25 @@ public class PageController {
         return renderTemplate(params, "upload");
     }
 
-    public static String profile(Request req, Response res) {
+    public String profile(Request req, Response res) {
         HashMap<String, Object> params = new HashMap<>();
         String username = req.session().attribute("user");
         User user = DataManager.getUserByName(username);
         String profilePicLink = "";
-        int userId = 0;
+        int userId;
         if (user != null) {
             userId = user.getId();
+            if (!(Integer.parseInt(req.params("id")) == user.getId())) {
+                res.redirect("/user/" + userId);
+                return "";
+            }
             params.put("uploadpage", true);
             if (user.getUserProfilePicture() != null) {
                 profilePicLink = user.getUserProfilePicture().getProfilePicture();
             }
         } else {
             res.redirect("/");
+            return "";
         }
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String profilePicture = req.queryParams("profilePicture");
@@ -210,7 +227,6 @@ public class PageController {
             }
             res.redirect("/user/" + userId);
             return "";
-
         }
         try {
             UserProfilePicture profilePicture = DataManager.getUserProfilePictureById(userId);
@@ -226,22 +242,22 @@ public class PageController {
         return renderTemplate(params, "userProfile");
     }
 
-    public static String logout(Request req, Response res) {
+    public String logout(Request req, Response res) {
         System.out.println(req.session().attribute("user") + " logged out");
         req.session().removeAttribute("user");
         res.redirect("/login");
         return "";
     }
 
-    private static String renderTemplate(Map model, String template) {
+    private String renderTemplate(Map model, String template) {
         return new ThymeleafTemplateEngine().render(new ModelAndView(model, template));
     }
 
-    private static String convertField(String string) {
+    private String convertField(String string) {
         return string.toLowerCase().trim().replaceAll("\\s+", "");
     }
 
-    private static boolean userLoggedIn(Request req, Response res) {
+    private boolean userLoggedIn(Request req, Response res) {
         if (req.session().attribute("user") != null) {
             System.out.println(req.session().attribute("user") + " are already logged in");
             res.redirect("/");
@@ -250,7 +266,7 @@ public class PageController {
         return false;
     }
 
-    private static String loginUser(Request req, Response res, String name) {
+    private String loginUser(Request req, Response res, String name) {
         req.session().attribute("user", name);
         System.out.println(req.session().attribute("user") + " logged in");
         res.redirect("/");
