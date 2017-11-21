@@ -25,30 +25,27 @@ public class Main {
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
         staticFileLocation("/public");
         port(8888);
+        enableDebugScreen();
 
         //routes
-        get("/register", PageController::register);
-        post("/register", PageController::register);
-        get("/login", PageController::login);
-        post("/login", PageController::login);
-        get("/logout", PageController::logout);
-        get("/upload", PageController::uploadVehicle);
-        post("/upload", PageController::uploadVehicle);
-        get("/user/:id", PageController::profile);
-        post("/upload-profile-pic", PageController::profile);
-        get("/vehicles/:id", PageController::details);
-        post("/vehicles/:id", PageController::details);
-        get("/", PageController::renderVehicles);
+        get("/register", PageController.getInstance()::register);
+        post("/register", PageController.getInstance()::register);
+        get("/login", PageController.getInstance()::login);
+        post("/login", PageController.getInstance()::login);
+        get("/logout", PageController.getInstance()::logout);
+        get("/upload", PageController.getInstance()::uploadVehicle);
+        post("/upload", PageController.getInstance()::uploadVehicle);
+        get("/user/:id", PageController.getInstance()::profile);
+        post("/upload-profile-pic", PageController.getInstance()::profile);
+        get("/vehicles/:id", PageController.getInstance()::details);
+        post("/vehicles/:id", PageController.getInstance()::details);
+        get("/", PageController.getInstance()::renderVehicles);
 
-        EntityManagerFactory emf = DataManager.getEntityManagerFactory();
-        EntityManager em = emf.createEntityManager();
-        populateTestData(em);
-
-        enableDebugScreen();
+        populateTestData();
 
     }
 
-    public static void populateTestData(EntityManager entityManager) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public static void populateTestData() throws InvalidKeySpecException, NoSuchAlgorithmException {
         User owner = new User("gergo", "valaki@valaki.com", SecurePassword.createHash("pass"));
         User owner2 = new User("Ödönke", "odon@tokodon.hu", SecurePassword.createHash("odon"));
         Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
@@ -63,23 +60,18 @@ public class Main {
         vehicle2.setOwner(owner2);
         vehicle3.setOwner(owner2);
 
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+        DataManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG5341.png"));
+        DataManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG3150.png"));
+        DataManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "https://cache.popcultcha.com.au/media/catalog/product/cache/1/image/1800x/040ec09b1e35df139433887a97daa66f/m/e/metals-batman-v-superman-batmobile-4-inch-01_1.1498484298.png"));
+        DataManager.persist(new Vehicle("Kitt", 1980, 4, Car, "http://www.hotwheels-elite.com/diecast-model-cars/images/Image/CATALOGO-A-2010/1-18%20CULT%20CLASSIC%20COLLECTION/X5469%20-%20KITT/X5469_PoP_13_12_w900.png"));
+        DataManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "http://www.straydogbicycles.com/images/Specialized_Hotrock.png"));
 
-        entityManager.persist(new Vehicle("Egy motor", 2005, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG5341.png"));
-        entityManager.persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG3150.png"));
-        entityManager.persist(new Vehicle("Batmobile", 1960, 2, Car, "https://cache.popcultcha.com.au/media/catalog/product/cache/1/image/1800x/040ec09b1e35df139433887a97daa66f/m/e/metals-batman-v-superman-batmobile-4-inch-01_1.1498484298.png"));
-        entityManager.persist(new Vehicle("Kitt", 1980, 4, Car, "http://www.hotwheels-elite.com/diecast-model-cars/images/Image/CATALOGO-A-2010/1-18%20CULT%20CLASSIC%20COLLECTION/X5469%20-%20KITT/X5469_PoP_13_12_w900.png"));
-        entityManager.persist(new Vehicle("Bobby's first bike", 2002, 1, Bike, "http://www.straydogbicycles.com/images/Specialized_Hotrock.png"));
+        DataManager.persist(owner);
+        DataManager.persist(owner2);
+        DataManager.persist(vehicle);
+        DataManager.persist(vehicle1);
+        DataManager.persist(vehicle2);
+        DataManager.persist(vehicle3);
 
-        entityManager.persist(owner);
-        entityManager.persist(owner2);
-        entityManager.persist(vehicle);
-        entityManager.persist(vehicle1);
-        entityManager.persist(vehicle2);
-        entityManager.persist(vehicle3);
-
-        transaction.commit();
-        
     }
 }
