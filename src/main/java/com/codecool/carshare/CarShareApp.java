@@ -62,7 +62,7 @@ public class CarShareApp {
         get("/upload", pageController::uploadVehicle);
         post("/upload", pageController::uploadVehicle);
         get("/user/:id", pageController::profile);
-        post("/upload-profile-pic", pageController::profile);
+        post("/:id/upload-profile-pic", pageController::profile);
         get("/vehicles/:id", pageController::details);
         post("/vehicles/:id", pageController::details);
         get("/", pageController::renderVehicles);

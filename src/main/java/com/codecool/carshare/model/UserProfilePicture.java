@@ -7,6 +7,9 @@ import javax.persistence.*;
         query = "SELECT upp FROM UserProfilePicture upp WHERE upp.user.id = :user_id")
 public class UserProfilePicture {
 
+    @Transient
+    private static final String DEFAULT_PICTURE = "/default_pic.jpg";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -17,6 +20,7 @@ public class UserProfilePicture {
     private User user;
 
     public UserProfilePicture() {
+        profilePicture = DEFAULT_PICTURE;
     }
 
     public UserProfilePicture(String profilePicture) {

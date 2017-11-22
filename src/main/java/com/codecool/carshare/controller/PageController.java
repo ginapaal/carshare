@@ -207,7 +207,7 @@ public class PageController {
         int userId;
         if (user != null) {
             userId = user.getId();
-            if (!(Integer.parseInt(req.params("id")) == user.getId())) {
+            if (!(Integer.parseInt(req.params("id")) == userId)) {
                 res.redirect("/user/" + userId);
                 return "";
             }
@@ -235,7 +235,6 @@ public class PageController {
             profilePictureLink = profilePicture;
         } catch (NoResultException e) {
             UserProfilePicture defaultPicture = new UserProfilePicture();
-            defaultPicture.setProfilePicture("/default_pic.jpg");
             params.put("profilePicture", defaultPicture);
             profilePictureLink = defaultPicture;
         }
