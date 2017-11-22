@@ -35,7 +35,10 @@ public class User {
     private UserProfilePicture profilePicture;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    List<Vehicle> vehicles = new ArrayList<>();
+    private List<Vehicle> vehicles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Reservation> reservations = new ArrayList<>();
 
     public User() {
     }
@@ -84,6 +87,14 @@ public class User {
 
     public List<Vehicle> getVehicles() {
         return vehicles;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public void addVehicle(Vehicle vehicle) {
