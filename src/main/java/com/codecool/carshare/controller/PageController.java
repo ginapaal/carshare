@@ -4,8 +4,7 @@ import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
-import com.codecool.carshare.model.email.ReservationMail;
-import com.codecool.carshare.model.email.WelcomeMail;
+import com.codecool.carshare.model.email.Mail;
 import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
 import spark.ModelAndView;
@@ -24,29 +23,31 @@ import java.util.*;
 
 public class PageController {
 
-    private static PageController instance = null;
     private UserProfilePicture profilePictureLink;
     private String emailAddress;
 
-    private PageController() {
-    }
+    private DataManager dataManager;
+    private Mail welcomeMail;
+    private Mail reservationMail;
+    // Should we inject enum?
+    // Can SecurePassword be static or not?
 
-    public static PageController getInstance() {
-        if (instance == null) {
-            instance = new PageController();
-        }
-        return instance;
+
+    public PageController(DataManager dataManager, Mail welcomeMail, Mail reservationMail) {
+        this.dataManager = dataManager;
+        this.welcomeMail = welcomeMail;
+        this.reservationMail = reservationMail;
     }
 
     public String renderVehicles(Request req, Response res) {
         HashMap<String, Object> params = new HashMap<>();
         String filterString = req.queryParams("type");
         VehicleType type = VehicleType.getTypeFromString(filterString);
-        List results = DataManager.getVehicleListByType(type);
+        List results = dataManager.getVehicleListByType(type);
 
         String username = req.session().attribute("user");
         if (username != null) {
-            User user = DataManager.getUserByName(username);
+            User user = dataManager.getUserByName(username);
             params.put("user", user);
         }
         params.put("types", Arrays.asList(VehicleType.values()));
@@ -66,20 +67,20 @@ public class PageController {
 
         String username = req.session().attribute("user");
         if (username != null) {
-            User user = DataManager.getUserByName(username);
+            User user = dataManager.getUserByName(username);
             params.put("user", user);
             if (user != null) {
                 emailAddress = user.getEmail();
             }
         }
 
-        Vehicle resultVehicle = DataManager.getVehicleById(vehicleId);
+        Vehicle resultVehicle = dataManager.getVehicleById(vehicleId);
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             if (username == null) {
                 res.redirect("/login");
             }
-            ReservationMail reservationMail = new ReservationMail();
+
             reservationMail.sendEmail(emailAddress, username);
             res.redirect("/");
         }
@@ -108,14 +109,13 @@ public class PageController {
             }
 
             // send welcome mail to registered e-mail address
-            WelcomeMail welcomeMail = new WelcomeMail();
             welcomeMail.sendEmail(email, username);
 
             String passwordHash = SecurePassword.createHash(password);
 
             if (password.equals(confirmPassword)) {
                 User user = new User(username, email, passwordHash);
-                DataManager.persist(user);
+                dataManager.persist(user);
                 return loginUser(req, res, username);
             } else {
                 params.put("errorMessage", "Confirm password");
@@ -143,7 +143,7 @@ public class PageController {
                 params.put("errorMessage", "All fields are required");
                 return renderTemplate(params, "login");
             } else {
-                storedPassword = DataManager.getPasswordByName(name);
+                storedPassword = dataManager.getPasswordByName(name);
             }
 
             if (storedPassword != null && SecurePassword.isPasswordValid(password, storedPassword)) {
@@ -160,7 +160,7 @@ public class PageController {
         HashMap<String, Object> params = new HashMap<>();
         String username = req.session().attribute("user");
         if (username != null) {
-            User user = DataManager.getUserByName(username);
+            User user = dataManager.getUserByName(username);
             params.put("user", user);
         } else {
             res.redirect("/");
@@ -186,13 +186,13 @@ public class PageController {
                 Date endDateF = df.parse(endDate);
                 Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF);
                 // sets owner to uploaded car
-                User owner = DataManager.getUserByName(username);
+                User owner = dataManager.getUserByName(username);
                 vehicle.setOwner(owner);
-                DataManager.persist(vehicle);
+                dataManager.persist(vehicle);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            res.redirect("/user/" + DataManager.getUserByName(username).getId());
+            res.redirect("/user/" + dataManager.getUserByName(username).getId());
         }
 
         return renderTemplate(params, "upload");
@@ -201,7 +201,7 @@ public class PageController {
     public String profile(Request req, Response res) {
         HashMap<String, Object> params = new HashMap<>();
         String username = req.session().attribute("user");
-        User user = DataManager.getUserByName(username);
+        User user = dataManager.getUserByName(username);
         String profilePicLink = "";
         int userId;
         if (user != null) {
@@ -223,13 +223,13 @@ public class PageController {
             if (!profilePicture.equals("") && !profilePicture.equals(profilePicLink)) {
                 UserProfilePicture userProfilePicture = new UserProfilePicture(profilePicture);
                 userProfilePicture.setUser(user);
-                DataManager.persist(userProfilePicture);
+                dataManager.persist(userProfilePicture);
             }
             res.redirect("/user/" + userId);
             return "";
         }
         try {
-            UserProfilePicture profilePicture = DataManager.getUserProfilePictureById(userId);
+            UserProfilePicture profilePicture = dataManager.getUserProfilePictureById(userId);
             params.put("profilePicture", profilePicture);
             profilePictureLink = profilePicture;
         } catch (NoResultException e) {
