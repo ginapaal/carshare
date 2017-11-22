@@ -29,14 +29,13 @@ public class PageController {
     private DataManager dataManager;
     private Mail welcomeMail;
     private Mail reservationMail;
-    // Should we inject enum?
-    // Can SecurePassword be static or not?
+    private SecurePassword securePassword;
 
-
-    public PageController(DataManager dataManager, Mail welcomeMail, Mail reservationMail) {
+    public PageController(DataManager dataManager, Mail welcomeMail, Mail reservationMail, SecurePassword securePassword) {
         this.dataManager = dataManager;
         this.welcomeMail = welcomeMail;
         this.reservationMail = reservationMail;
+        this.securePassword = securePassword;
     }
 
     public String renderVehicles(Request req, Response res) {
@@ -90,7 +89,8 @@ public class PageController {
         return renderTemplate(params, "details");
     }
 
-    public String register(Request req, Response res) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+    public String register(Request req, Response res) throws IOException,
+            InvalidKeySpecException, NoSuchAlgorithmException {
         Map<String, String> params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
@@ -99,7 +99,8 @@ public class PageController {
             String password = req.queryParams("password");
             String confirmPassword = req.queryParams("confirm-password");
 
-            if (username.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
+            if (username.equals("") || email.equals("") || password.equals("") ||
+                    confirmPassword.equals("")) {
                 System.out.println("One ore more field is empty");
                 params.put("errorMessage", "All fields are required");
                 params.put("username", username);
@@ -111,7 +112,7 @@ public class PageController {
             // send welcome mail to registered e-mail address
             welcomeMail.sendEmail(email, username);
 
-            String passwordHash = SecurePassword.createHash(password);
+            String passwordHash = securePassword.createHash(password);
 
             if (password.equals(confirmPassword)) {
                 User user = new User(username, email, passwordHash);
@@ -146,7 +147,7 @@ public class PageController {
                 storedPassword = dataManager.getPasswordByName(name);
             }
 
-            if (storedPassword != null && SecurePassword.isPasswordValid(password, storedPassword)) {
+            if (storedPassword != null && securePassword.isPasswordValid(password, storedPassword)) {
                 return loginUser(req, res, name);
             } else {
                 params.put("errorMessage", "Invalid username or password");

@@ -1,10 +1,15 @@
 package com.codecool.carshare;
 
 import com.codecool.carshare.controller.PageController;
+import com.codecool.carshare.model.email.Mail;
 import com.codecool.carshare.model.email.ReservationMail;
 import com.codecool.carshare.model.email.WelcomeMail;
 import com.codecool.carshare.utility.DataManager;
+import com.codecool.carshare.utility.SecurePassword;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -23,20 +28,25 @@ public class CarShareApp {
     }
 
     public static void main(String[] args) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        DataManager dataManager = new DataManager();
-        PageController pageController = new PageController(dataManager, new WelcomeMail(), new ReservationMail());
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("carsharePU");
+        EntityManager em = emf.createEntityManager();
+        SecurePassword securePassword = new SecurePassword();
+        DataManager dataManager = new DataManager(em, securePassword);
+        Mail welcomeMail = new WelcomeMail();
+        Mail reservationMail = new ReservationMail();
+        PageController pageController = new PageController(dataManager, welcomeMail, reservationMail, securePassword);
 
         CarShareApp app = new CarShareApp(dataManager, pageController);
 
         app.start();
     }
 
-    public void start() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private void start() throws InvalidKeySpecException, NoSuchAlgorithmException {
         dataManager.populateTestData();
         startServer(pageController);
     }
 
-    public void startServer(PageController pageController) {
+    private void startServer(PageController pageController) {
         //default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
         staticFileLocation("/public");
