@@ -19,9 +19,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.endsWith;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PageControllerTest {
 
@@ -125,6 +123,19 @@ class PageControllerTest {
         Map testData = pageController.getParams();
 
         assertEquals("Confirm password", testData.get("errorMessage"));
+    }
+
+    @Test
+    void testRegisterIfEveryInputIsOK() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("username")).thenReturn("gergo");
+        when(request.queryParams("email")).thenReturn("valami@valami.com");
+        when(request.queryParams("password")).thenReturn("pass");
+        when(request.queryParams("confirm-password")).thenReturn("pass");
+
+        pageController.register(request, res);
+
+        verify(welcomeMail).sendEmail("valami@valami.com", "gergo");
     }
 
 }
