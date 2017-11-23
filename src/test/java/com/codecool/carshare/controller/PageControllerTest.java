@@ -1,6 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.model.email.Mail;
 import com.codecool.carshare.model.email.ReservationMail;
@@ -21,14 +22,14 @@ import static org.mockito.Mockito.when;
 
 class PageControllerTest {
 
-    PageController pageController;
-    DataManager dataManager;
-    Request request;
-    Response res;
-    Mail welcomeMail;
-    Mail reservationMail;
-    SecurePassword securePassword;
-    User user = new User();
+    private PageController pageController;
+    private DataManager dataManager;
+    private Request request;
+    private Response res;
+    private Mail welcomeMail;
+    private Mail reservationMail;
+    private SecurePassword securePassword;
+    private User user = new User();
 
 
     @BeforeEach
@@ -56,7 +57,7 @@ class PageControllerTest {
         User myUser = (User) testData.get("user");
         String userName = myUser.getName();
 
-        assertEquals(userName, "gergo");
+        assertEquals("gergo", userName);
     }
 
     @Test
@@ -79,7 +80,7 @@ class PageControllerTest {
         Map testData = pageController.getParams();
         String filteredType = (String) testData.get("selected");
 
-        assertEquals(filteredType, "");
+        assertEquals("", filteredType);
     }
 
     @Test
@@ -93,7 +94,7 @@ class PageControllerTest {
         Map testData = pageController.getParams();
         VehicleType filteredType = (VehicleType) testData.get("selected");
 
-        assertEquals(filteredType, VehicleType.Car);
+        assertEquals(VehicleType.Car, filteredType);
     }
 
 }
