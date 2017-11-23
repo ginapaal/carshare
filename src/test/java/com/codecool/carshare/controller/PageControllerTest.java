@@ -104,6 +104,7 @@ class PageControllerTest {
 
     @Test
     void testUploadVehicle() {
+        when(dataManager.getUserByName("gergo")).thenReturn(mockedUser);
         when(request.session().attribute("user")).thenReturn("gergo");
         when(request.requestMethod()).thenReturn("POST");
         when(request.queryParams("name")).thenReturn("autó");
@@ -113,8 +114,17 @@ class PageControllerTest {
         when(request.queryParams("piclink")).thenReturn("piclink");
         when(request.queryParams("startDate")).thenReturn("11-11-2000");
         when(request.queryParams("endDate")).thenReturn("11-11-2100");
-        
 
+
+        when(vehicle.getName()).thenReturn("autó");
+        when(vehicle.getOwner()).thenReturn(mockedUser);
+        when(mockedUser.getVehicles()).thenReturn(Arrays.asList(vehicle));
+
+        pageController.uploadVehicle(request, res);
+        Map testData = pageController.getParams();
+        User userData =(User) testData.get("user");
+
+        assertEquals(userData.hashCode(), mockedUser.hashCode());
     }
 
 }
