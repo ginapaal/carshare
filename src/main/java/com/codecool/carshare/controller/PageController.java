@@ -31,6 +31,17 @@ public class PageController {
     private Mail reservationMail;
     private SecurePassword securePassword;
 
+
+    private Map<String, Object> params;
+
+    public Map getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
+    }
+
     public PageController(DataManager dataManager, Mail welcomeMail, Mail reservationMail, SecurePassword securePassword) {
         this.dataManager = dataManager;
         this.welcomeMail = welcomeMail;
@@ -39,7 +50,7 @@ public class PageController {
     }
 
     public String renderVehicles(Request req, Response res) {
-        HashMap<String, Object> params = new HashMap<>();
+        params = new HashMap<>();
         String filterString = req.queryParams("type");
         VehicleType type = VehicleType.getTypeFromString(filterString);
         List results = dataManager.getVehicleListByType(type);
