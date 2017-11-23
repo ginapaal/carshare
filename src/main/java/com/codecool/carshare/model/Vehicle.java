@@ -139,6 +139,7 @@ public class Vehicle {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
 
     public boolean setAvailability() {
         if(currentDay.before(startDate) || currentDay.after(endDate)) {

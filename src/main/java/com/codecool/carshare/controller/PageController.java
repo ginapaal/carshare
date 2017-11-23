@@ -95,13 +95,14 @@ public class PageController {
                 e.printStackTrace();
             }
 
-            User user = DataManager.getUserByName(username);
+            User user = dataManager.getUserByName(username);
             Reservation reservation = new Reservation(resultVehicle, user, startDateRes, endDateRes);
-            resultVehicle.setReservation(startDateRes, endDateRes);
-            dataManager.update(resultVehicle);
-            dataManager.persist(reservation);
-          
-            reservationMail.sendEmail(emailAddress, username);
+            if (!resultVehicle.setReservation(startDateRes, endDateRes)) {
+                dataManager.persist(reservation);
+                dataManager.update(resultVehicle);
+                reservationMail.sendEmail(emailAddress, username);
+            }
+
             res.redirect("/");
         }
 
