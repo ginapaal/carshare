@@ -8,11 +8,13 @@
     <div class="row">
         <form action="/upload" method="post" id="myform">
             <div class="sidebar col col-sm-2 text-center-small">
+                <div th:if = "${user.name} != null">
                 <img class="profile-pic" th:attr="src=${profilePicture.profilePicture}">
                 <h2 th:text="${user.name}"> My name </h2>
                 <h4> My messages </h4>
                 <h4> My contacts </h4>
                 <h4> My reviews </h4>
+                </div>
             </div>
             <div class="col-sm-10 row upload-form-container">
                 <div class="col-sm-10 offset-sm-2">

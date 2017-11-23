@@ -105,6 +105,10 @@ public class User {
         return profilePicture;
     }
 
+    public void setProfilePicture(UserProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     @Override
     public String toString() {
         return "User{" +
