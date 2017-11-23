@@ -1,7 +1,5 @@
 package com.codecool.carshare.model;
 
-import java.util.List;
-
 public enum VehicleType {
     Car, Motor, Bike;
 

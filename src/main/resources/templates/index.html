@@ -4,15 +4,16 @@
 <head th:replace="header :: head"></head>
 
 <body>
-    <nav th:replace="header :: nav"></nav>
-    <div class="container">
-        <div class="filters">
-            <a th:each="type : ${types}"
-               th:class="${selected.equals(type)} ? 'filterbutton activefilter' : 'filterbutton'"
-               th:href="'/?type=' + ${type.string}" th:text="${type.string}"></a>
-        </div>
+<nav th:replace="header :: nav"></nav>
+<div class="container">
+    <div class="filters">
+        <a th:each="type : ${types}"
+           th:class="${selected.equals(type)} ? 'filterbutton activefilter' : 'filterbutton'"
+           th:href="'/?type=' + ${type.string}" th:text="${type.string}"></a>
+    </div>
 
-        <div th:each="vehicle : ${vehicles}">
+    <div th:each="vehicle : ${vehicles}">
+        <div th:if="${vehicle.isAvailable}== true">
             <div class="row">
                 <div class="well vehiclecontainer clearfix">
                     <div class="col-md-4 vehicledatacontainer">
@@ -20,7 +21,7 @@
                     </div>
                     <div class="col-md-8 vehicledatacontainer">
                         <a class="vehiclename" th:text="${vehicle.name}" th:href="'/vehicles/' + ${vehicle.id}"></a>
-                        <p class ="vehicleyear" th:text="${vehicle.year}"></p>
+                        <p class="vehicleyear" th:text="${vehicle.year}"></p>
                         <p>
                             <a class="seemore" th:href="'/vehicles/' + ${vehicle.id}">See more</a>
                         </p>
@@ -29,5 +30,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

@@ -46,12 +46,12 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle", fetch = FetchType.EAGER)
     private List<Reservation> reservations = new ArrayList<>();
 
+    private Date currentDay = new Date();
     private Date startDate;
     private Date endDate;
 
     private String picture = "http://www.junkcarcashout.com/files/3114/1875/9328/when_it_is_time_to_sell_your_car.jpg";
 
-    @Transient
     private boolean isAvailable;
 
     public Vehicle() {
@@ -139,5 +139,20 @@ public class Vehicle {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+
+    public boolean setAvailability() {
+        if(currentDay.before(startDate) || currentDay.after(endDate)) {
+            this.isAvailable = false;
+        } else {
+            this.isAvailable = true;
+        }
+        return isAvailable;
+    }
+
+    public boolean setReservation(Date startDate, Date endDate) {
+        if (startDate.after(this.startDate) && endDate.before(this.endDate)) {
+            this.isAvailable = false;
+        }
+        return isAvailable;
     }
 }

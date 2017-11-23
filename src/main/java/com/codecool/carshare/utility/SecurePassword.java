@@ -32,7 +32,7 @@ public class SecurePassword {
      * @param password the password to hash
      * @return a salted PBKDF2 hash of the password
      */
-    public static String createHash(String password)
+    public String createHash(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         return createHash(password.toCharArray());
     }
@@ -43,7 +43,7 @@ public class SecurePassword {
      * @param password the password to hash
      * @return a salted PBKDF2 hash of the password
      */
-    private static String createHash(char[] password)
+    private String createHash(char[] password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // Generate a random salt
         SecureRandom random = new SecureRandom();
@@ -63,7 +63,7 @@ public class SecurePassword {
      * @param goodHash the hash of the valid password
      * @return true if the password is correct, false if not
      */
-    public static boolean isPasswordValid(String password, String goodHash)
+    public boolean isPasswordValid(String password, String goodHash)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         return isPasswordValid(password.toCharArray(), goodHash);
     }
@@ -75,7 +75,7 @@ public class SecurePassword {
      * @param goodHash the hash of the valid password
      * @return true if the password is correct, false if not
      */
-    private static boolean isPasswordValid(char[] password, String goodHash)
+    private boolean isPasswordValid(char[] password, String goodHash)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // Decode the hash into its parameters
         String[] params = goodHash.split(":");
@@ -99,7 +99,7 @@ public class SecurePassword {
      * @param b the second byte array
      * @return true if both byte arrays are the same, false if not
      */
-    private static boolean slowEquals(byte[] a, byte[] b) {
+    private boolean slowEquals(byte[] a, byte[] b) {
         int diff = a.length ^ b.length;
         for (int i = 0; i < a.length && i < b.length; i++)
             diff |= a[i] ^ b[i];
@@ -115,7 +115,7 @@ public class SecurePassword {
      * @param bytes      the length of the hash to compute in bytes
      * @return the PBDKF2 hash of the password
      */
-    private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes)
+    private byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
@@ -128,7 +128,7 @@ public class SecurePassword {
      * @param hex the hex string
      * @return the hex string decoded into a byte array
      */
-    private static byte[] fromHex(String hex) {
+    private byte[] fromHex(String hex) {
         byte[] binary = new byte[hex.length() / 2];
         for (int i = 0; i < binary.length; i++) {
             binary[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
@@ -142,7 +142,7 @@ public class SecurePassword {
      * @param array the byte array to convert
      * @return a length*2 character string encoding the byte array
      */
-    private static String toHex(byte[] array) {
+    private String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
