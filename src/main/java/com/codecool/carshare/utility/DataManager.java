@@ -78,6 +78,14 @@ public class DataManager {
         transaction.commit();
     }
 
+    public void update(Object objectToUpdate) {
+        EntityTransaction transaction = em.getTransaction();
+
+        transaction.begin();
+        em.merge(objectToUpdate);
+        transaction.commit();
+    }
+
     public void populateTestData() throws InvalidKeySpecException, NoSuchAlgorithmException {
         User owner = new User("gergo", "ngerle@gmail.com", securePassword.createHash("pass"));
         User owner2 = new User("Ödönke", "odon@tokodon.hu", securePassword.createHash("odon"));
