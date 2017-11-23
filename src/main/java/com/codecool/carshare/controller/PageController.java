@@ -10,6 +10,7 @@ import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.model.email.Mail;
 import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
+import org.thymeleaf.exceptions.TemplateProcessingException;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -191,7 +192,7 @@ public class PageController {
     }
 
     public String uploadVehicle(Request req, Response res) {
-        HashMap<String, Object> params = new HashMap<>();
+        params = new HashMap<>();
         String username = req.session().attribute("user");
         if (username != null) {
             User user = dataManager.getUserByName(username);
