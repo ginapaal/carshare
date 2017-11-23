@@ -11,10 +11,11 @@ import com.codecool.carshare.utility.DataManager;
 import com.codecool.carshare.utility.SecurePassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.thymeleaf.exceptions.TemplateProcessingException;
 import spark.Request;
 import spark.Response;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -56,10 +57,9 @@ class PageControllerTest {
     @Test
     void testRenderVehiclesReturnsExpectedName() {
         when(dataManager.getUserByName("gergo")).thenReturn(user);
-
         when(request.session().attribute("user")).thenReturn("gergo");
 
-        pageController.renderVehicles(request,res);
+        pageController.renderVehicles(request, res);
 
         Map testData = pageController.getParams();
         User myUser = (User) testData.get("user");
@@ -82,7 +82,6 @@ class PageControllerTest {
     void testRenderVehiclesVehicleTypeDoesNotExist() {
         when(request.session().attribute("user")).thenReturn(null);
         when(request.queryParams("type")).thenReturn("truck");
-        VehicleType vehicleType = VehicleType.getTypeFromString("truck");
 
         pageController.renderVehicles(request, res);
         Map testData = pageController.getParams();
@@ -95,11 +94,55 @@ class PageControllerTest {
     void testRenderVehiclesVehicleTypeReturnsAsExpected() {
         when(request.session().attribute("user")).thenReturn(null);
         when(request.queryParams("type")).thenReturn("Car");
+
+        VehicleType vehicleType = VehicleType.Car;
+
         pageController.renderVehicles(request, res);
         Map testData = pageController.getParams();
         VehicleType filteredType = (VehicleType) testData.get("selected");
 
-        assertEquals(VehicleType.Car, filteredType);
+        assertEquals(vehicleType, filteredType);
+    }
+
+    @Test
+    void testRegisterIfUsernameIsEmptyString() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("username")).thenReturn("");
+        when(request.queryParams("email")).thenReturn("valami@valami.com");
+        when(request.queryParams("password")).thenReturn("pass");
+        when(request.queryParams("confirm-password")).thenReturn("pass");
+
+        pageController.register(request, res);
+        Map testData = pageController.getParams();
+
+        assertEquals("", testData.get("username"));
+    }
+
+    @Test
+    void testRegisterIfConfirmPassIsDifferentThanPass() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("username")).thenReturn("gergo");
+        when(request.queryParams("email")).thenReturn("valami@valami.com");
+        when(request.queryParams("password")).thenReturn("pass");
+        when(request.queryParams("confirm-password")).thenReturn("passs");
+
+        pageController.register(request, res);
+        Map testData = pageController.getParams();
+
+        assertEquals("Confirm password", testData.get("errorMessage"));
+    }
+
+    @Test
+    void testRegisterIfEveryInputIsOK() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("username")).thenReturn("gergo");
+        when(request.queryParams("email")).thenReturn("valami@valami.com");
+        when(request.queryParams("password")).thenReturn("pass");
+        when(request.queryParams("confirm-password")).thenReturn("pass");
+
+        pageController.register(request, res);
+
+        verify(welcomeMail).sendEmail("valami@valami.com", "gergo");
     }
 
     @Test

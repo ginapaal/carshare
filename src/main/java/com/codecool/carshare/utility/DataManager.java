@@ -87,7 +87,7 @@ public class DataManager {
     }
 
     public void populateTestData() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        User owner = new User("gergo", "ngerle@gmail.com", securePassword.createHash("pass"));
+        User owner = new User("gergo", "valami@valami.com", securePassword.createHash("pass"));
         User owner2 = new User("Ödönke", "odon@tokodon.hu", securePassword.createHash("odon"));
         Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png");
         Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 6, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-Aston-Martin-V12-Zagato-Red-Sports-Car-PNG-Image.png");

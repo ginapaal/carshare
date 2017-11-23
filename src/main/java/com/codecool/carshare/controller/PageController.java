@@ -123,9 +123,8 @@ public class PageController {
         return renderTemplate(params, "details");
     }
 
-    public String register(Request req, Response res) throws IOException,
-            InvalidKeySpecException, NoSuchAlgorithmException {
-        Map<String, String> params = new HashMap<>();
+    public String register(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String username = req.queryParams("username").toLowerCase().trim();
@@ -143,14 +142,15 @@ public class PageController {
                 return renderTemplate(params, "register");
             }
 
-            // send welcome mail to registered e-mail address
-            welcomeMail.sendEmail(email, username);
-
             String passwordHash = securePassword.createHash(password);
 
             if (password.equals(confirmPassword)) {
                 User user = new User(username, email, passwordHash);
                 dataManager.persist(user);
+
+                // send welcome mail to registered e-mail address
+                welcomeMail.sendEmail(email, username);
+
                 return loginUser(req, res, username);
             } else {
                 params.put("errorMessage", "Confirm password");
