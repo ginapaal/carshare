@@ -75,7 +75,7 @@ public class PageController {
     }
 
     public String details(Request req, Response res) {
-        Map<String, Object> params = new HashMap<>();
+        params = new HashMap<>();
         int vehicleId = Integer.valueOf(req.params("id"));
 
         String username = req.session().attribute("user");

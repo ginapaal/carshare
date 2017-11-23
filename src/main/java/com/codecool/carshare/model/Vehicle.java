@@ -141,6 +141,10 @@ public class Vehicle {
         this.reservations = reservations;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public boolean setAvailability() {
         if(currentDay.before(startDate) || currentDay.after(endDate)) {
             this.isAvailable = false;
