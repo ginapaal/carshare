@@ -153,7 +153,7 @@ class PageControllerTest {
     }
 
     @Test
-    void testLoginReturnsEmptyStringIfValidLogin() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    void testLoginRedirectsToRootAfterValidLogin() throws InvalidKeySpecException, NoSuchAlgorithmException {
         when(request.requestMethod()).thenReturn("POST");
         when(request.queryParams("username")).thenReturn("b");
         when(request.queryParams("password")).thenReturn("a");
@@ -162,7 +162,8 @@ class PageControllerTest {
         when(dataManager.getPasswordByName(anyString())).thenReturn("not null");
         when(securePassword.isPasswordValid(anyString(), anyString())).thenReturn(true);
 
-        assertEquals("", pageController.login(request, res));
+        pageController.login(request, res);
+        verify(res, times(1)).redirect("/");
     }
 
     @Test
@@ -204,5 +205,4 @@ class PageControllerTest {
         pageController.profile(request, res);
         verify(res, times(1)).redirect("/user/0");
     }
-
 }
