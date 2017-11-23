@@ -13,9 +13,12 @@ import org.junit.jupiter.api.Test;
 import spark.Request;
 import spark.Response;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -97,4 +100,67 @@ class PageControllerTest {
         assertEquals(VehicleType.Car, filteredType);
     }
 
+    @Test
+    void testLoginReturnsEmptyStringIfAlreadyLoggedIn() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.session().attribute("user")).thenReturn(new User());
+        assertEquals("", pageController.login(request, res));
+    }
+
+    @Test
+    void testLoginSendsErrorMessageIfPasswordIsEmpty() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("password")).thenReturn("");
+        when(request.queryParams("username")).thenReturn("binladen");
+        when(request.session().attribute("user")).thenReturn(null);
+        String expectedErrorMessage = "All fields are required";
+
+        pageController.login(request, res);
+
+        Map testData = pageController.getParams();
+        assertEquals(expectedErrorMessage, testData.get("errorMessage"));
+    }
+
+    @Test
+    void testLoginSendsErrorMessageIfUsernameIsEmpty() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("password")).thenReturn("binladen");
+        when(request.queryParams("username")).thenReturn("");
+        when(request.session().attribute("user")).thenReturn(null);
+        String expectedErrorMessage = "All fields are required";
+
+        pageController.login(request, res);
+
+        Map testData = pageController.getParams();
+        assertEquals(expectedErrorMessage, testData.get("errorMessage"));
+    }
+
+    @Test
+    void testLoginSendsErrorMessageIfPasswordIsInvalid() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("password")).thenReturn("a");
+        when(request.queryParams("username")).thenReturn("b");
+        when(request.session().attribute("user")).thenReturn(null);
+
+        when(securePassword.isPasswordValid(anyString(), anyString())).thenReturn(false);
+        when(dataManager.getPasswordByName("b")).thenReturn("not null");
+        String expectedErrorMessage = "Invalid username or password";
+
+        pageController.login(request, res);
+
+        Map testData = pageController.getParams();
+        assertEquals(expectedErrorMessage, testData.get("errorMessage"));
+    }
+
+    @Test
+    void testLoginReturnsEmptyStringIfValidLogin() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("username")).thenReturn("b");
+        when(request.queryParams("password")).thenReturn("a");
+        when(request.session().attribute("user")).thenReturn(null);
+
+        when(dataManager.getPasswordByName(anyString())).thenReturn("not null");
+        when(securePassword.isPasswordValid(anyString(), anyString())).thenReturn(true);
+
+        assertEquals("", pageController.login(request, res));
+    }
 }

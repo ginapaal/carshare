@@ -165,7 +165,7 @@ public class PageController {
     public String login(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (userLoggedIn(req, res)) return "";
 
-        Map<String, Object> params = new HashMap<>();
+        params = new HashMap<>();
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String name = convertField(req.queryParams("username"));
             String password = req.queryParams("password");
