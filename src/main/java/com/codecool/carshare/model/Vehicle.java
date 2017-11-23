@@ -1,7 +1,9 @@
 package com.codecool.carshare.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @NamedQueries({
 
@@ -41,6 +43,8 @@ public class Vehicle {
     @ManyToOne
     private User owner;
 
+    @OneToMany(mappedBy = "vehicle", fetch = FetchType.EAGER)
+    private List<Reservation> reservations = new ArrayList<>();
 
     private Date currentDay = new Date();
     private Date startDate;
@@ -128,6 +132,13 @@ public class Vehicle {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
 
     public boolean setAvailability() {
         if(currentDay.before(startDate) || currentDay.after(endDate)) {

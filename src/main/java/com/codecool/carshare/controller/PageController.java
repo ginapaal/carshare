@@ -1,5 +1,8 @@
 package com.codecool.carshare.controller;
 
+import com.codecool.carshare.model.*;
+import com.codecool.carshare.model.email.ReservationMail;
+import com.codecool.carshare.model.email.WelcomeMail;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
@@ -79,6 +82,7 @@ public class PageController {
             if (username == null) {
                 res.redirect("/login");
             }
+
             String resStartDate = req.queryParams("reservation_startdate");
             String resEndDate = req.queryParams("reservation_enddate");
             Date startDateRes = new Date();
@@ -90,9 +94,13 @@ public class PageController {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+            User user = DataManager.getUserByName(username);
+            Reservation reservation = new Reservation(resultVehicle, user, startDateRes, endDateRes);
             resultVehicle.setReservation(startDateRes, endDateRes);
             dataManager.update(resultVehicle);
-
+            dataManager.persist(reservation);
+          
             reservationMail.sendEmail(emailAddress, username);
             res.redirect("/");
         }
