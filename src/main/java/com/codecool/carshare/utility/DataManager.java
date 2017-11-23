@@ -104,17 +104,18 @@ public class DataManager {
             e.printStackTrace();
         }
 
-        Vehicle vehicle = new Vehicle("Ödönke kocsija", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png",
+        Vehicle vehicle = new Vehicle("Dodge Challenger", 1978, 3, Car, "https://www.alamo.com/alamoData/vehicle/bookingCountries/US/CARS/SSAR.doi.320.high.imageLargeThreeQuarterNodePath.png/1508943174788.png",
                 startDate, endDate);
-        Vehicle vehicle1 = new Vehicle("Ödönke másik kocsija", 1990, 4, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-Aston-Martin-V12-Zagato-Red-Sports-Car-PNG-Image.png",
+        Vehicle vehicle1 = new Vehicle("Aston Martin", 1990, 4, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-Aston-Martin-V12-Zagato-Red-Sports-Car-PNG-Image.png",
                 startDate, endDate);
-        Vehicle vehicle2 = new Vehicle("Ödönke harmadik kocsija", 1990, 4, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-Bugatti-Chiron-Blue-Car-PNG-Image.png",
+        Vehicle vehicle2 = new Vehicle("Bugatti Chiron", 1990, 4, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-Bugatti-Chiron-Blue-Car-PNG-Image.png",
                 startDate, endDate);
-        Vehicle vehicle3 = new Vehicle("Ödönke negyedik kocsija", 1990, 4, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-BMW-M2-Coupe-White-Car-PNG-Image.png",
+        Vehicle vehicle3 = new Vehicle("BMW M2 Coupe", 1990, 4, Car, "http://www.pngpix.com/wp-content/uploads/2016/06/PNGPIX-COM-BMW-M2-Coupe-White-Car-PNG-Image.png",
                 startDate, endDate);
+        owner.addVehicle(vehicle);
         owner.addVehicle(vehicle1);
-        owner.addVehicle(vehicle2);
-        owner.addVehicle(vehicle3);
+        owner2.addVehicle(vehicle2);
+        owner2.addVehicle(vehicle3);
         vehicle.setOwner(owner);
         vehicle1.setOwner(owner);
         vehicle2.setOwner(owner2);
@@ -126,9 +127,9 @@ public class DataManager {
         persist(vehicle2);
         persist(vehicle3);
 
-        persist(new Vehicle("Egy motor", 2005, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG5341.png",
+        persist(new Vehicle("Suzuki XRV-100", 2005, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG5341.png",
                 startDate, endDate));
-        persist(new Vehicle("Egy másik motor", 2009, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG3150.png",
+        persist(new Vehicle("Suzuki GSX", 2009, 1, Motor, "http://pngimg.com/uploads/motorcycle/motorcycle_PNG3150.png",
                 startDate, endDate));
         persist(new Vehicle("Batmobile", 1960, 2, Car, "https://cache.popcultcha.com.au/media/catalog/product/cache/1/image/1800x/040ec09b1e35df139433887a97daa66f/m/e/metals-batman-v-superman-batmobile-4-inch-01_1.1498484298.png",
                 startDate, endDate));

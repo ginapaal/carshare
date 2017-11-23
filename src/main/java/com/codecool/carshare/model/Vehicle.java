@@ -46,10 +46,11 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle", fetch = FetchType.EAGER)
     private List<Reservation> reservations = new ArrayList<>();
 
+    @Transient
     private Date currentDay = new Date();
+
     private Date startDate;
     private Date endDate;
-
     private String picture = "http://www.junkcarcashout.com/files/3114/1875/9328/when_it_is_time_to_sell_your_car.jpg";
 
     private boolean isAvailable;
