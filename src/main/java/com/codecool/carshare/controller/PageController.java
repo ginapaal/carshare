@@ -202,6 +202,7 @@ public class PageController {
                 // sets owner to uploaded car
                 User owner = dataManager.getUserByName(username);
                 vehicle.setOwner(owner);
+                owner.addVehicle(vehicle);
                 vehicle.setAvailability();
                 dataManager.persist(vehicle);
             } catch (ParseException e) {

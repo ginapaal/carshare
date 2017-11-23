@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <div th:if="${user}!= null">
+    <div th:if="${user}!= null and ${vehicle.isAvailable} == true" >
         <form th:action="'/vehicles/'+${vehicle.id}" method="post">
             <input type="date" name="reservation_startdate">
             <input type="date" name="reservation_enddate">
