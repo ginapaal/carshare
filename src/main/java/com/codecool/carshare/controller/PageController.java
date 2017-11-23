@@ -235,7 +235,7 @@ public class PageController {
     }
 
     public String profile(Request req, Response res) {
-        HashMap<String, Object> params = new HashMap<>();
+        params = new HashMap<>();
         String username = req.session().attribute("user");
         User user = dataManager.getUserByName(username);
         String profilePicLink = "";

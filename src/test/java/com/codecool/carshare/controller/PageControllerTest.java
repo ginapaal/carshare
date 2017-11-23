@@ -1,6 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.UserProfilePicture;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.model.email.Mail;
@@ -19,9 +20,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PageControllerTest {
 
@@ -33,7 +32,7 @@ class PageControllerTest {
     private Mail reservationMail;
     private SecurePassword securePassword;
     private User user = new User();
-
+    private UserProfilePicture profilePicture;
 
     @BeforeEach
     void setUp() {
@@ -44,6 +43,7 @@ class PageControllerTest {
         welcomeMail = mock(WelcomeMail.class);
         reservationMail = mock(ReservationMail.class);
         securePassword = mock(SecurePassword.class);
+        profilePicture = mock(UserProfilePicture.class);
         pageController = new PageController(dataManager, welcomeMail, reservationMail, securePassword);
         user.setName("gergo");
     }
@@ -101,9 +101,10 @@ class PageControllerTest {
     }
 
     @Test
-    void testLoginReturnsEmptyStringIfAlreadyLoggedIn() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    void testLoginRedirectsToRootIfAlreadyLoggedIn() throws InvalidKeySpecException, NoSuchAlgorithmException {
         when(request.session().attribute("user")).thenReturn(new User());
-        assertEquals("", pageController.login(request, res));
+        pageController.login(request, res);
+        verify(res, times(1)).redirect("/");
     }
 
     @Test
@@ -163,4 +164,45 @@ class PageControllerTest {
 
         assertEquals("", pageController.login(request, res));
     }
+
+    @Test
+    void testProfileRedirectsToLoggedInUsersProfileIfCalledWithDifferentId() {
+        when(request.session().attribute("user")).thenReturn("gergo");
+        user.setId(10); //currently logged in user has ID 10
+        when(dataManager.getUserByName("gergo")).thenReturn(user);
+        when(request.params("id")).thenReturn("1"); //requesting the profile page of ID 1
+        pageController.profile(request, res);
+        verify(res, times(1)).redirect("/user/10");
+    }
+
+    @Test
+    void testProfileRedirectsToRootIfNotLoggedIn() {
+        when(request.session().attribute("user")).thenReturn(null);
+        when(dataManager.getUserByName(anyString())).thenReturn(null);
+        pageController.profile(request, res);
+        verify(res, times(1)).redirect("/");
+    }
+
+    @Test
+    void testProfileStoresProfilePictureOnUploadIfNotEmpty() {
+        when(request.session().attribute("user")).thenReturn("irrelevant");
+        when(request.params("id")).thenReturn("0");
+        when(dataManager.getUserByName("irrelevant")).thenReturn(user);
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("profilePicture")).thenReturn("some link for a profile pic");
+        pageController.profile(request, res);
+        verify(dataManager, times(1)).persist(any());
+    }
+
+    @Test
+    void testProfileRedirectsToProfilePageAfterUpload() {
+        when(request.session().attribute("user")).thenReturn("irrelevant");
+        when(request.params("id")).thenReturn("0");
+        when(dataManager.getUserByName("irrelevant")).thenReturn(user);
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("profilePicture")).thenReturn("some link for a profile pic");
+        pageController.profile(request, res);
+        verify(res, times(1)).redirect("/user/0");
+    }
+
 }
