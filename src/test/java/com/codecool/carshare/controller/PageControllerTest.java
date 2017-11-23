@@ -13,7 +13,7 @@ import spark.Response;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -41,21 +41,31 @@ class PageControllerTest {
         securePassword = mock(SecurePassword.class);
         pageController = new PageController(dataManager, welcomeMail, reservationMail, securePassword);
         user.setName("gergo");
-        String userName = user.getName();
     }
 
     @Test
-    void testRenderVehiclesReturnValueAsExpected() {
+    void testRenderVehiclesReturnsExpectedName() {
         when(dataManager.getUserByName("gergo")).thenReturn(user);
+
         when(request.session().attribute("user")).thenReturn("gergo");
 
-        pageController.renderVehicles(request, res);
+        pageController.renderVehicles(request,res);
 
         Map testData = pageController.getParams();
         User myUser = (User) testData.get("user");
-        String username =myUser.getName();
+        String userName = myUser.getName();
 
-        assertEquals(username, "gergo");
+        assertEquals(userName, "gergo");
+    }
+
+    @Test
+    void testRenderVehiclesUserIsNull() {
+        when(request.session().attribute("user")).thenReturn(null);
+
+        pageController.renderVehicles(request, res);
+        Map testData = pageController.getParams();
+
+        assertFalse(testData.containsKey("user"));
     }
 
 }
