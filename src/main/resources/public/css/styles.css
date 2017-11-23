@@ -99,6 +99,7 @@ body {
 .vehicleimage {
     width: 100%;
     overflow: hidden;
+    padding: 0;
     margin: 10px 10px 20px 0;
     border: 1px solid #DDDDDD;
     border-radius: 5px;
@@ -175,7 +176,7 @@ body {
 }
 
 .vehicledetail {
-    font-size: 1.5em;
+    font-size: 1.3em;
     color: #555;
     font-family: "Roboto", sans-serif;
 }
@@ -352,43 +353,20 @@ label {
     font-weight: 400;
 }
 
-@media (min-width: 768px) {
-    .upload-form-container {
-        margin: 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .text-center-sm {
-        margin: 0 auto;
-    }
-
-    .text-center-small {
-        text-align: center;
-    }
-
-    #headertext {
-        margin: 0;
-    }
-
-    .sidebar {
-        margin-bottom: 30px;
-    }
-
-    .container {
-        margin: 0 20%;
-    }
-}
-
-@media (max-width: 400px) {
-    .container {
-        margin: 0 10%;
-    }
-}
-
 .reserve-button {
-    margin-left: 100px;
     font-size: 16px;
+}
+
+.reservation-form {
+    margin-top: 20px;
+}
+
+.reservation-input {
+    margin: 0 auto;
+}
+
+.reservation-label {
+    margin-top: 10px;
 }
 
 img.profile-pic {
@@ -427,4 +405,49 @@ h3 {
 a.card:hover {
     text-decoration: none;
     box-shadow: 0 5px 15px #999;
+}
+
+@media (min-width: 768px) {
+    .upload-form-container {
+        margin: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .text-center-sm {
+        margin: 0 auto;
+    }
+
+    .text-center-small {
+        text-align: center;
+    }
+
+    #headertext {
+        margin: 0;
+    }
+
+    .sidebar {
+        margin-bottom: 30px;
+    }
+
+    .container {
+        margin: 0 0;
+    }
+
+    .vehiclename {
+        font-size: 1.5em;
+    }
+}
+@media (max-width: 1024px) {
+    .vehicleimage-sm {
+        width: 100%;
+        overflow: hidden;
+        margin: 10px 10px 20px 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .container {
+        margin: 0 0;
+    }
 }
