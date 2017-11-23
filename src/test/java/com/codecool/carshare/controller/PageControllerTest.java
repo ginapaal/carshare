@@ -1,6 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.model.email.Mail;
 import com.codecool.carshare.model.email.ReservationMail;
 import com.codecool.carshare.model.email.WelcomeMail;
@@ -66,6 +67,33 @@ class PageControllerTest {
         Map testData = pageController.getParams();
 
         assertFalse(testData.containsKey("user"));
+    }
+
+    @Test
+    void testRenderVehiclesVehicleTypeDoesNotExist() {
+        when(request.session().attribute("user")).thenReturn(null);
+        when(request.queryParams("type")).thenReturn("truck");
+        VehicleType vehicleType = VehicleType.getTypeFromString("truck");
+
+        pageController.renderVehicles(request, res);
+        Map testData = pageController.getParams();
+        String filteredType = (String) testData.get("selected");
+
+        assertEquals(filteredType, "");
+    }
+
+    @Test
+    void testRenderVehiclesVehicleTypeReturnsAsExpected() {
+        when(request.session().attribute("user")).thenReturn(null);
+        when(request.queryParams("type")).thenReturn("Car");
+
+        VehicleType vehicleType = VehicleType.getTypeFromString("Car");
+
+        pageController.renderVehicles(request, res);
+        Map testData = pageController.getParams();
+        VehicleType filteredType = (VehicleType) testData.get("selected");
+
+        assertEquals(filteredType, VehicleType.Car);
     }
 
 }
