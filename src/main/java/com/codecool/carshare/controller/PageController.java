@@ -122,8 +122,7 @@ public class PageController {
         return renderTemplate(params, "details");
     }
 
-    public String register(Request req, Response res) throws IOException,
-            InvalidKeySpecException, NoSuchAlgorithmException {
+    public String register(Request req, Response res) throws InvalidKeySpecException, NoSuchAlgorithmException {
         params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {

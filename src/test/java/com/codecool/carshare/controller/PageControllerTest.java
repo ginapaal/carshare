@@ -52,7 +52,7 @@ class PageControllerTest {
         when(dataManager.getUserByName("gergo")).thenReturn(user);
         when(request.session().attribute("user")).thenReturn("gergo");
 
-        pageController.renderVehicles(request,res);
+        pageController.renderVehicles(request, res);
 
         Map testData = pageController.getParams();
         User myUser = (User) testData.get("user");
@@ -98,7 +98,7 @@ class PageControllerTest {
     }
 
     @Test
-    void testRegisterIfUsernameIsEmptyString() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+    void testRegisterIfUsernameIsEmptyString() throws InvalidKeySpecException, NoSuchAlgorithmException {
         when(request.requestMethod()).thenReturn("POST");
         when(request.queryParams("username")).thenReturn("");
         when(request.queryParams("email")).thenReturn("valami@valami.com");
@@ -112,7 +112,7 @@ class PageControllerTest {
     }
 
     @Test
-        void testRegisterIfConfirmPassIsDifferentThanPass() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+    void testRegisterIfConfirmPassIsDifferentThanPass() throws InvalidKeySpecException, NoSuchAlgorithmException {
         when(request.requestMethod()).thenReturn("POST");
         when(request.queryParams("username")).thenReturn("gergo");
         when(request.queryParams("email")).thenReturn("valami@valami.com");
@@ -126,7 +126,7 @@ class PageControllerTest {
     }
 
     @Test
-    void testRegisterIfEveryInputIsOK() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+    void testRegisterIfEveryInputIsOK() throws InvalidKeySpecException, NoSuchAlgorithmException {
         when(request.requestMethod()).thenReturn("POST");
         when(request.queryParams("username")).thenReturn("gergo");
         when(request.queryParams("email")).thenReturn("valami@valami.com");
