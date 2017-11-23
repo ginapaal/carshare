@@ -52,7 +52,6 @@ class PageControllerTest {
     @Test
     void testRenderVehiclesReturnsExpectedName() {
         when(dataManager.getUserByName("gergo")).thenReturn(user);
-
         when(request.session().attribute("user")).thenReturn("gergo");
 
         pageController.renderVehicles(request,res);
@@ -112,6 +111,20 @@ class PageControllerTest {
         Map testData = pageController.getParams();
 
         assertEquals("", testData.get("username"));
+    }
+
+    @Test
+        void testRegisterIfConfirmPassIsDifferentThanPass() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("username")).thenReturn("gergo");
+        when(request.queryParams("email")).thenReturn("valami@valami.com");
+        when(request.queryParams("password")).thenReturn("pass");
+        when(request.queryParams("confirm-password")).thenReturn("passs");
+
+        pageController.register(request, res);
+        Map testData = pageController.getParams();
+
+        assertEquals("Confirm password", testData.get("errorMessage"));
     }
 
 }
