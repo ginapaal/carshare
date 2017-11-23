@@ -79,6 +79,19 @@ public class PageController {
             if (username == null) {
                 res.redirect("/login");
             }
+            String resStartDate = req.queryParams("reservation_startdate");
+            String resEndDate = req.queryParams("reservation_enddate");
+            Date startDateRes = new Date();
+            Date endDateRes = new Date();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                startDateRes = df.parse(resStartDate);
+                endDateRes = df.parse(resEndDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            resultVehicle.setReservation(startDateRes, endDateRes);
+            dataManager.update(resultVehicle);
 
             reservationMail.sendEmail(emailAddress, username);
             res.redirect("/");
@@ -189,6 +202,7 @@ public class PageController {
                 // sets owner to uploaded car
                 User owner = dataManager.getUserByName(username);
                 vehicle.setOwner(owner);
+                vehicle.setAvailability();
                 dataManager.persist(vehicle);
             } catch (ParseException e) {
                 e.printStackTrace();
