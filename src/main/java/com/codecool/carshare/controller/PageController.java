@@ -124,7 +124,7 @@ public class PageController {
 
     public String register(Request req, Response res) throws IOException,
             InvalidKeySpecException, NoSuchAlgorithmException {
-        Map<String, String> params = new HashMap<>();
+        params = new HashMap<>();
 
         if (req.requestMethod().equalsIgnoreCase("POST")) {
             String username = req.queryParams("username").toLowerCase().trim();

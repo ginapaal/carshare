@@ -1,7 +1,6 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
-import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.model.email.Mail;
 import com.codecool.carshare.model.email.ReservationMail;
@@ -13,9 +12,13 @@ import org.junit.jupiter.api.Test;
 import spark.Request;
 import spark.Response;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -41,6 +44,7 @@ class PageControllerTest {
         welcomeMail = mock(WelcomeMail.class);
         reservationMail = mock(ReservationMail.class);
         securePassword = mock(SecurePassword.class);
+
         pageController = new PageController(dataManager, welcomeMail, reservationMail, securePassword);
         user.setName("gergo");
     }
@@ -74,7 +78,6 @@ class PageControllerTest {
     void testRenderVehiclesVehicleTypeDoesNotExist() {
         when(request.session().attribute("user")).thenReturn(null);
         when(request.queryParams("type")).thenReturn("truck");
-        VehicleType vehicleType = VehicleType.getTypeFromString("truck");
 
         pageController.renderVehicles(request, res);
         Map testData = pageController.getParams();
@@ -88,13 +91,27 @@ class PageControllerTest {
         when(request.session().attribute("user")).thenReturn(null);
         when(request.queryParams("type")).thenReturn("Car");
 
-        VehicleType vehicleType = VehicleType.getTypeFromString("Car");
+        VehicleType vehicleType = VehicleType.Car;
 
         pageController.renderVehicles(request, res);
         Map testData = pageController.getParams();
         VehicleType filteredType = (VehicleType) testData.get("selected");
 
-        assertEquals(VehicleType.Car, filteredType);
+        assertEquals(vehicleType, filteredType);
+    }
+
+    @Test
+    void testRegisterIfUsernameIsEmptyString() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("username")).thenReturn("");
+        when(request.queryParams("email")).thenReturn("valami@valami.com");
+        when(request.queryParams("password")).thenReturn("pass");
+        when(request.queryParams("confirm-password")).thenReturn("pass");
+
+        pageController.register(request, res);
+        Map testData = pageController.getParams();
+
+        assertEquals("", testData.get("username"));
     }
 
 }
