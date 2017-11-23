@@ -117,6 +117,25 @@ class PageControllerTest {
 
 
         when(vehicle.getName()).thenReturn("autó");
+
+        pageController.uploadVehicle(request, res);
+
+        assertEquals("autó", vehicle.getName());
+    }
+
+    @Test
+    void testUploadVehicleSetsOwnerToVehicle() {
+        when(dataManager.getUserByName("gergo")).thenReturn(mockedUser);
+        when(request.session().attribute("user")).thenReturn("gergo");
+        when(request.requestMethod()).thenReturn("POST");
+        when(request.queryParams("name")).thenReturn("autó");
+        when(request.queryParams("year")).thenReturn("1999");
+        when(request.queryParams("numofseats")).thenReturn("6");
+        when(request.queryParams("type")).thenReturn("Car");
+        when(request.queryParams("piclink")).thenReturn("piclink");
+        when(request.queryParams("startDate")).thenReturn("11-11-2000");
+        when(request.queryParams("endDate")).thenReturn("11-11-2100");
+
         when(vehicle.getOwner()).thenReturn(mockedUser);
         when(mockedUser.getVehicles()).thenReturn(Arrays.asList(vehicle));
 
@@ -124,7 +143,7 @@ class PageControllerTest {
         Map testData = pageController.getParams();
         User userData =(User) testData.get("user");
 
-        assertEquals(userData.hashCode(), mockedUser.hashCode());
+        assertEquals(mockedUser.hashCode(), userData.hashCode());
     }
 
 }
