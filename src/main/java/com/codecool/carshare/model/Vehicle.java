@@ -1,7 +1,9 @@
 package com.codecool.carshare.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @NamedQueries({
 
@@ -31,7 +33,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;;
+    private String name;
     private int year;
     private int numOfSeats;
 
@@ -41,34 +43,32 @@ public class Vehicle {
     @ManyToOne
     private User owner;
 
+    @OneToMany(mappedBy = "vehicle", fetch = FetchType.EAGER)
+    private List<Reservation> reservations = new ArrayList<>();
+
+    @Transient
+    private Date currentDay = new Date();
 
     private Date startDate;
     private Date endDate;
-
     private String picture = "http://www.junkcarcashout.com/files/3114/1875/9328/when_it_is_time_to_sell_your_car.jpg";
 
-    @Transient
     private boolean isAvailable;
 
     public Vehicle() {
     }
 
-    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String picture) {
-        this.name = name;
-        this.year = year;
-        this.numOfSeats = numOfSeats;
-        this.vehicleType = vehicleType;
-        this.picture = picture;
-    }
-
-
-    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink, Date startDate, Date
-            endDate) {
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
         this.picture = piclink;
+    }
+
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink,
+                   Date startDate, Date endDate) {
+        this(name, year, numOfSeats, vehicleType, piclink);
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAvailable = true;
@@ -132,5 +132,33 @@ public class Vehicle {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean setAvailability() {
+        if(currentDay.before(startDate) || currentDay.after(endDate)) {
+            this.isAvailable = false;
+        } else {
+            this.isAvailable = true;
+        }
+        return isAvailable;
+    }
+
+    public boolean setReservation(Date startDate, Date endDate) {
+        if (startDate.after(this.startDate) && endDate.before(this.endDate)) {
+            this.isAvailable = false;
+        }
+        return isAvailable;
     }
 }

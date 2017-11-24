@@ -10,41 +10,56 @@
         <h2 id="headertext" class="col-md-8 text-center-small">Vehicle Details</h2>
     </div>
     <div class="row vehiclecontainer clearfix">
-        <img class="text-left col-md-4" th:src="${vehicle.picture}" alt="Vehicle Picture">
-        <div class="vehicledetail col-md-8">
+        <a th:href="${vehicle.picture}">
+            <img class="text-left col-md-6 col-sm-12 vehicleimage-sm" th:src="${vehicle.picture}" alt="Vehicle Picture">
+        </a>
+        <div class="vehicledetail col-md-6 col-sm-12">
             <div class="row">
-                <div class="col-sm-6">Name:</div>
-                <div class="col-sm-6" th:text="${vehicle.name}">Name</div>
+                <div class="col-xs-6 col-md-4">Name:</div>
+                <div class="col-xs-6 col-md-8" th:text="${vehicle.name}">Name</div>
             </div>
             <div class="row">
-                <div class="col-sm-6">Type:</div>
-                <div class="col-sm-6" th:text="${vehicle.vehicleType}">Type</div>
+                <div class="col-xs-6 col-md-4">Type:</div>
+                <div class="col-xs-6 col-md-8" th:text="${vehicle.vehicleType}">Type</div>
             </div>
             <div class="row">
-                <div class="col-sm-6">Year:</div>
-                <div class="col-sm-6" th:text="${vehicle.year}">NumberOfSeats</div>
+                <div class="col-xs-6 col-md-4">Year:</div>
+                <div class="col-xs-6 col-md-8" th:text="${vehicle.year}">NumberOfSeats</div>
             </div>
             <div class="row">
-                <div class="col-sm-6">Seats:</div>
-                <div class="col-sm-6" th:text="${vehicle.numOfSeats}">NumberOfSeats</div>
+                <div class="col-xs-6 col-md-4">Seats:</div>
+                <div class="col-xs-6 col-md-8" th:text="${vehicle.numOfSeats}">NumberOfSeats</div>
             </div>
             <div class="row">
-                <div class="col-sm-6">Available:</div>
-                <div class="col-sm-6" th:switch="${vehicle.isAvailable}">
+                <div class="col-xs-6 col-md-4">Available:</div>
+                <div class="col-xs-6 col-md-8" th:switch="${vehicle.isAvailable}">
                     <div th:case="true">Yes</div>
                     <div th:case="false">Reserved</div>
                 </div>
             </div>
             <div class="row" th:if="${vehicle.owner}">
-                <div class="col-md-6">Owner:</div>
-                <div class="col-md-6" th:text="${vehicle.owner.name}">Owner</div>
+                <div class="col-xs-6 col-md-4">Owner:</div>
+                <div class="col-xs-6 col-md-8" th:text="${vehicle.owner.name}">Owner</div>
             </div>
         </div>
-    </div>
-    <div th:if="${user}!= null">
-        <form th:action="'/vehicles/'+${vehicle.id}" method="post">
-            <input value="I want this vehicle" type="submit" class="btn btn-info reserve-button" src="index.html">
-        </form>
+        <div th:if="${user} != null and ${vehicle.isAvailable} == true">
+            <form class="reservation-form" th:action="'/vehicles/'+${vehicle.id}" method="post">
+                <h3 class="col-xs-12">Reservation:</h3>
+                <div class="row container-fluid">
+                    <div class="col col-sm-6 text-left ">
+                        <div class="reservation-label">Start date</div>
+                        <input id="startDate" class="col col-sm-6 form-control reservation-input" type="date" name="reservation_startdate">
+                    </div>
+                    <div class="col col-sm-6 pull-right-custom form-group">
+                        <div class="reservation-label">End date</div>
+                        <input id="endDate" class="col col-sm-6 form-control reservation-input" type="date" name="reservation_enddate">
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group">
+                    <input value="I want this vehicle" type="submit" class="btn btn-info reserve-button" src="index.html">
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>
