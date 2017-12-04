@@ -108,13 +108,16 @@ public class PageController {
             }
 
             User user = dataManager.getUserByName(username);
-            Reservation reservation = new Reservation(resultVehicle, user, startDateRes, endDateRes);
             if (!resultVehicle.setReservation(startDateRes, endDateRes)) {
-                dataManager.persist(reservation);
-                dataManager.update(resultVehicle);
-                reservationMail.sendEmail(emailAddress, username);
-            }
+                Reservation reservation = new Reservation(resultVehicle, user, startDateRes, endDateRes);
+                params.put("reservation", reservation);
+                params.put("vehicle", resultVehicle);
+                return renderTemplate(params, "billing");
 
+               /* dataManager.persist(reservation);
+                dataManager.update(resultVehicle);
+                reservationMail.sendEmail(emailAddress, username);*/
+            }
             res.redirect("/");
         }
 
