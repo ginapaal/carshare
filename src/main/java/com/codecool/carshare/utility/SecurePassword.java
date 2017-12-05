@@ -1,5 +1,7 @@
 package com.codecool.carshare.utility;
 
+import org.springframework.stereotype.Component;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
@@ -13,6 +15,7 @@ import java.security.spec.InvalidKeySpecException;
  * Author: havoc AT defuse.ca
  * www: http://crackstation.net/hashing-security.htm
  */
+@Component
 public class SecurePassword {
 
     private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";

@@ -1,15 +1,17 @@
 package com.codecool.carshare.controller;
 
+import com.codecool.carshare.model.User;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorController;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @Controller
 public class RouteController {
@@ -20,6 +22,7 @@ public class RouteController {
     @Autowired
     private VehicleService vehicleService;
 
+    private User user = new User();
 //    get("/register", pageController::register);
 //    post("/register", pageController::register);
 //    get("/login", pageController::login);
@@ -47,10 +50,26 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.POST)
-    public String reservation (Model model, @PathVariable("id") String id) {
+    public String reservation (Model model, @PathVariable("id") String id, @ModelAttribute("user") User user) {
 //        model.addAllAttributes(vehicleService.reserveVehicle(id));
         return "details";
     }
+
+    @RequestMapping(value = "/register", method=RequestMethod.GET)
+    public String registerPage(Model model) {
+        return "register";
+    }
+
+    @RequestMapping(value = "/register", method= RequestMethod.POST)
+    public String register(Model model, @RequestParam("username") String username,
+                           @RequestParam("email") String email,
+                           @RequestParam("password") String password,
+                           @RequestParam("confirm-password") String confirmPassword)
+    throws NoSuchAlgorithmException, InvalidKeySpecException{
+        model.addAttribute(userService.registration(username, email, password, confirmPassword));
+        return "redirect:/";
+    }
+
 
 
 }

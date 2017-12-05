@@ -1,22 +1,25 @@
 package com.codecool.carshare.model;
 
+import org.springframework.context.annotation.Scope;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NamedQueries({
-        @NamedQuery(
-                name = "User.getPasswordHash",
-                query = "SELECT passwordHash FROM User WHERE name = :name"
-        ),
-        @NamedQuery(
-                name = "User.getUserByName",
-                query = "SELECT u FROM User u WHERE name = :name"
-        )
-})
+//@NamedQueries({
+//        @NamedQuery(
+//                name = "User.getPasswordHash",
+//                query = "SELECT passwordHash FROM User WHERE name = :name"
+//        ),
+//        @NamedQuery(
+//                name = "User.getUserByName",
+//                query = "SELECT u FROM User u WHERE name = :name"
+//        )
+//})
 
 @Entity
 @Table(name = "Users")
+@Scope("session")
 public class User {
 
     @Id
