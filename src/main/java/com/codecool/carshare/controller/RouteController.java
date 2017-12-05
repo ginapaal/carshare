@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,5 +39,18 @@ public class RouteController {
         model.addAllAttributes(vehicleService.renderVehicles(filter));
         return "index";
     }
+
+    @RequestMapping(value = "/vehicles/{id}", method = RequestMethod.GET)
+    public String detailsPage(Model model, @PathVariable("id") String id) {
+        model.addAllAttributes(vehicleService.details(id));
+        return "details";
+    }
+
+    @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.POST)
+    public String reservation (Model model, @PathVariable("id") String id) {
+//        model.addAllAttributes(vehicleService.reserveVehicle(id));
+        return "details";
+    }
+
 
 }

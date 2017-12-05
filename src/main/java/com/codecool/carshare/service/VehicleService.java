@@ -47,4 +47,64 @@ public class VehicleService {
         vehicleRepository.save(entity);
     }
 
+    public Map<String, Object> details(String id) {
+        Map<String, Object> params = new HashMap<>();
+        int vehicleId = Integer.valueOf(id);
+
+//        String username = req.session().attribute("user");
+//        if (username != null) {
+//            User user = dataManager.getUserByName(username);
+//            params.put("user", user);
+//            if (user != null) {
+//                emailAddress = user.getEmail();
+//            }
+//        }
+
+//        Vehicle resultVehicle = dataManager.getVehicleById(vehicleId);
+        params.put("vehicle", vehicleRepository.findVehicleById(vehicleId));
+
+        return params;
+    }
+
+    public void reserveVehicle(String id) {
+//        Map<String, Object> params = new HashMap<>();
+//        int vehicleId = Integer.valueOf(id);
+//
+//        String username = req.session().attribute("user");
+//        if (username != null) {
+//            User user = dataManager.getUserByName(username);
+//            params.put("user", user);
+//            if (user != null) {
+//                emailAddress = user.getEmail();
+//            }
+//        }
+//
+//        if (username == null) {
+//            res.redirect("/login");
+//        }
+//
+//            String resStartDate = req.queryParams("reservation_startdate");
+//            String resEndDate = req.queryParams("reservation_enddate");
+//            Date startDateRes = new Date();
+//            Date endDateRes = new Date();
+//            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//            try {
+//                startDateRes = df.parse(resStartDate);
+//                endDateRes = df.parse(resEndDate);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//
+//            User user = dataManager.getUserByName(username);
+//            Reservation reservation = new Reservation(resultVehicle, user, startDateRes, endDateRes);
+//            if (!resultVehicle.setReservation(startDateRes, endDateRes)) {
+//                dataManager.persist(reservation);
+//                dataManager.update(resultVehicle);
+//                reservationMail.sendEmail(emailAddress, username);
+//            }
+//
+//            res.redirect("/");
+
+    }
+
 }
