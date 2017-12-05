@@ -102,7 +102,7 @@ public class Vehicle {
         this.owner = owner;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 

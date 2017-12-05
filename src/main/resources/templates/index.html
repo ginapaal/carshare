@@ -13,7 +13,7 @@
     </div>
 
     <div th:each="vehicle : ${vehicles}">
-        <div th:if="${vehicle.isAvailable}== true">
+        <div th:if="${vehicle.isAvailable}">
             <div class="row">
                 <div class="well vehiclecontainer clearfix">
                     <div class="col-md-4 vehicledatacontainer">
