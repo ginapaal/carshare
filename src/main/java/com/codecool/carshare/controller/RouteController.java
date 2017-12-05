@@ -35,9 +35,11 @@ public class RouteController {
 //    get("/", pageController::renderVehicles);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(Model model,
+    public String index(Model model, HttpSession session,
                         @RequestParam(value = "type", required = false) String filter) {
         model.addAllAttributes(vehicleService.renderVehicles(filter));
+        model.addAttribute("user", userService.getSessionUser(session));
+
         return "index";
     }
 
@@ -69,8 +71,34 @@ public class RouteController {
                             @RequestParam("password") String password)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         model.addAllAttributes(userService.login(username, password, session));
-        return "login";
+        return "redirect:/";
     }
 
+    @RequestMapping(value = "/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("user");
+        return "redirect:/login";
+    }
 
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String registerPage() {
+        return "register";
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String registerUser(Model model, HttpSession session,
+                               @RequestParam("username") String username,
+                               @RequestParam("password") String password,
+                               @RequestParam("email") String email,
+                               @RequestParam("confirm-password") String confirmPassword)
+            throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        if (userService.register(username, password, confirmPassword, email, model)) {
+            session.setAttribute("user", username);
+            return "redirect:/";
+        }
+        else {
+            return "/register";
+        }
+    }
 }
