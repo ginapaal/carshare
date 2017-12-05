@@ -108,12 +108,12 @@ public class VehicleService {
             e.printStackTrace();
         }
 
-        User user = userRepository.getUserByName(username);
+       /* User user = userRepository.getUserByName(username);
         Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
         if (!vehicle.setReservation(startDateRes, endDateRes)) {
 
             reservationMail.sendEmail(emailAddress, username);
-        }
+        }*/
 
         return params;
 
