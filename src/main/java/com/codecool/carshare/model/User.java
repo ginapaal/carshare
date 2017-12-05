@@ -1,5 +1,8 @@
 package com.codecool.carshare.model;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Users")
+@Component
+@Scope("session")
 public class User {
 
     @Id

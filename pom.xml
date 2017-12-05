@@ -34,6 +34,16 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session</artifactId>
+        </dependency>
+
         <!-- The versions of these dependencies are defined by the spring-boot-dependencies pom in the parent pom -->
         <!-- Spring boot + web package + Thymeleaf support -->
         <dependency>

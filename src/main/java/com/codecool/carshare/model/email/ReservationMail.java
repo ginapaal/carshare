@@ -1,5 +1,8 @@
 package com.codecool.carshare.model.email;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ReservationMail extends Mail {
 
     public void setEmailData(String emailAddress, String name) {

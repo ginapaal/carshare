@@ -1,21 +1,35 @@
 package com.codecool.carshare.service;
 
+import com.codecool.carshare.model.Reservation;
+import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
+import com.codecool.carshare.model.email.ReservationMail;
+import com.codecool.carshare.repository.UserRepository;
 import com.codecool.carshare.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ReservationMail reservationMail;
+
+    @Autowired
+    private User user;
 
     public Map<String, Object> renderVehicles(String filter) {
         Map<String, Object> params = new HashMap<>();
@@ -47,18 +61,15 @@ public class VehicleService {
         vehicleRepository.save(entity);
     }
 
-    public Map<String, Object> details(String id) {
+    public Map<String, Object> details(String id, HttpSession session) {
         Map<String, Object> params = new HashMap<>();
         int vehicleId = Integer.valueOf(id);
 
-//        String username = req.session().attribute("user");
-//        if (username != null) {
-//            User user = dataManager.getUserByName(username);
-//            params.put("user", user);
-//            if (user != null) {
-//                emailAddress = user.getEmail();
-//            }
-//        }
+        String username = (String) session.getAttribute("user");
+        if (username != null) {
+            User user = userRepository.getUserByName(username);
+            params.put("user", user);
+        }
 
 //        Vehicle resultVehicle = dataManager.getVehicleById(vehicleId);
         params.put("vehicle", vehicleRepository.findVehicleById(vehicleId));
@@ -66,44 +77,45 @@ public class VehicleService {
         return params;
     }
 
-    public void reserveVehicle(String id) {
-//        Map<String, Object> params = new HashMap<>();
-//        int vehicleId = Integer.valueOf(id);
-//
+    public Map<String, Object> reserveVehicle(String id, String resStartDate, String resEndDate) {
+        Map<String, Object> params = new HashMap<>();
+        int vehicleId = Integer.valueOf(id);
+        String emailAddress = null;
+        Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId);
+
 //        String username = req.session().attribute("user");
 //        if (username != null) {
-//            User user = dataManager.getUserByName(username);
+//            User user = userRepository.getUserByName(username);
 //            params.put("user", user);
 //            if (user != null) {
 //                emailAddress = user.getEmail();
 //            }
 //        }
-//
+
 //        if (username == null) {
 //            res.redirect("/login");
 //        }
 //
-//            String resStartDate = req.queryParams("reservation_startdate");
-//            String resEndDate = req.queryParams("reservation_enddate");
-//            Date startDateRes = new Date();
-//            Date endDateRes = new Date();
-//            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//            try {
-//                startDateRes = df.parse(resStartDate);
-//                endDateRes = df.parse(resEndDate);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//
-//            User user = dataManager.getUserByName(username);
-//            Reservation reservation = new Reservation(resultVehicle, user, startDateRes, endDateRes);
-//            if (!resultVehicle.setReservation(startDateRes, endDateRes)) {
-//                dataManager.persist(reservation);
-//                dataManager.update(resultVehicle);
-//                reservationMail.sendEmail(emailAddress, username);
-//            }
-//
-//            res.redirect("/");
+//        String resStartDate = req.queryParams("reservation_startdate");
+//        String resEndDate = req.queryParams("reservation_enddate");
+        Date startDateRes = new Date();
+        Date endDateRes = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            startDateRes = df.parse(resStartDate);
+            endDateRes = df.parse(resEndDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        User user = userRepository.getUserByName(username);
+        Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
+        if (!vehicle.setReservation(startDateRes, endDateRes)) {
+
+            reservationMail.sendEmail(emailAddress, username);
+        }
+
+        return params;
 
     }
 
