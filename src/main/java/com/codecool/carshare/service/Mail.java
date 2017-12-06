@@ -1,7 +1,6 @@
 package com.codecool.carshare.service;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -11,10 +10,39 @@ import java.util.Properties;
 @Component
 public class Mail {
 
-    public String subject;
-    public String text;
+    private String subject;
+    private String text;
+    private String emailAddress;
+    private String username;
 
-    public void sendEmail(String emailAddress) {
+    public void setData(MailType type) {
+        switch (type) {
+            case Welcome:
+                subject = "Successfully registered to Carshare!";
+                text = "<h1>Welcome to Carshare, " + username + "!</h1>" +
+                        "<h3> Thanks for using our awesome application. </h3>" +
+                        "<h4> Your registration data: </h4>" +
+                        "<p> Username: " + username + "</p>" +
+                        "<p>E-mail address: " + emailAddress + "</p>" +
+                        "<p> Hope you will find your perfect ride! </p>" +
+                        "<p> Cheers: no Idea </p>";
+                break;
+            case Registration:
+                subject = "Successfully reserved a car on Carshare!";
+                text = "<h1>" + username + ", you've reserved a car!</h1>" +
+                        "<h3> You can discuss about the details with the owner in our message system. </h3>" +
+                        "<p> (Which is not implemented yet) </p>" +
+                        "<p> Hope you will find your perfect ride! </p>" +
+                        "<p> Cheers: no Idea </p>";
+        }
+    }
+
+    public void sendEmail(String username, String emailAddress, MailType type) {
+
+        this.username = username;
+        this.emailAddress = emailAddress;
+        setData(type);
+
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");

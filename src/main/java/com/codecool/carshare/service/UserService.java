@@ -24,7 +24,7 @@ public class UserService {
     private SecurePassword securePassword;
 
     @Autowired
-    private Mail welcomeMail;
+    private Mail mail;
 
     public Map<String, Object> login(String username, String password, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
         Map<String, Object> params = new HashMap<>();
@@ -63,15 +63,7 @@ public class UserService {
         try {
             saveUser(new User(username, email, securePassword.createHash(password)));
             // send welcome mail to registered e-mail address
-            welcomeMail.setSubject("Successfully registered to Carshare!");
-            welcomeMail.setText("<h1>Welcome to Carshare, " + username + "!</h1>" +
-                    "<h3> Thanks for using our awesome application. </h3>" +
-                    "<h4> Your registration data: </h4>" +
-                    "<p> Username: " + username + "</p>" +
-                    "<p>E-mail address: " + email + "</p>" +
-                    "<p> Hope you will find your perfect ride! </p>" +
-                    "<p> Cheers: no Idea </p>");
-            welcomeMail.sendEmail(email);
+            mail.sendEmail(username, email, MailType.Welcome);
             return true;
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("errorMessage", "Username or email already exists!");

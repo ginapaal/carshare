@@ -29,7 +29,7 @@ public class VehicleService {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private Mail reservationMail;
+    private Mail mail;
 
     public Map<String, Object> renderVehicles(String filter) {
         Map<String, Object> params = new HashMap<>();
@@ -50,10 +50,6 @@ public class VehicleService {
         }
 
         return params;
-    }
-
-    public void saveVehicle(Vehicle entity) {
-        vehicleRepository.save(entity);
     }
 
     public Map<String, Object> details(String id, HttpSession session) {
@@ -93,17 +89,10 @@ public class VehicleService {
         reservationRepository.save(reservation);
         if (!vehicle.setReservation(startDateRes, endDateRes)) {
             // send confirmation mail
-            reservationMail.setSubject("Successfully reserved a car on Carshare!");
-            reservationMail.setText("<h1>" + username + ", you've reserved a car!</h1>" +
-                    "<h3> You can discuss about the details with the owner in our message system. </h3>" +
-                    "<p> (Which is not implemented yet) </p>" +
-                    "<p> Hope you will find your perfect ride! </p>" +
-                    "<p> Cheers: no Idea </p>");
-            reservationMail.sendEmail(emailAddress);
+            mail.sendEmail(username, emailAddress, MailType.Registration);
         }
 
         return params;
-
     }
 
     public Map<String, Object> uploadVehicle(String name,
@@ -143,4 +132,7 @@ public class VehicleService {
         return params;
     }
 
+    public void saveVehicle(Vehicle entity) {
+        vehicleRepository.save(entity);
+    }
 }
