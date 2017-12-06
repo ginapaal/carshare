@@ -3,6 +3,7 @@ package com.codecool.carshare.controller;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -32,7 +33,7 @@ public class RouteController {
                         @RequestParam(value = "type", required = false) String filter) {
         model.addAllAttributes(vehicleService.renderVehicles(filter));
         model.addAttribute("user", userService.getSessionUser(session));
-
+        model.addAttribute("locationlist", vehicleService.jsonify(vehicleService.getAllLocation()));
         return "index";
     }
 

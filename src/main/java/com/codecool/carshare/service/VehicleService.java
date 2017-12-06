@@ -7,6 +7,8 @@ import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.model.email.ReservationMail;
 import com.codecool.carshare.repository.UserRepository;
 import com.codecool.carshare.repository.VehicleRepository;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -134,6 +136,30 @@ public class VehicleService {
         }
 
         return params;
+    }
+
+    public List<String> getAllLocation() {
+
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        List<String> vehicAddress = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            vehicAddress.add(vehicle.getLocation());
+        }
+        return vehicAddress;
+    }
+
+    public JSONObject jsonify(List<String> vehicleAddress) {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (String location : vehicleAddress) {
+            JSONObject locatioToAdd = new JSONObject();
+            locatioToAdd.put("location", location);
+            jsonArray.add(locatioToAdd);
+        }
+
+        jsonObject.put("locationlist", jsonArray);
+        return jsonObject;
     }
 
 }

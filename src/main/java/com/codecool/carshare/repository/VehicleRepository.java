@@ -11,4 +11,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer>{
     List<Vehicle> findVehicleByVehicleType(VehicleType vehicleType);
     Vehicle findVehicleById(Integer vehicleId);
 
+
 }
