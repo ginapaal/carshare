@@ -105,6 +105,7 @@ public class VehicleService {
                                              String piclink,
                                              String startDate,
                                              String endDate,
+                                             String location,
                                              HttpSession session) {
         Map<String, Object> params = new HashMap<>();
         String username = (String) session.getAttribute("user");
@@ -121,7 +122,7 @@ public class VehicleService {
         try {
             Date startDateF = df.parse(startDate);
             Date endDateF = df.parse(endDate);
-            Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF);
+            Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF, location);
             // sets owner to uploaded car
             User owner = userRepository.getUserByName(username);
             vehicle.setOwner(owner);

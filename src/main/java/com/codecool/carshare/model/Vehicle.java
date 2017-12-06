@@ -5,28 +5,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@NamedQueries({
-
-        @NamedQuery(
-                name = "Vehicle.getAll",
-                query = "SELECT v FROM Vehicle v"
-        ),
-        @NamedQuery(
-                name = "Vehicle.getByType",
-                query = "SELECT v FROM Vehicle v WHERE vehicleType = :type"
-        ),
-
-        @NamedQuery(
-                name = "Vehicle.getById",
-                query = "SELECT v FROM Vehicle v WHERE id = :vehicleId"
-        ),
-
-        @NamedQuery(
-                name = "Vehicle.getByOwner",
-                query = "SELECT v FROM Vehicle v WHERE v.owner = :owner_id"
-        )
-
-})
+//@NamedQueries({
+//
+//        @NamedQuery(
+//                name = "Vehicle.getAll",
+//                query = "SELECT v FROM Vehicle v"
+//        ),
+//        @NamedQuery(
+//                name = "Vehicle.getByType",
+//                query = "SELECT v FROM Vehicle v WHERE vehicleType = :type"
+//        ),
+//
+//        @NamedQuery(
+//                name = "Vehicle.getById",
+//                query = "SELECT v FROM Vehicle v WHERE id = :vehicleId"
+//        ),
+//
+//        @NamedQuery(
+//                name = "Vehicle.getByOwner",
+//                query = "SELECT v FROM Vehicle v WHERE v.owner = :owner_id"
+//        )
+//
+//})
 @Entity
 public class Vehicle {
     @Id
@@ -36,6 +36,7 @@ public class Vehicle {
     private String name;
     private int year;
     private int numOfSeats;
+    private String location;
 
     @Enumerated
     private VehicleType vehicleType;
@@ -58,17 +59,18 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink, String location) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
         this.picture = piclink;
+        this.location = location;
     }
 
     public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink,
-                   Date startDate, Date endDate) {
-        this(name, year, numOfSeats, vehicleType, piclink);
+                   Date startDate, Date endDate, String location) {
+        this(name, year, numOfSeats, vehicleType, piclink, location);
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAvailable = true;
@@ -144,6 +146,14 @@ public class Vehicle {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public boolean setAvailability() {

@@ -128,8 +128,9 @@ public class RouteController {
                                 @RequestParam("type") String type,
                                 @RequestParam("piclink") String piclink,
                                 @RequestParam("startDate") String startDate,
-                                @RequestParam("endDate") String endDate) {
-        model.addAllAttributes(vehicleService.uploadVehicle(name, year, seats, type, piclink, startDate, endDate, session));
+                                @RequestParam("endDate") String endDate,
+                                @RequestParam("location") String location) {
+        model.addAllAttributes(vehicleService.uploadVehicle(name, year, seats, type, piclink, startDate, endDate, location, session));
         User user = (User) userService.getSessionUser(session);
         model.addAttribute("user", user);
 
