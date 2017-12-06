@@ -28,7 +28,7 @@ public class InitializerBean {
         Date endDate = new Date();
         try {
             startDate = df.parse("2017-11-10");
-            endDate = df.parse("2017-12-07");
+            endDate = df.parse("2017-12-24");
         } catch (ParseException e) {
             e.printStackTrace();
         }

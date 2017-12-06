@@ -23,6 +23,9 @@ public class UserService {
     @Autowired
     private SecurePassword securePassword;
 
+    @Autowired
+    private Mail welcomeMail;
+
     public Map<String, Object> login(String username, String password, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
         Map<String, Object> params = new HashMap<>();
         String name = convertField(username);
@@ -58,9 +61,19 @@ public class UserService {
         }
 
         try {
-            userRepository.save(new User(username, email, securePassword.createHash(password)));
+            saveUser(new User(username, email, securePassword.createHash(password)));
+            // send welcome mail to registered e-mail address
+            welcomeMail.setSubject("Successfully registered to Carshare!");
+            welcomeMail.setText("<h1>Welcome to Carshare, " + username + "!</h1>" +
+                    "<h3> Thanks for using our awesome application. </h3>" +
+                    "<h4> Your registration data: </h4>" +
+                    "<p> Username: " + username + "</p>" +
+                    "<p>E-mail address: " + email + "</p>" +
+                    "<p> Hope you will find your perfect ride! </p>" +
+                    "<p> Cheers: no Idea </p>");
+            welcomeMail.sendEmail(email);
             return true;
-        } catch (DataIntegrityViolationException e) { // what kind of exception is this gonna throw?
+        } catch (DataIntegrityViolationException e) {
             model.addAttribute("errorMessage", "Username or email already exists!");
             e.printStackTrace();
             return false;
@@ -68,8 +81,7 @@ public class UserService {
     }
 
     public Object getSessionUser(HttpSession session) {
-        User user = userRepository.getUserByName((String) session.getAttribute("user"));
-        return user;
+        return userRepository.getUserByName((String) session.getAttribute("user"));
     }
 
     public void saveUser(User entity) {

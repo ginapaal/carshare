@@ -49,7 +49,7 @@ public class RouteController {
                                @RequestParam("reservation_enddate") String resEndDate,
                                HttpSession session) {
         model.addAllAttributes(vehicleService.reserveVehicle(id, resStartDate, resEndDate, session));
-        return "details";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)

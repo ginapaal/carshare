@@ -4,7 +4,7 @@ import com.codecool.carshare.model.Reservation;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.model.VehicleType;
-import com.codecool.carshare.model.email.ReservationMail;
+import com.codecool.carshare.repository.ReservationRepository;
 import com.codecool.carshare.repository.UserRepository;
 import com.codecool.carshare.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +26,10 @@ public class VehicleService {
     private UserRepository userRepository;
 
     @Autowired
-    private ReservationMail reservationMail;
+    private ReservationRepository reservationRepository;
 
     @Autowired
-    private User user;
+    private Mail reservationMail;
 
     public Map<String, Object> renderVehicles(String filter) {
         Map<String, Object> params = new HashMap<>();
@@ -87,11 +87,19 @@ public class VehicleService {
             e.printStackTrace();
         }
         String username = (String) session.getAttribute("user");
-        User user = (User) userRepository.getUserByName(username);
+        User user = userRepository.getUserByName(username);
         String emailAddress = user.getEmail();
         Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
+        reservationRepository.save(reservation);
         if (!vehicle.setReservation(startDateRes, endDateRes)) {
-            reservationMail.sendEmail(emailAddress, username);
+            // send confirmation mail
+            reservationMail.setSubject("Successfully reserved a car on Carshare!");
+            reservationMail.setText("<h1>" + username + ", you've reserved a car!</h1>" +
+                    "<h3> You can discuss about the details with the owner in our message system. </h3>" +
+                    "<p> (Which is not implemented yet) </p>" +
+                    "<p> Hope you will find your perfect ride! </p>" +
+                    "<p> Cheers: no Idea </p>");
+            reservationMail.sendEmail(emailAddress);
         }
 
         return params;
