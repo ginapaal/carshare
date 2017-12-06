@@ -22,6 +22,9 @@ import java.util.List;
 @Component
 public class User {
 
+    @Transient
+    private static final String DEFAULT_PICTURE = "/default_pic.jpg";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -34,8 +37,10 @@ public class User {
 
     private String passwordHash;
 
-    @OneToOne(mappedBy = "user")
-    private UserProfilePicture profilePicture;
+    /*@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private UserProfilePicture profilePicture;*/
+
+    private String profilePicture;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Vehicle> vehicles = new ArrayList<>();
@@ -50,6 +55,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
+        this.profilePicture = DEFAULT_PICTURE;
     }
 
     public int getId() {
@@ -104,11 +110,19 @@ public class User {
         vehicles.add(vehicle);
     }
 
-    public UserProfilePicture getUserProfilePicture() {
+    /*public UserProfilePicture getUserProfilePicture() {
+        return profilePicture;
+    }*/
+
+    /*public void setProfilePicture(UserProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
+    }*/
+
+    public String getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture(UserProfilePicture profilePicture) {
+    public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
 

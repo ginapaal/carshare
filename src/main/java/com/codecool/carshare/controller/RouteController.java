@@ -101,4 +101,11 @@ public class RouteController {
             return "/register";
         }
     }
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    public String renderProfilePage(Model model, HttpSession session) {
+        model.addAttribute("user", userService.getSessionUser(session));
+        model.addAttribute("uploadpage", true);
+        return "userProfile";
+    }
 }

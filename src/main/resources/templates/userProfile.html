@@ -8,7 +8,7 @@
             <aside class="sidebar col col-sm-4 text-center-sm">
                 <div>
                     <div class="user-profile-pic-link">
-                        <img name="profilepic" class="user-profile-pic" th:attr="src=${profilePicture.profilePicture}">
+                        <img name="profilepic" class="user-profile-pic" th:attr="src=${user.profilePicture}">
                         <div class="overlay">
                             <button class="btn btn-default change-pic">Change profile picture</button>
                             <form th:attr="action='/' + ${user.id} + '/upload-profile-pic'" method="post" class="form">
