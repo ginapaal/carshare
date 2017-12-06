@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
+<head th:replace="header :: head"></head>
+
+<body>
+<nav th:replace="header :: nav"></nav>
+
+<div class="container">
+    <div th:each="vehicle : ${vehicles}">
+        <h1 th:text="${vehicle.name}"></h1>
+    </div>
+</div>
 </body>
 </html>

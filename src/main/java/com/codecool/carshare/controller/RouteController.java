@@ -1,6 +1,7 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
 import org.json.simple.JSONObject;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 
 @Controller
 public class RouteController {
@@ -148,8 +150,12 @@ public class RouteController {
     }
 
     @RequestMapping(value="/locations/{cityIndex}", method = RequestMethod.POST)
-    public String getVehiclesByLocation(@RequestParam("index") String index) {
-        System.out.println(index);
+    public String getVehiclesByLocation(@RequestParam("index") String index,
+                                        @RequestParam("cityName") String cityName,
+                                        Model model) {
+        List<Vehicle> vehicles = vehicleService.getAllVehiclesByLocation(cityName);
+        System.out.println(vehicles.get(0).getName());
+        model.addAllAttributes(vehicles);
         return "vehiclesinlocation";
     }
 
