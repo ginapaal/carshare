@@ -283,6 +283,19 @@ body {
     border-color: #1CA347;
 }
 
+.payment-picker {
+    text-align: center;
+}
+
+.payment-logo {
+    width: 100px;
+    height: 75px;
+}
+
+#card-info {
+    display: none;
+}
+
 /* Custom Styles
 ******************/
 

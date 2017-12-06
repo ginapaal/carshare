@@ -28,4 +28,17 @@ $(document).ready(function () {
         $('.cancel-profile-pic').addClass('hidden');
     });
 
+    $('#paypal-radio').on('click', function () {
+        if (!$('#paypal-info').is(":visible")) {
+            $('#paypal-info').slideToggle(400);
+            $('#card-info').slideToggle(400);
+        }
+    });
+
+    $('#card-radio').on('click', function () {
+        if (!$('#card-info').is(":visible")) {
+            $('#paypal-info').slideToggle(400);
+            $('#card-info').slideToggle(400);
+        }
+    });
 });

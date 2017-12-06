@@ -29,8 +29,21 @@
                 <p class="text-center error-message" th:text="${errorMessage}" th:if="${errorMessage} != null"></p>
             </div>
             <div class="col-md-6">
-                <div class="payment-picker-???">
-
+                <div class="payment-picker">
+                    <label for="paypal-radio">
+                        <img class="payment-logo" src="http://icons.iconarchive.com/icons/designbolts/credit-card-payment/256/Paypal-icon.png">
+                    </label>
+                    <input class="payment-radio" name="payment" type="radio" value="" id="paypal-radio" checked>
+                    <label for="card-radio">
+                        <img class="payment-logo" src="http://icons.iconarchive.com/icons/designbolts/credit-card-payment/256/Maestro-icon.png">
+                    </label>
+                    <input class="payment-radio" name="payment" type="radio" value="" id="card-radio">
+                </div>
+                <div id="card-info">
+                    <p>Card info</p>
+                </div>
+                <div id="paypal-info">
+                    <p>Paypal info</p>
                 </div>
             </div>
         </div>
