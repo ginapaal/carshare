@@ -80,4 +80,9 @@ public class UserService {
         User user = userRepository.getUserByName((String) session.getAttribute("user"));
         return user;
     }
+
+    public void saveUser(User entity) {
+        userRepository.save(entity);
+    }
+
 }
