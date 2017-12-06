@@ -9,10 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
@@ -33,9 +30,16 @@ public class RouteController {
                         @RequestParam(value = "type", required = false) String filter) {
         model.addAllAttributes(vehicleService.renderVehicles(filter));
         model.addAttribute("user", userService.getSessionUser(session));
-        model.addAttribute("locationlist", vehicleService.jsonify(vehicleService.getAllLocation()));
         return "index";
     }
+
+    @RequestMapping(value = "/json", method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject json(Model model) {
+        return vehicleService.jsonify(vehicleService.getAllLocation());
+
+    }
+
 
     @RequestMapping(value = "/vehicles/{id}", method = RequestMethod.GET)
     public String detailsPage(Model model, @PathVariable("id") String id, HttpSession session) {

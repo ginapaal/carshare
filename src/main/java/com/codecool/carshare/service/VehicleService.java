@@ -153,12 +153,13 @@ public class VehicleService {
         JSONArray jsonArray = new JSONArray();
 
         for (String location : vehicleAddress) {
-            JSONObject locatioToAdd = new JSONObject();
-            locatioToAdd.put("location", location);
+            List<String> locatioToAdd = new ArrayList<>();
+            locatioToAdd.add(location);
             jsonArray.add(locatioToAdd);
         }
 
         jsonObject.put("locationlist", jsonArray);
+        System.out.println(jsonObject);
         return jsonObject;
     }
 

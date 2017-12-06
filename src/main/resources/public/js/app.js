@@ -39,18 +39,28 @@ function initMap() {
 }
 
 function geocodeAddress(geocoder, resultsMap) {
-    var address = "Budapest";
-    geocoder.geocode({'address': address}, function(results, status) {
-        if (status === 'OK') {
-            resultsMap.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-                map: resultsMap,
-                position: results[0].geometry.location
+
+
+    $.getJSON("/json", function(response) {
+        console.log(response);
+        $.each(response, function(key, value) {
+            $.each(value, function(index, data) {
+                var address = data.toString();
+                geocoder.geocode({'address': address}, function(results, status) {
+                    if (status === 'OK') {
+                        resultsMap.setCenter(results[0].geometry.location);
+                        var marker = new google.maps.Marker({
+                            map: resultsMap,
+                            position: results[0].geometry.location
+                        });
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
             });
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
+        });
     });
+
 }
 
 function main() {
