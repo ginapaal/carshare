@@ -152,15 +152,20 @@ public class VehicleService {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        for (String location : vehicleAddress) {
-            List<String> locatioToAdd = new ArrayList<>();
-            locatioToAdd.add(location);
-            jsonArray.add(locatioToAdd);
+        for (int i = 0; i < vehicleAddress.size(); i++) {
+            JSONObject locationToAdd = new JSONObject();
+            locationToAdd.put("location", vehicleAddress.get(i));
+            locationToAdd.put("index", i);
+            locationToAdd.put("url", "/locations/"+i+"");
+            jsonArray.add(locationToAdd);
         }
 
         jsonObject.put("locationlist", jsonArray);
-        System.out.println(jsonObject);
         return jsonObject;
+    }
+
+    public List<Vehicle> getAllVehiclesByLocation(String location) {
+        return vehicleRepository.findAllByLocation(location);
     }
 
 }

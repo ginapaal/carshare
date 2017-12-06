@@ -33,14 +33,6 @@ public class RouteController {
         return "index";
     }
 
-    @RequestMapping(value = "/json", method = RequestMethod.GET)
-    @ResponseBody
-    public JSONObject json(Model model) {
-        return vehicleService.jsonify(vehicleService.getAllLocation());
-
-    }
-
-
     @RequestMapping(value = "/vehicles/{id}", method = RequestMethod.GET)
     public String detailsPage(Model model, @PathVariable("id") String id, HttpSession session) {
         model.addAllAttributes(vehicleService.details(id, session));
@@ -142,4 +134,28 @@ public class RouteController {
         model.addAttribute("profilePicture", user.getProfilePicture());
         return "redirect:" + "/user/" + user.getId();
     }
+
+    @RequestMapping(value = "/locationData", method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject json(Model model) {
+        return vehicleService.jsonify(vehicleService.getAllLocation());
+
+    }
+
+    @RequestMapping(value="/locations", method=RequestMethod.GET)
+    public String map() {
+        return "locations";
+    }
+
+    @RequestMapping(value="/locations/{cityIndex}", method = RequestMethod.POST)
+    public String getVehiclesByLocation(@RequestParam("index") String index) {
+        System.out.println(index);
+        return "vehiclesinlocation";
+    }
+
+    @RequestMapping(value="/locations/{cityIndex}", method = RequestMethod.GET)
+    public String getVehics() {
+        return "vehiclesinlocation";
+    }
+
 }

@@ -31,8 +31,7 @@ function styling() {
 
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map-container'), {
-        zoom: 8,
-        // center: {lat: -34.397, lng: 150.644}
+        zoom: 6,
     });
     var geocoder = new google.maps.Geocoder();
     geocodeAddress(geocoder, map);
@@ -40,21 +39,36 @@ function initMap() {
 
 function geocodeAddress(geocoder, resultsMap) {
 
-
-    $.getJSON("/json", function(response) {
-        console.log(response);
-        $.each(response, function(key, value) {
-            $.each(value, function(index, data) {
-                var address = data.toString();
-                geocoder.geocode({'address': address}, function(results, status) {
+    $.getJSON("/locationData", function (response) {
+        $.each(response, function (key, value) {
+            $.each(value, function (selector, data) {
+                var address = data['location'].toString();
+                console.log(address);
+                console.log(data['url'].toString());
+                geocoder.geocode({'address': address}, function (results, status) {
                     if (status === 'OK') {
                         resultsMap.setCenter(results[0].geometry.location);
                         var marker = new google.maps.Marker({
                             map: resultsMap,
-                            position: results[0].geometry.location
+                            position: results[0].geometry.location,
+                            url: data['url'].toString()
+                        });
+                        google.maps.event.addListener(marker, 'click', function () {
+                            window.location.href = marker.url;
+                            $.ajax({
+                                method: 'POST',
+                                url: '/locations/' + data['index'].toString() +"",
+                                data: {
+                                    index: data['index'].toString(),
+                                    cityName: address,
+                                },
+                                success: function() {
+                                    console.log('c');
+                                }
+                            });
                         });
                     } else {
-                        alert('Geocode was not successful for the following reason: ' + status);
+                        alert('I know no city with the following name: ' + address);
                     }
                 });
             });
