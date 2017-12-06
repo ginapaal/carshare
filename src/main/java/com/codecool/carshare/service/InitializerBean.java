@@ -55,6 +55,29 @@ public class InitializerBean {
         User user1 = new User("gergo", "valami@valami.com", securePassword.createHash("pass"));
         User user2 = new User("Ödönke", "odon@tokodon.hu", securePassword.createHash("odon"));
 
+
+        vehicleService.saveVehicle(vehicle1);
+        vehicleService.saveVehicle(vehicle2);
+        vehicleService.saveVehicle(vehicle3);
+        vehicleService.saveVehicle(vehicle4);
+        vehicleService.saveVehicle(vehicle5);
+        vehicleService.saveVehicle(vehicle6);
+        vehicleService.saveVehicle(vehicle7);
+        vehicleService.saveVehicle(vehicle8);
+        vehicleService.saveVehicle(vehicle9);
+        userService.saveUser(user1);
+        userService.saveUser(user2);
+
+        vehicle1.setOwner(user1);
+        vehicle2.setOwner(user1);
+        vehicle3.setOwner(user2);
+        vehicle4.setOwner(user2);
+
+        user1.addVehicle(vehicle1);
+        user1.addVehicle(vehicle2);
+        user2.addVehicle(vehicle3);
+        user2.addVehicle(vehicle4);
+
         vehicleService.saveVehicle(vehicle1);
         vehicleService.saveVehicle(vehicle2);
         vehicleService.saveVehicle(vehicle3);
