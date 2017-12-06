@@ -4,14 +4,13 @@ import com.codecool.carshare.model.User;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ErrorController;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
 
 @Controller
 public class RouteController {
@@ -56,7 +55,7 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/register", method=RequestMethod.GET)
-    public String registerPage(Model model) {
+    public String registerPage() {
         return "register";
     }
 
@@ -66,7 +65,13 @@ public class RouteController {
                            @RequestParam("password") String password,
                            @RequestParam("confirm-password") String confirmPassword)
     throws NoSuchAlgorithmException, InvalidKeySpecException{
-        model.addAttribute(userService.registration(username, email, password, confirmPassword));
+        Map<String, Object> params = userService.registration(username, email, password, confirmPassword);
+        if (params.containsKey("errorMessage")) {
+            model.addAllAttributes(params);
+            return "register";
+        } else if (params.containsKey("userSession")) {
+            model.addAllAttributes(params);
+        }
         return "redirect:/";
     }
 

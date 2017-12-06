@@ -5,10 +5,6 @@ import com.codecool.carshare.repository.UserRepository;
 import com.codecool.carshare.utility.SecurePassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -46,8 +42,6 @@ public class UserService {
             User user = new User(username, email, passwordHash);
             saveUser(user);
 
-            params.put("message", "user saved");
-
 //                // send welcome mail to registered e-mail address
 //                welcomeMail.sendEmail(email, username);
 
@@ -60,12 +54,16 @@ public class UserService {
 //            return params;
 
         }
-        System.out.println(params);
+//        System.out.println(params);
         return params;
     }
 
 
     public void saveUser(User user) {
         userRepository.save(user);
+    }
+
+    public User findUserById(Integer id) {
+        return userRepository.findUserById(id);
     }
 }
