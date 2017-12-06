@@ -4,6 +4,7 @@ import com.codecool.carshare.model.User;
 import com.codecool.carshare.repository.UserRepository;
 import com.codecool.carshare.utility.SecurePassword;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,8 +24,6 @@ public class UserService {
     private SecurePassword securePassword;
 
     public Map<String, Object> login(String username, String password, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        //if (userLoggedIn(req, res)) return "";
-
         Map<String, Object> params = new HashMap<>();
         String name = convertField(username);
 
@@ -48,15 +47,6 @@ public class UserService {
         return params;
     }
 
-//    private boolean userLoggedIn(Request req, Response res) {
-//        if (req.session().attribute("user") != null) {
-//            System.out.println(req.session().attribute("user") + " are already logged in");
-//            res.redirect("/");
-//            return true;
-//        }
-//        return false;
-//    }
-
     private String convertField(String string) {
         return string.toLowerCase().trim().replaceAll("\\s+", "");
     }
@@ -70,8 +60,9 @@ public class UserService {
         try {
             userRepository.save(new User(username, email, securePassword.createHash(password)));
             return true;
-        } catch (Exception e) { // what kind of exception is this gonna throw?
-            model.addAttribute("errorMessage", "Username already exists!");
+        } catch (DataIntegrityViolationException e) { // what kind of exception is this gonna throw?
+            model.addAttribute("errorMessage", "Username or email already exists!");
+            e.printStackTrace();
             return false;
         }
     }

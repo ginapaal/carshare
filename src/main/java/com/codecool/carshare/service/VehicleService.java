@@ -41,11 +41,6 @@ public class VehicleService {
             results = vehicleRepository.findVehicleByVehicleType(type);
         }
 
-//        String username = req.session().attribute("user");
-//        if (username != null) {
-//            User user = dataManager.getUserByName(username);
-//            params.put("user", user);
-//        }
         params.put("types", Arrays.asList(VehicleType.values()));
         params.put("vehicles", results);
         if (type != null) {
@@ -71,33 +66,17 @@ public class VehicleService {
             params.put("user", user);
         }
 
-//        Vehicle resultVehicle = dataManager.getVehicleById(vehicleId);
         params.put("vehicle", vehicleRepository.findVehicleById(vehicleId));
 
         return params;
     }
 
-    public Map<String, Object> reserveVehicle(String id, String resStartDate, String resEndDate) {
+    public Map<String, Object> reserveVehicle(String id, String resStartDate, String resEndDate,
+                                              HttpSession session) {
         Map<String, Object> params = new HashMap<>();
         int vehicleId = Integer.valueOf(id);
-        String emailAddress = null;
         Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId);
 
-//        String username = req.session().attribute("user");
-//        if (username != null) {
-//            User user = userRepository.getUserByName(username);
-//            params.put("user", user);
-//            if (user != null) {
-//                emailAddress = user.getEmail();
-//            }
-//        }
-
-//        if (username == null) {
-//            res.redirect("/login");
-//        }
-//
-//        String resStartDate = req.queryParams("reservation_startdate");
-//        String resEndDate = req.queryParams("reservation_enddate");
         Date startDateRes = new Date();
         Date endDateRes = new Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -107,16 +86,53 @@ public class VehicleService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-       /* User user = userRepository.getUserByName(username);
+        String username = (String) session.getAttribute("user");
+        User user = (User) userRepository.getUserByName(username);
+        String emailAddress = user.getEmail();
         Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
         if (!vehicle.setReservation(startDateRes, endDateRes)) {
-
             reservationMail.sendEmail(emailAddress, username);
-        }*/
+        }
 
         return params;
 
+    }
+
+    public Map<String, Object> uploadVehicle(String name,
+                                             String year,
+                                             String seats,
+                                             String type,
+                                             String piclink,
+                                             String startDate,
+                                             String endDate,
+                                             HttpSession session) {
+        Map<String, Object> params = new HashMap<>();
+        String username = (String) session.getAttribute("user");
+        if (username != null) {
+            User user = userRepository.getUserByName(username);
+            params.put("user", user);
+        }
+
+        VehicleType vehicleType = VehicleType.getTypeFromString(type);
+
+        int yearInt = Integer.parseInt(year);
+        int numOfSeats = Integer.parseInt(seats);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDateF = df.parse(startDate);
+            Date endDateF = df.parse(endDate);
+            Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF);
+            // sets owner to uploaded car
+            User owner = userRepository.getUserByName(username);
+            vehicle.setOwner(owner);
+            owner.addVehicle(vehicle);
+            vehicle.setAvailability();
+            saveVehicle(vehicle);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return params;
     }
 
 }

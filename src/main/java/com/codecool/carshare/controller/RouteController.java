@@ -1,14 +1,20 @@
 package com.codecool.carshare.controller;
 
+import com.codecool.carshare.model.User;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ErrorController;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.PathParam;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -20,19 +26,6 @@ public class RouteController {
 
     @Autowired
     private VehicleService vehicleService;
-
-//    get("/register", pageController::register);
-//    post("/register", pageController::register);
-//    get("/login", pageController::login);
-//    post("/login", pageController::login);
-//    get("/logout", pageController::logout);
-//    get("/upload", pageController::uploadVehicle);
-//    post("/upload", pageController::uploadVehicle);
-//    get("/user/:id", pageController::profile);
-//    post("/:id/upload-profile-pic", pageController::profile);
-//    get("/vehicles/:id", pageController::details);
-//    post("/vehicles/:id", pageController::details);
-//    get("/", pageController::renderVehicles);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Model model, HttpSession session,
@@ -53,14 +46,17 @@ public class RouteController {
     public String reservation (Model model,
                                @PathVariable("id") String id,
                                @RequestParam("reservation_startdate") String resStartDate,
-                               @RequestParam("reservation_enddate") String resEndDate
-                               ) {
-        model.addAllAttributes(vehicleService.reserveVehicle(id, resStartDate, resEndDate));
+                               @RequestParam("reservation_enddate") String resEndDate,
+                               HttpSession session) {
+        model.addAllAttributes(vehicleService.reserveVehicle(id, resStartDate, resEndDate, session));
         return "details";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage() {
+    public String loginPage(HttpSession session) {
+        User user = (User) userService.getSessionUser(session);
+        if (user != null) return "redirect:/";
+
         return "login";
     }
 
@@ -103,9 +99,41 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public String renderProfilePage(Model model, HttpSession session) {
-        model.addAttribute("user", userService.getSessionUser(session));
+    @Scope(value="session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public String renderProfilePage(Model model, HttpSession session, @PathParam("id") Integer id) {
+        User user = (User) userService.getSessionUser(session);
+        if (user == null) return "redirect:/";
+        model.addAttribute("user", user);
         model.addAttribute("uploadpage", true);
         return "userProfile";
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    public String uploadVehiclePage(Model model, HttpSession session) {
+        String username = (String) session.getAttribute("user");
+        if (username != null) {
+            User user = (User) userService.getSessionUser(session);
+            model.addAttribute("user", user);
+        } else {
+            return "redirect:/";
+        }
+        return "upload";
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public String uploadVehicle(Model model, HttpSession session,
+                                @RequestParam("name") String name,
+                                @RequestParam("year") String year,
+                                @RequestParam("numofseats") String seats,
+                                @RequestParam("type") String type,
+                                @RequestParam("piclink") String piclink,
+                                @RequestParam("startDate") String startDate,
+                                @RequestParam("endDate") String endDate) {
+        model.addAllAttributes(vehicleService.uploadVehicle(name, year, seats, type, piclink, startDate, endDate, session));
+        User user = (User) userService.getSessionUser(session);
+        model.addAttribute("user", user);
+
+        model.addAttribute("profilePicture", user.getProfilePicture());
+        return "redirect:" + "/user/" + user.getId();
     }
 }
