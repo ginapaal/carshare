@@ -1,5 +1,6 @@
 package com.codecool.carshare.controller;
 
+import com.codecool.carshare.model.User;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +108,13 @@ public class RouteController {
         model.addAttribute("user", userService.getSessionUser(session));
         model.addAttribute("uploadpage", true);
         return "userProfile";
+    }
+
+    @RequestMapping(value = "/{id}/upload-profile-pic", method = RequestMethod.POST)
+    public String uploadProfilePicture(HttpSession session,
+                                       @PathVariable("id") String id,
+                                       @RequestParam("profilePicture") String profilePicture) {
+        userService.uploadProfilePicture((User) userService.getSessionUser(session), profilePicture);
+        return "redirect:/user/" + id;
     }
 }
