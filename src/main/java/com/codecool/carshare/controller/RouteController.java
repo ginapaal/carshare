@@ -50,15 +50,15 @@ public class RouteController {
         return "details";
     }
 
-    @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.POST)
+   /* @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.POST)
     public String reservation (Model model,
                                @PathVariable("id") String id,
                                @RequestParam("reservation_startdate") String resStartDate,
-                               @RequestParam("reservation_enddate") String resEndDate
-                               ) {
+                               @RequestParam("reservation_enddate") String resEndDate) {
+
         model.addAllAttributes(vehicleService.reserveVehicle(id, resStartDate, resEndDate));
         return "details";
-    }
+    }*/
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
@@ -116,5 +116,42 @@ public class RouteController {
                                        @RequestParam("profilePicture") String profilePicture) {
         userService.uploadProfilePicture((User) userService.getSessionUser(session), profilePicture);
         return "redirect:/user/" + id;
+    }
+
+    @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.POST)
+    public String reserveVehicle(HttpSession session, Model model,
+                                 @PathVariable("id") String vehicleId,
+                                 @RequestParam("reservation_startdate") String resStartString,
+                                 @RequestParam("reservation_enddate") String resEndString) {
+
+        if (vehicleService.reserveVehicle(model, session, vehicleId, resStartString, resEndString)) {
+            return "redirect:/vehicles/" + vehicleId + "/reservation";
+        }
+        else {
+            if (model.containsAttribute("error")) {
+                String error = (String) model.asMap().get("error");
+                if (error.equals("not_logged_in")) {
+                    return "redirect:/login";
+                }
+                if (error.equals("invalid_date")) {
+                    return "redirect:/vehicles/" + vehicleId;
+                }
+            }
+
+            return "redirect:/";
+        }
+    }
+
+    @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.GET)
+    public String billingInfoPage(HttpSession session, Model model,
+                                  @PathVariable("id") String vehicleId) {
+        if (session.getAttribute("reservation") != null) {
+            model.addAttribute("user", userService.getSessionUser(session));
+            model.addAttribute("reservation", session.getAttribute("reservation"));
+            return "billing";
+        }
+        else {
+            return "redirect:/vehicles/" + vehicleId;
+        }
     }
 }

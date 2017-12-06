@@ -9,6 +9,7 @@ import com.codecool.carshare.repository.UserRepository;
 import com.codecool.carshare.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
@@ -77,46 +78,34 @@ public class VehicleService {
         return params;
     }
 
-    public Map<String, Object> reserveVehicle(String id, String resStartDate, String resEndDate) {
-        Map<String, Object> params = new HashMap<>();
-        int vehicleId = Integer.valueOf(id);
-        String emailAddress = null;
+    public boolean reserveVehicle(Model model, HttpSession session, String vehicleIdString, String resStartDate, String resEndDate) {
+        int vehicleId = Integer.valueOf(vehicleIdString);
         Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId);
 
-//        String username = req.session().attribute("user");
-//        if (username != null) {
-//            User user = userRepository.getUserByName(username);
-//            params.put("user", user);
-//            if (user != null) {
-//                emailAddress = user.getEmail();
-//            }
-//        }
+        String userName = (String) session.getAttribute("user");
+        if (userName == null) {
+            model.addAttribute("error", "not_logged_in");
+            return false;
+        }
 
-//        if (username == null) {
-//            res.redirect("/login");
-//        }
-//
-//        String resStartDate = req.queryParams("reservation_startdate");
-//        String resEndDate = req.queryParams("reservation_enddate");
-        Date startDateRes = new Date();
-        Date endDateRes = new Date();
+        User user = userRepository.getUserByName(userName);
+        String emailAddress = user.getEmail();
+
+        Date startDateRes;
+        Date endDateRes;
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
             startDateRes = df.parse(resStartDate);
             endDateRes = df.parse(resEndDate);
+            Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
+            model.addAttribute("reservation", reservation);
+            session.setAttribute("reservation", reservation);
+            return true;
+
         } catch (ParseException e) {
-            e.printStackTrace();
+            model.addAttribute("error", "invalid_date");
+            return false;
         }
-
-       /* User user = userRepository.getUserByName(username);
-        Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
-        if (!vehicle.setReservation(startDateRes, endDateRes)) {
-
-            reservationMail.sendEmail(emailAddress, username);
-        }*/
-
-        return params;
-
     }
 
 }
