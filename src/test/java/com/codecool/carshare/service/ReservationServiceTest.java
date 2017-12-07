@@ -1,5 +1,6 @@
 package com.codecool.carshare.service;
 
+import com.codecool.carshare.model.Reservation;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.repository.ReservationRepository;
@@ -45,6 +46,9 @@ public class ReservationServiceTest {
     @MockBean
     Vehicle vehicle;
 
+    @MockBean
+    Reservation reservation;
+
     @Autowired
     ReservationService reservationService;
 
@@ -79,7 +83,7 @@ public class ReservationServiceTest {
     public void testReserveVehicleStoresReservationInModelAndSession() {
         when(session.getAttribute("user")).thenReturn("username");
         when(vehicleService.findVehicleById(anyInt())).thenReturn(vehicle);
-        when(vehicle.setReservation(any(), any())).thenReturn(true);
+        when(vehicle.checkReservationDate(any(), any())).thenReturn(true);
 
         reservationService.reserveVehicle(model, session, "1", "2017-11-11", "2017-11-12");
         verify(session).setAttribute(eq("reservation"), any());
@@ -95,6 +99,8 @@ public class ReservationServiceTest {
         when(userService.getSessionUser(session)).thenReturn(mockUser);
         when(mockUser.getName()).thenReturn(mockUsername);
         when(mockUser.getEmail()).thenReturn(mockEmail);
+        when(session.getAttribute("reservation")).thenReturn(reservation);
+        when(reservation.getVehicle()).thenReturn(vehicle);
 
         reservationService.makeReservation(session);
 

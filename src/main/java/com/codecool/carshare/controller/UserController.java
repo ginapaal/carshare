@@ -1,51 +1,30 @@
 package com.codecool.carshare.controller;
 
-import com.codecool.carshare.model.LocationFilter;
 import com.codecool.carshare.model.User;
-import com.codecool.carshare.service.ReservationService;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 @Controller
-public class RouteController {
+public class UserController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private VehicleService vehicleService;
-
-    @Autowired
-    private ReservationService reservationService;
-
-    @Autowired
-    private LocationFilter locationFilter;
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(Model model, HttpSession session,
-                        @RequestParam(value = "type", required = false) String filter) {
-        model.addAllAttributes(vehicleService.renderVehicles(filter));
-        model.addAttribute("user", userService.getSessionUser(session));
-        return "index";
-    }
-
-    @RequestMapping(value = "/vehicles/{id}", method = RequestMethod.GET)
-    public String detailsPage(Model model, @PathVariable("id") String id, HttpSession session) {
-        model.addAllAttributes(vehicleService.details(id, session));
-        return "details";
-    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage(HttpSession session) {
@@ -94,7 +73,7 @@ public class RouteController {
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public String renderProfilePage(Model model, HttpSession session, @PathParam("id") Integer id) {
+    public String renderProfilePage(Model model, HttpSession session) {
         User user = userService.getSessionUser(session);
         if (user == null) return "redirect:/";
         model.addAttribute("user", user);
@@ -138,83 +117,6 @@ public class RouteController {
                                        @RequestParam("profilePicture") String profilePicture) {
         userService.uploadProfilePicture(userService.getSessionUser(session), profilePicture);
         return "redirect:/user/" + id;
-    }
-
-    @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.POST)
-    public String reserveVehicle(HttpSession session, Model model,
-                                 @PathVariable("id") String vehicleId,
-                                 @RequestParam("reservation_startdate") String resStartString,
-                                 @RequestParam("reservation_enddate") String resEndString) {
-
-        if (reservationService.reserveVehicle(model, session, vehicleId, resStartString, resEndString)) {
-            return "redirect:/vehicles/" + vehicleId + "/billing";
-        }
-        else {
-            if (model.containsAttribute("error")) {
-                String error = (String) model.asMap().get("error");
-                if (error.equals("not_logged_in")) {
-                    return "redirect:/login";
-                }
-                if (error.equals("invalid_date")) {
-                    return "redirect:/vehicles/" + vehicleId;
-                }
-            }
-
-            return "redirect:/";
-        }
-    }
-
-    @RequestMapping(value = "/vehicles/{id}/billing", method = RequestMethod.GET)
-    public String billingInfoPage(HttpSession session, Model model,
-                                  @PathVariable("id") String vehicleId) {
-        if (session.getAttribute("reservation") != null) {
-            model.addAttribute("user", userService.getSessionUser(session));
-            model.addAttribute("vehicle", vehicleService.findVehicleById(Integer.valueOf(vehicleId)));
-            model.addAttribute("reservation", session.getAttribute("reservation"));
-            return "billing";
-        }
-        else {
-            return "redirect:/vehicles/" + vehicleId;
-        }
-    }
-
-    @RequestMapping(value = "/billingData", method = RequestMethod.POST)
-    public String makeReservation(HttpSession session) {
-
-        reservationService.makeReservation(session);
-
-        return "redirect:/";
-    }
-
-    @RequestMapping(value = "/locationData", method = RequestMethod.GET)
-    @ResponseBody
-    public JSONObject json() {
-        return vehicleService.jsonify(vehicleService.getAllLocation());
-
-    }
-
-    @RequestMapping(value = "/locations", method = RequestMethod.GET)
-    public String map(Model model, HttpSession session) {
-        User user = userService.getSessionUser(session);
-        model.addAttribute("user", user);
-        return "locations";
-    }
-
-    @RequestMapping(value = "/locations/{cityIndex}", method = RequestMethod.POST)
-    public String getVehiclesByLocation(@RequestParam("index") String index,
-                                        @RequestParam("cityName") String cityName) {
-        locationFilter.setVehiclesByLocation(vehicleService.getAllVehiclesByLocation(cityName));
-        locationFilter.setCity(cityName);
-        return "vehiclesinlocation";
-    }
-
-    @RequestMapping(value = "/locations/{cityIndex}", method = RequestMethod.GET)
-    public String getVehics(Model model, HttpSession session) {
-        User user = userService.getSessionUser(session);
-        model.addAttribute("user", user);
-        model.addAttribute("vehicles", locationFilter.getVehiclesByLocation());
-        model.addAttribute("location", locationFilter.getCity());
-        return "vehiclesinlocation";
     }
 
 }
