@@ -26,6 +26,9 @@ public class VehicleService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ReservationRepository reservationRepository;
 
     @Autowired
@@ -58,39 +61,11 @@ public class VehicleService {
 
         String username = (String) session.getAttribute("user");
         if (username != null) {
-            User user = userRepository.getUserByName(username);
+            User user = userService.getUserByName(username);
             params.put("user", user);
         }
 
         params.put("vehicle", vehicleRepository.findVehicleById(vehicleId));
-
-        return params;
-    }
-
-    public Map<String, Object> reserveVehicle(String id, String resStartDate, String resEndDate,
-                                              HttpSession session) {
-        Map<String, Object> params = new HashMap<>();
-        int vehicleId = Integer.valueOf(id);
-        Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId);
-
-        Date startDateRes = new Date();
-        Date endDateRes = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            startDateRes = df.parse(resStartDate);
-            endDateRes = df.parse(resEndDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String username = (String) session.getAttribute("user");
-        User user = userRepository.getUserByName(username);
-        String emailAddress = user.getEmail();
-        Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
-        reservationRepository.save(reservation);
-        if (!vehicle.setReservation(startDateRes, endDateRes)) {
-            // send confirmation mail
-            mail.sendEmail(username, emailAddress, MailType.Registration);
-        }
 
         return params;
     }
@@ -135,4 +110,9 @@ public class VehicleService {
     public void saveVehicle(Vehicle entity) {
         vehicleRepository.save(entity);
     }
+
+    public Vehicle findVehicleById(int id) {
+        return vehicleRepository.findVehicleById(id);
+    }
+
 }

@@ -28,4 +28,34 @@ $(document).ready(function () {
         $('.cancel-profile-pic').addClass('hidden');
     });
 
+
+    var $paypalInfo = $('#paypal-info');
+    var $cardInfo = $('#card-info');
+    var $paymentForm = $('#payment-form');
+
+    $('#paypal-radio').on('click', function () {
+        if (!$paypalInfo.is(":visible")) {
+            $cardInfo.detach();
+            $cardInfo.children().required = false;
+
+            $paymentForm.append($paypalInfo);
+            $paypalInfo.children().required = true;
+
+            $paypalInfo.toggle(400);
+            $cardInfo.toggle(400);
+        }
+    });
+
+    $('#card-radio').on('click', function () {
+        if (!$cardInfo.is(":visible")) {
+            $paypalInfo.detach();
+            $cardInfo.children().required = true;
+
+            $paymentForm.append($cardInfo);
+            $paypalInfo.children().required = false;
+
+            $paypalInfo.toggle(400);
+            $cardInfo.toggle(400);
+        }
+    });
 });

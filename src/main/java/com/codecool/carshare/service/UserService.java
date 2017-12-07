@@ -72,8 +72,19 @@ public class UserService {
         }
     }
 
-    public Object getSessionUser(HttpSession session) {
+    public User getSessionUser(HttpSession session) {
         return userRepository.getUserByName((String) session.getAttribute("user"));
+    }
+
+    public void uploadProfilePicture(User sessionUser, String profilePicture) {
+        if (!(profilePicture.equals("") || profilePicture.equals(sessionUser.getProfilePicture()))) {
+            sessionUser.setProfilePicture(profilePicture);
+            userRepository.save(sessionUser);
+        }
+    }
+
+    public User getUserByName(String name) {
+        return userRepository.getUserByName(name);
     }
 
     public void saveUser(User entity) {

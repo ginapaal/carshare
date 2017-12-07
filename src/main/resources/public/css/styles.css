@@ -283,6 +283,23 @@ body {
     border-color: #1CA347;
 }
 
+.payment-picker {
+    text-align: center;
+    padding-right: 75px;
+}
+
+.payment-logo {
+    width: 75px;
+    height: 50px;
+}
+
+#card-info {
+    display: none;
+}
+
+#expiration-date, #card-exp-month, #card-exp-year {
+}
+
 /* Custom Styles
 ******************/
 
@@ -450,4 +467,54 @@ a.card:hover {
     .container {
         margin: 0 0;
     }
+}
+
+#card-number::-webkit-inner-spin-button,
+#card-exp-month::-webkit-inner-spin-button, #card-exp-year::-webkit-inner-spin-button,
+#card-exp-month::-webkit-outer-spin-button, #card-exp-year::-webkit-outer-spin-button,
+#card-number::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#card-exp {
+    margin-top: 15px;
+}
+
+#card-exp-year, #card-exp-month {
+    width: 3.85em;
+}
+
+#card-exp-year, #card-exp-month, #card-sec-code {
+    display: inline;
+    text-align: center;
+}
+
+
+#card-sec-code {
+    width: 3em;
+}
+
+#expiration-date, #card-sec-code-label {
+    color: #00415d;
+    font-weight: bold;
+    font-family: "Raleway", serif;
+}
+
+#paypal-info, #card-info {
+    text-align: center;
+    vertical-align: center;
+}
+
+#paypal-login-button {
+    margin-top: 15px;
+}
+
+.billing-panel {
+    padding: 30px 20px;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.payment-picker > label {
+    margin-left: 70px;
 }

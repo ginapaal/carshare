@@ -3,13 +3,14 @@ package com.codecool.carshare.model;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Users")
 @Component
-public class User {
+public class User implements Serializable {
 
     @Transient
     private static final String DEFAULT_PICTURE = "/default_pic.jpg";

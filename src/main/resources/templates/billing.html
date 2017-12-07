@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="header :: head"></head>
+
+<body>
+<nav th:replace="header :: nav"></nav>
+<div class="container">
+    <form id="billing-form" action="/billingData" method="post" role="form">
+        <div class="row panel billing-panel">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="billing-country" id="billing-country" tabindex="1" class="form-control" placeholder="Country" autofocus required >
+                </div>
+                <div class="form-group">
+                    <input type="billing-firstname" name="billing-firstname" id="billing-firstname" tabindex="2" class="form-control" placeholder="First Name" required>
+                    <input type="billing-lastname" name="billing-lastname" id="billing-lastname" tabindex="2" class="form-control" placeholder="Last Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="billing-city" id="billing-city" tabindex="3" class="form-control" placeholder="City" required >
+                </div>
+                <div class="form-group">
+                    <input type="text" name="billing-address" id="billing-address" tabindex="4" class="form-control" placeholder="Address" required >
+                </div>
+                <div class="form-group">
+                    <input type="text" name="billing-zipcode" id="billing-zipcode" tabindex="5" class="form-control" placeholder="Zip Code" required >
+                </div>
+
+                <p class="text-center error-message" th:text="${errorMessage}" th:if="${errorMessage} != null"></p>
+            </div>
+            <div class="col-md-6">
+                <div class="payment-picker">
+                    <label for="paypal-radio">
+                        <img class="payment-logo" src="http://icons.iconarchive.com/icons/designbolts/credit-card-payment/256/Paypal-icon.png">
+                    </label>
+                    <input class="payment-radio" name="payment" type="radio" value="paypal" id="paypal-radio" checked>
+                    <label for="card-radio">
+                        <img class="payment-logo" src="http://icons.iconarchive.com/icons/designbolts/credit-card-payment/256/Maestro-icon.png">
+                    </label>
+                    <input class="payment-radio" name="payment" type="radio" value="card" id="card-radio">
+                </div>
+                <div id="payment-form">
+                    <div id="card-info">
+                        <input type="text" name="card-name" id="card-name" tabindex="1" class="form-control" placeholder="Cardholder Name">
+                        <input type="number" name="card-number" maxlength="16" id="card-number" tabindex="1" class="form-control" placeholder="Card no.">
+                        <div class="form-group" id="card-exp">
+                            <label id="expiration-date" for="card-exp">Expiration date:</label>
+                            <input type="number" maxlength="2" name="card-exp-month" step="1" min="1" max="12" id="card-exp-month" tabindex="6" class="form-control" placeholder="MM"> /
+                            <input type="number" maxlength="2" name="card-exp-year" step="1" min="17" max="30" id="card-exp-year" tabindex="7" class="form-control" placeholder="YY">
+                        </div>
+                        <div class="form-group">
+                            <label id="card-sec-code-label" for="card-sec-code">Security code:</label>
+                            <input type="password" name="card-sec-code" maxlength="3" size="3" id="card-sec-code" tabindex="8" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div id="paypal-info">
+                    <input type="text" name="paypal-email" id="paypal-email" tabindex="6" class="form-control" placeholder="PayPal email address" required>
+                    <input type="password" name="paypal-password" id="paypal-password" tabindex="7" class="form-control" placeholder="PayPal password" required>
+                    <button class="btn btn-primary" id="paypal-login-button">LOG IN WITH PAYPAL</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <input type="submit" name="reserve-submit" id="reserve-submit" tabindex="9" class="form-control btn btn-login" value="Reserve">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
