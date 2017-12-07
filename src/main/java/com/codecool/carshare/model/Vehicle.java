@@ -1,6 +1,7 @@
 package com.codecool.carshare.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
 
 })
 @Entity
-public class Vehicle {
+public class Vehicle implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
