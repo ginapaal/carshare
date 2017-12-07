@@ -463,6 +463,11 @@ a.card:hover {
     }
 }
 
+div#map-container {
+    width: 1200px;
+    height: 600px;
+}
+
 @media (max-width: 400px) {
     .container {
         margin: 0 0;
