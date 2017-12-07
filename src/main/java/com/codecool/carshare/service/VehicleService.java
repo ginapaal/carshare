@@ -76,9 +76,14 @@ public class VehicleService {
                                              HttpSession session) {
         Map<String, Object> params = new HashMap<>();
         String username = (String) session.getAttribute("user");
+        User owner;
         if (username != null) {
-            User user = userRepository.getUserByName(username);
-            params.put("user", user);
+            owner = userRepository.getUserByName(username);
+            params.put("user", owner);
+        }
+        else {
+            params.put("error", "not_logged_in");
+            return params;
         }
 
         VehicleType vehicleType = VehicleType.getTypeFromString(type);
@@ -91,7 +96,6 @@ public class VehicleService {
             Date endDateF = df.parse(endDate);
             Vehicle vehicle = new Vehicle(name, yearInt, numOfSeats, vehicleType, piclink, startDateF, endDateF, location);
             // sets owner to uploaded car
-            User owner = userRepository.getUserByName(username);
             vehicle.setOwner(owner);
             owner.addVehicle(vehicle);
             vehicle.setAvailability();
