@@ -43,8 +43,6 @@ function geocodeAddress(geocoder, resultsMap) {
         $.each(response, function (key, value) {
             $.each(value, function (selector, data) {
                 var address = data['location'].toString();
-                console.log(address);
-                console.log(data['url'].toString());
                 geocoder.geocode({'address': address}, function (results, status) {
                     if (status === 'OK') {
                         resultsMap.setCenter(results[0].geometry.location);
@@ -54,18 +52,19 @@ function geocodeAddress(geocoder, resultsMap) {
                             url: data['url'].toString()
                         });
                         google.maps.event.addListener(marker, 'click', function () {
-                            window.location.href = marker.url;
                             $.ajax({
                                 method: 'POST',
-                                url: '/locations/' + data['index'].toString() +"",
+                                url: '/locations/'+data['index'].toString(),
                                 data: {
                                     index: data['index'].toString(),
                                     cityName: address,
                                 },
                                 success: function() {
-                                    console.log('c');
+                                    window.location.href = marker.url;
                                 }
                             });
+
+
                         });
                     } else {
                         alert('I know no city with the following name: ' + address);

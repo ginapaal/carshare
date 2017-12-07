@@ -1,5 +1,6 @@
 package com.codecool.carshare.controller;
 
+import com.codecool.carshare.model.LocationFilter;
 import com.codecool.carshare.model.User;
 import com.codecool.carshare.model.Vehicle;
 import com.codecool.carshare.service.UserService;
@@ -11,11 +12,13 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -26,6 +29,10 @@ public class RouteController {
 
     @Autowired
     private VehicleService vehicleService;
+
+    @Autowired
+    private LocationFilter locationFilter;
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Model model, HttpSession session,
@@ -42,11 +49,11 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.POST)
-    public String reservation (Model model,
-                               @PathVariable("id") String id,
-                               @RequestParam("reservation_startdate") String resStartDate,
-                               @RequestParam("reservation_enddate") String resEndDate,
-                               HttpSession session) {
+    public String reservation(Model model,
+                              @PathVariable("id") String id,
+                              @RequestParam("reservation_startdate") String resStartDate,
+                              @RequestParam("reservation_enddate") String resEndDate,
+                              HttpSession session) {
         model.addAllAttributes(vehicleService.reserveVehicle(id, resStartDate, resEndDate, session));
         return "details";
     }
@@ -91,14 +98,13 @@ public class RouteController {
         if (userService.register(username, password, confirmPassword, email, model)) {
             session.setAttribute("user", username);
             return "redirect:/";
-        }
-        else {
+        } else {
             return "/register";
         }
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    @Scope(value="session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
     public String renderProfilePage(Model model, HttpSession session, @PathParam("id") Integer id) {
         User user = (User) userService.getSessionUser(session);
         if (user == null) return "redirect:/";
@@ -139,28 +145,27 @@ public class RouteController {
 
     @RequestMapping(value = "/locationData", method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject json(Model model) {
+    public JSONObject json() {
         return vehicleService.jsonify(vehicleService.getAllLocation());
 
     }
 
-    @RequestMapping(value="/locations", method=RequestMethod.GET)
+    @RequestMapping(value = "/locations", method = RequestMethod.GET)
     public String map() {
         return "locations";
     }
 
-    @RequestMapping(value="/locations/{cityIndex}", method = RequestMethod.POST)
+    @RequestMapping(value = "/locations/{cityIndex}", method = RequestMethod.POST)
     public String getVehiclesByLocation(@RequestParam("index") String index,
-                                        @RequestParam("cityName") String cityName,
-                                        Model model) {
-        List<Vehicle> vehicles = vehicleService.getAllVehiclesByLocation(cityName);
-        System.out.println(vehicles.get(0).getName());
-        model.addAllAttributes(vehicles);
+                                        @RequestParam("cityName") String cityName) {
+        locationFilter.setVehiclesByLocation(vehicleService.getAllVehiclesByLocation(cityName));
+
         return "vehiclesinlocation";
     }
 
-    @RequestMapping(value="/locations/{cityIndex}", method = RequestMethod.GET)
-    public String getVehics() {
+    @RequestMapping(value = "/locations/{cityIndex}", method = RequestMethod.GET)
+    public String getVehics(Model model) {
+        model.addAttribute("vehicles", locationFilter.getVehiclesByLocation());
         return "vehiclesinlocation";
     }
 

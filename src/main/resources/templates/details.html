@@ -36,6 +36,9 @@
                     <div th:case="true">Yes</div>
                     <div th:case="false">Reserved</div>
                 </div>
+            </div><div class="row">
+                <div class="col-xs-6 col-md-4">Location:</div>
+                <div class="col-xs-6 col-md-8" th:text="${vehicle.location}"> Location </div>
             </div>
             <div class="row" th:if="${vehicle.owner}">
                 <div class="col-xs-6 col-md-4">Owner:</div>

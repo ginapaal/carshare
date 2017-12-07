@@ -8,7 +8,20 @@
 
 <div class="container">
     <div th:each="vehicle : ${vehicles}">
-        <h1 th:text="${vehicle.name}"></h1>
+        <div class="row">
+            <div class="well vehiclecontainer clearfix">
+                <div class="col-md-4 vehicledatacontainer">
+                    <a th:href="'/vehicles/' + ${vehicle.id}"><img class="vehicleimage" th:src="${vehicle.picture}"></a>
+                </div>
+                <div class="col-md-8 vehicledatacontainer">
+                    <a class="vehiclename" th:text="${vehicle.name}" th:href="'/vehicles/' + ${vehicle.id}"></a>
+                    <p class="vehicleyear" th:text="${vehicle.year}"></p>
+                    <p>
+                        <a class="seemore" th:href="'/vehicles/' + ${vehicle.id}">See more</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

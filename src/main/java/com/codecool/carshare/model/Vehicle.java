@@ -56,6 +56,9 @@ public class Vehicle {
 
     private boolean isAvailable;
 
+    @Transient
+    private List<Vehicle> vehiclesByLocation;
+
     public Vehicle() {
     }
 
@@ -170,5 +173,14 @@ public class Vehicle {
             this.isAvailable = false;
         }
         return isAvailable;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
