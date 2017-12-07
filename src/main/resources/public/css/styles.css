@@ -447,7 +447,8 @@ a.card:hover {
 }
 
 div#map-container {
-    width: auto;
+    min-width: 700px;
+    overflow: hidden;
     height: 600px;
 }
 
