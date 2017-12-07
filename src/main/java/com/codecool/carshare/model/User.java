@@ -6,17 +6,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NamedQueries({
-        @NamedQuery(
-                name = "User.getPasswordHash",
-                query = "SELECT passwordHash FROM User WHERE name = :name"
-        ),
-        @NamedQuery(
-                name = "User.getUserByName",
-                query = "SELECT u FROM User u WHERE name = :name"
-        )
-})
-
 @Entity
 @Table(name = "Users")
 @Component
@@ -36,9 +25,6 @@ public class User {
     private String email;
 
     private String passwordHash;
-
-    /*@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private UserProfilePicture profilePicture;*/
 
     private String profilePicture;
 
