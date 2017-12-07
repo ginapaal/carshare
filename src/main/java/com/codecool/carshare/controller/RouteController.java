@@ -1,6 +1,8 @@
 package com.codecool.carshare.controller;
 
 import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.Vehicle;
+import com.codecool.carshare.service.ReservationService;
 import com.codecool.carshare.service.UserService;
 import com.codecool.carshare.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class RouteController {
 
     @Autowired
     private VehicleService vehicleService;
+
+    @Autowired
+    private ReservationService reservationService;
 
 //    get("/register", pageController::register);
 //    post("/register", pageController::register);
@@ -114,7 +119,7 @@ public class RouteController {
     public String uploadProfilePicture(HttpSession session,
                                        @PathVariable("id") String id,
                                        @RequestParam("profilePicture") String profilePicture) {
-        userService.uploadProfilePicture((User) userService.getSessionUser(session), profilePicture);
+        userService.uploadProfilePicture(userService.getSessionUser(session), profilePicture);
         return "redirect:/user/" + id;
     }
 
@@ -124,7 +129,7 @@ public class RouteController {
                                  @RequestParam("reservation_startdate") String resStartString,
                                  @RequestParam("reservation_enddate") String resEndString) {
 
-        if (vehicleService.reserveVehicle(model, session, vehicleId, resStartString, resEndString)) {
+        if (reservationService.reserveVehicle(model, session, vehicleId, resStartString, resEndString)) {
             return "redirect:/vehicles/" + vehicleId + "/reservation";
         }
         else {
@@ -147,11 +152,21 @@ public class RouteController {
                                   @PathVariable("id") String vehicleId) {
         if (session.getAttribute("reservation") != null) {
             model.addAttribute("user", userService.getSessionUser(session));
+            model.addAttribute("vehicle", vehicleService.findVehicleById(Integer.valueOf(vehicleId)));
             model.addAttribute("reservation", session.getAttribute("reservation"));
             return "billing";
         }
         else {
             return "redirect:/vehicles/" + vehicleId;
         }
+    }
+
+    @RequestMapping(value = "/reserve/{vehicleId}", method = RequestMethod.POST)
+    public String makeReservation(HttpSession session,
+                                  @PathVariable("vehicleId") String vehicleId) {
+
+        reservationService.makeReservation(vehicleId, session);
+
+        return "redirect:/";
     }
 }
