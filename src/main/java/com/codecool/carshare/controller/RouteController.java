@@ -49,7 +49,7 @@ public class RouteController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage(HttpSession session) {
-        User user = (User) userService.getSessionUser(session);
+        User user = userService.getSessionUser(session);
         if (user != null) return "redirect:/";
 
         return "login";
@@ -95,7 +95,7 @@ public class RouteController {
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
     public String renderProfilePage(Model model, HttpSession session, @PathParam("id") Integer id) {
-        User user = (User) userService.getSessionUser(session);
+        User user = userService.getSessionUser(session);
         if (user == null) return "redirect:/";
         model.addAttribute("user", user);
         model.addAttribute("uploadpage", true);
@@ -106,7 +106,7 @@ public class RouteController {
     public String uploadVehiclePage(Model model, HttpSession session) {
         String username = (String) session.getAttribute("user");
         if (username != null) {
-            User user = (User) userService.getSessionUser(session);
+            User user = userService.getSessionUser(session);
             model.addAttribute("user", user);
         } else {
             return "redirect:/";
@@ -125,7 +125,7 @@ public class RouteController {
                                 @RequestParam("endDate") String endDate,
                                 @RequestParam("location") String location) {
         model.addAllAttributes(vehicleService.uploadVehicle(name, year, seats, type, piclink, startDate, endDate, location, session));
-        User user = (User) userService.getSessionUser(session);
+        User user = userService.getSessionUser(session);
         model.addAttribute("user", user);
 
         model.addAttribute("profilePicture", user.getProfilePicture());
@@ -195,7 +195,7 @@ public class RouteController {
 
     @RequestMapping(value = "/locations", method = RequestMethod.GET)
     public String map(Model model, HttpSession session) {
-        User user = (User) userService.getSessionUser(session);
+        User user = userService.getSessionUser(session);
         model.addAttribute("user", user);
         return "locations";
     }
@@ -210,7 +210,7 @@ public class RouteController {
 
     @RequestMapping(value = "/locations/{cityIndex}", method = RequestMethod.GET)
     public String getVehics(Model model, HttpSession session) {
-        User user = (User) userService.getSessionUser(session);
+        User user = userService.getSessionUser(session);
         model.addAttribute("user", user);
         model.addAttribute("vehicles", locationFilter.getVehiclesByLocation());
         model.addAttribute("location", locationFilter.getCity());
