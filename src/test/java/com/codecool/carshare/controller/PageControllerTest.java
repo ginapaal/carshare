@@ -1,48 +1,51 @@
-//package com.codecool.carshare.controller;
-//
-//import com.codecool.carshare.model.User;
-//import com.codecool.carshare.model.Vehicle;
-//import com.codecool.carshare.model.VehicleType;
-//import com.codecool.carshare.model.email.Mail;
-//import com.codecool.carshare.model.email.ReservationMail;
-//import com.codecool.carshare.model.email.WelcomeMail;
-//import com.codecool.carshare.utility.DataManager;
-//import com.codecool.carshare.utility.SecurePassword;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import spark.Request;
-//import spark.Response;
-//
-//import java.security.NoSuchAlgorithmException;
-//import java.security.spec.InvalidKeySpecException;
-//import java.text.DateFormat;
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-//import java.util.Arrays;
-//import java.util.Date;
-//import java.util.Map;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertFalse;
-//import static org.mockito.ArgumentMatchers.anyString;
-//import static org.mockito.Mockito.*;
-//
-//class PageControllerTest {
-//
-//    private PageController pageController;
-//    private DataManager dataManager;
-//    private Request request;
-//    private Response res;
-//    private Mail welcomeMail;
-//    private Mail reservationMail;
-//    private SecurePassword securePassword;
-//    private User user = new User();
-//    private Vehicle vehicle;
-//    private User mockedUser;
-//
-//
-//    @BeforeEach
-//    void setUp() {
+package com.codecool.carshare.controller;
+
+import com.codecool.carshare.model.User;
+import com.codecool.carshare.model.Vehicle;
+import com.codecool.carshare.repository.VehicleRepository;
+import com.codecool.carshare.service.Mail;
+import com.codecool.carshare.service.VehicleService;
+import com.codecool.carshare.utility.SecurePassword;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+class PageControllerTest {
+
+    @MockBean
+    private Mail mail;
+    @MockBean
+    private SecurePassword securePassword;
+
+    @MockBean
+    private Vehicle vehicle;
+    @MockBean
+    private User mockedUser;
+
+    @MockBean
+    private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private VehicleService vehicleService;
+
+    private User user = new User();
+
+
+    @BeforeEach
+    void setUp() {
+
 //        mockedUser = mock(User.class);
 //        vehicle = mock(Vehicle.class);
 //        request = mock(Request.class, RETURNS_DEEP_STUBS);
@@ -51,15 +54,15 @@
 //        welcomeMail = mock(WelcomeMail.class);
 //        reservationMail = mock(ReservationMail.class);
 //        securePassword = mock(SecurePassword.class);
-//
+
 //        user.setName("gergo");
-//
+
 //        pageController = new PageController(dataManager, welcomeMail, reservationMail, securePassword);
-//    }
-//
+    }
+
 //    @Test
 //    void testRenderVehiclesReturnsExpectedName() {
-//        when(dataManager.getUserByName("gergo")).thenReturn(user);
+//        when(userservice.getUserByName("gergo")).thenReturn(user);
 //        when(request.session().attribute("user")).thenReturn("gergo");
 //
 //        pageController.renderVehicles(request,res);
@@ -70,8 +73,8 @@
 //
 //        assertEquals("gergo", userName);
 //    }
-//
-//    @Test
+
+    //    @Test
 //    void testRenderVehiclesUserIsNull() {
 //        when(request.session().attribute("user")).thenReturn(null);
 //
@@ -81,17 +84,16 @@
 //        assertFalse(testData.containsKey("user"));
 //    }
 //
-//    @Test
-//    void testRenderVehiclesVehicleTypeDoesNotExist() {
-//        when(request.session().attribute("user")).thenReturn(null);
-//        when(request.queryParams("type")).thenReturn("truck");
-//
-//        pageController.renderVehicles(request, res);
-//        Map testData = pageController.getParams();
-//        String filteredType = (String) testData.get("selected");
-//
-//        assertEquals("", filteredType);
-//    }
+    @Test
+    void testRenderVehiclesVehicleTypeDoesNotExist() {
+//        when(request.queryParams("type")).thenReturn("truck");pe
+        String filterType = "truck";
+        System.out.println(vehicleService);
+        Map<String, Object> params = vehicleService.renderVehicles(filterType);
+        String filteredType = (String) params.get("selected");
+
+        assertEquals("", filteredType);
+    }
 //
 //    @Test
 //    void testRenderVehiclesVehicleTypeReturnsAsExpected() {
@@ -380,5 +382,5 @@
 //        pageController.profile(request, res);
 //        verify(res, times(1)).redirect("/user/0");
 //    }
-//}
-//
+}
+
