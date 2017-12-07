@@ -81,20 +81,6 @@ public class UserController {
         return "userProfile";
     }
 
-    @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.GET)
-    public String billingInfoPage(HttpSession session, Model model,
-                                  @PathVariable("id") String vehicleId) {
-        if (session.getAttribute("reservation") != null) {
-            model.addAttribute("user", userService.getSessionUser(session));
-            model.addAttribute("vehicle", vehicleService.findVehicleById(Integer.valueOf(vehicleId)));
-            model.addAttribute("reservation", session.getAttribute("reservation"));
-            return "billing";
-        }
-        else {
-            return "redirect:/vehicles/" + vehicleId;
-        }
-    }
-
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String uploadVehiclePage(Model model, HttpSession session) {
         String username = (String) session.getAttribute("user");
