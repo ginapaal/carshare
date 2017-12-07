@@ -51,7 +51,7 @@ public class ReservationService {
             Reservation reservation = new Reservation(vehicle, user, startDateRes, endDateRes);
             model.addAttribute("reservation", reservation);
             session.setAttribute("reservation", reservation);
-            return !vehicle.setReservation(startDateRes, endDateRes);
+            return vehicle.checkReservationDate(startDateRes, endDateRes);
         } catch (ParseException e) {
             e.printStackTrace();
             model.addAttribute("error", "invalid_date");
@@ -61,6 +61,9 @@ public class ReservationService {
 
     public void makeReservation(HttpSession session) {
         Reservation res = (Reservation) session.getAttribute("reservation");
+        Vehicle vehicle = res.getVehicle();
+        vehicle.setAvailable(false);
+        vehicleService.saveVehicle(vehicle);
         reservationRepository.save(res);
         User user = userService.getSessionUser(session);
         String username = user.getName();

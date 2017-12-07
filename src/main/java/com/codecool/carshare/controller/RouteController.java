@@ -147,7 +147,7 @@ public class RouteController {
                                  @RequestParam("reservation_enddate") String resEndString) {
 
         if (reservationService.reserveVehicle(model, session, vehicleId, resStartString, resEndString)) {
-            return "redirect:/vehicles/" + vehicleId + "/reservation";
+            return "redirect:/vehicles/" + vehicleId + "/billing";
         }
         else {
             if (model.containsAttribute("error")) {
@@ -164,7 +164,7 @@ public class RouteController {
         }
     }
 
-    @RequestMapping(value = "/vehicles/{id}/reservation", method = RequestMethod.GET)
+    @RequestMapping(value = "/vehicles/{id}/billing", method = RequestMethod.GET)
     public String billingInfoPage(HttpSession session, Model model,
                                   @PathVariable("id") String vehicleId) {
         if (session.getAttribute("reservation") != null) {

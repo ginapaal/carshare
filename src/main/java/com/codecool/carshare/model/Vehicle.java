@@ -144,14 +144,9 @@ public class Vehicle implements Serializable {
         return isAvailable;
     }
 
-    public boolean setReservation(Date startDate, Date endDate) {
-        if (startDate.after(this.startDate) && endDate.before(this.endDate)) {
-            this.isAvailable = false;
-        }
-        return isAvailable;
+    public boolean checkReservationDate(Date startDate, Date endDate) {
+        return startDate.after(this.startDate) && endDate.before(this.endDate);
     }
-
-
 
     @Override
     public String toString() {
