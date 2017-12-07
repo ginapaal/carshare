@@ -151,7 +151,9 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/locations", method = RequestMethod.GET)
-    public String map() {
+    public String map(Model model, HttpSession session) {
+        User user = (User) userService.getSessionUser(session);
+        model.addAttribute("user", user);
         return "locations";
     }
 
@@ -159,13 +161,16 @@ public class RouteController {
     public String getVehiclesByLocation(@RequestParam("index") String index,
                                         @RequestParam("cityName") String cityName) {
         locationFilter.setVehiclesByLocation(vehicleService.getAllVehiclesByLocation(cityName));
-
+        locationFilter.setCity(cityName);
         return "vehiclesinlocation";
     }
 
     @RequestMapping(value = "/locations/{cityIndex}", method = RequestMethod.GET)
-    public String getVehics(Model model) {
+    public String getVehics(Model model, HttpSession session) {
+        User user = (User) userService.getSessionUser(session);
+        model.addAttribute("user", user);
         model.addAttribute("vehicles", locationFilter.getVehiclesByLocation());
+        model.addAttribute("location", locationFilter.getCity());
         return "vehiclesinlocation";
     }
 

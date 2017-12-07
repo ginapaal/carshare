@@ -31,7 +31,8 @@ function styling() {
 
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map-container'), {
-        zoom: 6,
+        zoom: 7,
+        center: {'47.174330': '19.498925'}
     });
     var geocoder = new google.maps.Geocoder();
     geocodeAddress(geocoder, map);

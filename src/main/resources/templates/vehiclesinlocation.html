@@ -7,6 +7,8 @@
 <nav th:replace="header :: nav"></nav>
 
 <div class="container">
+    <h1 th:text="${location}"> location </h1>
+
     <div th:each="vehicle : ${vehicles}">
         <div class="row">
             <div class="well vehiclecontainer clearfix">
