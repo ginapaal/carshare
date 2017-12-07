@@ -64,7 +64,7 @@ function payment() {
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map-container'), {
         zoom: 7,
-        center: {'47.174330': '19.498925'}
+        center: {lat:47.174330, lng:19.498925}
     });
     var geocoder = new google.maps.Geocoder();
     geocodeAddress(geocoder, map);
@@ -111,8 +111,14 @@ function geocodeAddress(geocoder, resultsMap) {
 
 function main() {
     styling();
-    initMap();
-    payment();
+
+    if ($('#payment-form') != null) {
+        payment();
+    }
+
+    if ($('#map-container') != null) {
+        initMap();
+    }
 }
 
 $(document).ready(main);
