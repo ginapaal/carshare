@@ -10,6 +10,12 @@
     <packaging>jar</packaging>
     <name>Carshare Project</name>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.8.RELEASE</version>
+    </parent>
+
     <properties>
         <version.java>1.7</version.java>
         <version.eclipselink>2.6.2</version.eclipselink>
@@ -21,26 +27,38 @@
         <version.junit>4.11</version.junit>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <thymeleaf.version>3.0.7.RELEASE</thymeleaf.version>
+        <thymeleaf-layout-dialect.version>2.2.1</thymeleaf-layout-dialect.version>
     </properties>
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>${version.eclipselink}</version>
-        </dependency>
+
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.2.10.Final</version>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session</artifactId>
         </dependency>
 
+        <!-- The versions of these dependencies are defined by the spring-boot-dependencies pom in the parent pom -->
+        <!-- Spring boot + web package + Thymeleaf support -->
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>${version.el}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!-- ORM repository (JPA) support -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Spring boot test framework -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -61,33 +79,17 @@
             <artifactId>log4j-api</artifactId>
             <version>2.8.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.8.2</version>
         </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-core</artifactId>
-            <version>2.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-template-thymeleaf</artifactId>
-            <version>2.5.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-debug-tools</artifactId>
-            <version>0.5</version>
         </dependency>
 
         <dependency>
@@ -130,6 +132,13 @@
 
     <build>
         <plugins>
+
+            <!-- Allows to package executable jar or war archives and run an application "in-place" -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -143,26 +152,6 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
-
-            <!--<plugin>-->
-            <!--<groupId>org.bsc.maven</groupId>-->
-            <!--<artifactId>maven-processor-plugin</artifactId>-->
-            <!--<version>${version.maven.processor.plugin}</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>process</id>-->
-            <!--<goals>-->
-            <!--<goal>process</goal>-->
-            <!--</goals>-->
-            <!--<phase>generate-sources</phase>-->
-            <!--<configuration>-->
-            <!--<processors>-->
-            <!--<processor>org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor</processor>-->
-            <!--</processors>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
 
         </plugins>
     </build>

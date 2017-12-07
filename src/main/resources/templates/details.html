@@ -43,7 +43,7 @@
             </div>
         </div>
         <div th:if="${user} != null and ${vehicle.isAvailable} == true">
-            <form class="reservation-form" th:action="'/vehicles/'+${vehicle.id}" method="post">
+            <form class="reservation-form" th:action="'/vehicles/'+${vehicle.id}+'/reservation'" method="post">
                 <h3 class="col-xs-12">Reservation:</h3>
                 <div class="row container-fluid">
                     <div class="col col-sm-6 text-left ">
