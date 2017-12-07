@@ -125,7 +125,7 @@ public class RouteController {
                                 @RequestParam("endDate") String endDate,
                                 @RequestParam("location") String location) {
         model.addAllAttributes(vehicleService.uploadVehicle(name, year, seats, type, piclink, startDate, endDate, location, session));
-        if (model.asMap().get("error").equals("not_logged_in")) {
+        if (model.asMap().get("error") != null) {
             return "redirect:/login";
         }
 
