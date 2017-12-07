@@ -1,5 +1,6 @@
 package com.codecool.carshare.service;
 
+import com.codecool.carshare.model.VehicleType;
 import com.codecool.carshare.repository.VehicleRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -34,4 +35,17 @@ public class VehicleServiceTest {
 
         assertEquals("", filteredType);
     }
+
+    @Test
+    public void testRenderVehiclesVehicleTypeReturnsAsExpected() {
+        String filterType = "Car";
+        VehicleType vehicleType = VehicleType.Car;
+
+        when(vehicleRepository.findVehicleByVehicleType(vehicleType)).thenReturn(null);
+        Map testData =vehicleService.renderVehicles(filterType);
+        VehicleType filteredType = (VehicleType) testData.get("selected");
+
+        assertEquals(vehicleType, filteredType);
+    }
+
 }
