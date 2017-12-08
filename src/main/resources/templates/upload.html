@@ -9,7 +9,7 @@
         <form action="/upload" method="post" id="myform">
             <div class="sidebar col col-sm-2 text-center-small">
                 <div th:if = "${user.name} != null">
-                <img class="profile-pic" th:attr="src=${profilePicture.profilePicture}">
+                <img class="profile-pic" th:attr="src=${user.profilePicture}">
                 <h2 th:text="${user.name}"> My name </h2>
                 <h4> My messages </h4>
                 <h4> My contacts </h4>
@@ -62,10 +62,16 @@
                         <h3>Upload a pic</h3>
                         <input name="piclink" type="text" class="form-control upload-input" placeholder="Copy the URL of your picture here" required>
                     </div>
+                    <div>
+                        <h3> City of vehicle: </h3>
+                        <input name="location" type="text" class="form-control upload-input" placeholder="City" autofocus required>
+                    </div>
                 </div>
+
                 <div class="col-sm-12">
                     <input type="submit" class="btn btn-info upload-vehicle-button" form="myform">
                 </div>
+
             </div>
         </form>
     </div>

@@ -1,23 +1,19 @@
 package com.codecool.carshare.model;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@NamedQueries({
-        @NamedQuery(
-                name = "User.getPasswordHash",
-                query = "SELECT passwordHash FROM User WHERE name = :name"
-        ),
-        @NamedQuery(
-                name = "User.getUserByName",
-                query = "SELECT u FROM User u WHERE name = :name"
-        )
-})
-
 @Entity
 @Table(name = "Users")
-public class User {
+@Component
+public class User implements Serializable {
+
+    @Transient
+    private static final String DEFAULT_PICTURE = "/default_pic.jpg";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +27,7 @@ public class User {
 
     private String passwordHash;
 
-    @OneToOne(mappedBy = "user")
-    private UserProfilePicture profilePicture;
+    private String profilePicture;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Vehicle> vehicles = new ArrayList<>();
@@ -47,6 +42,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
+        this.profilePicture = DEFAULT_PICTURE;
     }
 
     public int getId() {
@@ -101,11 +97,19 @@ public class User {
         vehicles.add(vehicle);
     }
 
-    public UserProfilePicture getUserProfilePicture() {
+    /*public UserProfilePicture getUserProfilePicture() {
+        return profilePicture;
+    }*/
+
+    /*public void setProfilePicture(UserProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
+    }*/
+
+    public String getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture(UserProfilePicture profilePicture) {
+    public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
 

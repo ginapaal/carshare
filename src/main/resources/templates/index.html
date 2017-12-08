@@ -10,10 +10,15 @@
         <a th:each="type : ${types}"
            th:class="${selected.equals(type)} ? 'filterbutton activefilter' : 'filterbutton'"
            th:href="'/?type=' + ${type.string}" th:text="${type.string}"></a>
+
+        <a th:class="${selected.equals(type)} ? 'filterbutton activefilter' : 'filterbutton'"
+           href="/locations">
+            <i class="fa fa-globe" aria-hidden="true"></i>
+            Map</a>
     </div>
 
     <div th:each="vehicle : ${vehicles}">
-        <div th:if="${vehicle.isAvailable}== true">
+        <div th:if="${vehicle.isAvailable}">
             <div class="row">
                 <div class="well vehiclecontainer clearfix">
                     <div class="col-md-4 vehicledatacontainer">

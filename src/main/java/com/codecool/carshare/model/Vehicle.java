@@ -1,34 +1,13 @@
 package com.codecool.carshare.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@NamedQueries({
-
-        @NamedQuery(
-                name = "Vehicle.getAll",
-                query = "SELECT v FROM Vehicle v"
-        ),
-        @NamedQuery(
-                name = "Vehicle.getByType",
-                query = "SELECT v FROM Vehicle v WHERE vehicleType = :type"
-        ),
-
-        @NamedQuery(
-                name = "Vehicle.getById",
-                query = "SELECT v FROM Vehicle v WHERE id = :vehicleId"
-        ),
-
-        @NamedQuery(
-                name = "Vehicle.getByOwner",
-                query = "SELECT v FROM Vehicle v WHERE v.owner = :owner_id"
-        )
-
-})
 @Entity
-public class Vehicle {
+public class Vehicle implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -36,6 +15,7 @@ public class Vehicle {
     private String name;
     private int year;
     private int numOfSeats;
+    private String location;
 
     @Enumerated
     private VehicleType vehicleType;
@@ -58,17 +38,18 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink) {
+    public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink, String location) {
         this.name = name;
         this.year = year;
         this.numOfSeats = numOfSeats;
         this.vehicleType = vehicleType;
         this.picture = piclink;
+        this.location = location;
     }
 
     public Vehicle(String name, int year, int numOfSeats, VehicleType vehicleType, String piclink,
-                   Date startDate, Date endDate) {
-        this(name, year, numOfSeats, vehicleType, piclink);
+                   Date startDate, Date endDate, String location) {
+        this(name, year, numOfSeats, vehicleType, piclink, location);
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAvailable = true;
@@ -102,7 +83,7 @@ public class Vehicle {
         this.owner = owner;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 
@@ -146,6 +127,14 @@ public class Vehicle {
         this.id = id;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public boolean setAvailability() {
         if(currentDay.before(startDate) || currentDay.after(endDate)) {
             this.isAvailable = false;
@@ -155,10 +144,14 @@ public class Vehicle {
         return isAvailable;
     }
 
-    public boolean setReservation(Date startDate, Date endDate) {
-        if (startDate.after(this.startDate) && endDate.before(this.endDate)) {
-            this.isAvailable = false;
-        }
-        return isAvailable;
+    public boolean checkReservationDate(Date startDate, Date endDate) {
+        return startDate.after(this.startDate) && endDate.before(this.endDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

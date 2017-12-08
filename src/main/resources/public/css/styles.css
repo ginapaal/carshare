@@ -36,7 +36,8 @@ body {
     text-align: center;
 }
 
-.filterbutton {
+.filterbutton,
+back-button {
     font-size: 1.2em;
     font-family: "Roboto", sans-serif;
     color: #fff;
@@ -446,8 +447,87 @@ a.card:hover {
     }
 }
 
+#map-container {
+    min-width: 700px;
+    overflow: hidden;
+    height: 600px;
+}
+
 @media (max-width: 400px) {
     .container {
         margin: 0 0;
     }
+}
+
+#card-number::-webkit-inner-spin-button,
+#card-exp-month::-webkit-inner-spin-button, #card-exp-year::-webkit-inner-spin-button,
+#card-exp-month::-webkit-outer-spin-button, #card-exp-year::-webkit-outer-spin-button,
+#card-number::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#card-exp {
+    margin-top: 15px;
+}
+
+#card-exp-year, #card-exp-month {
+    width: 3.85em;
+}
+
+#card-exp-year, #card-exp-month, #card-sec-code {
+    display: inline;
+    text-align: center;
+}
+
+#card-sec-code {
+    width: 3em;
+}
+
+#expiration-date, #card-sec-code-label {
+    color: #00415d;
+    font-weight: bold;
+    font-family: "Raleway", serif;
+}
+
+#paypal-info, #card-info {
+    text-align: center;
+    vertical-align: center;
+}
+
+#paypal-login-button {
+    margin-top: 15px;
+}
+
+.billing-panel {
+    padding: 30px 20px;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.payment-picker > label {
+    margin-left: 70px;
+}
+
+
+.payment-picker {
+    text-align: center;
+    padding-right: 75px;
+}
+
+.payment-logo {
+    height: 50px;
+    width: auto;
+    cursor: pointer;
+}
+
+#card-info {
+    display: none;
+}
+
+.back-button {
+    margin: 0 10% 30px;
+}
+
+.home-container {
+    padding: 10px 10px;
 }

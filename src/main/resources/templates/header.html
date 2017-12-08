@@ -24,9 +24,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
 
     <script src="/js/app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_YrydzciGZ7bXZUSLuhKbyumOpl5-0TI&callback=initMap"></script>
 </head>
 
 <nav th:fragment="nav" id="navigationbar" class="navbar navbar-default">
@@ -35,10 +37,18 @@
             <a id="logo" href="/"> Carshare </a>
         </div>
         <div class="row navcontent">
-            <div class="userfunc-container pull-right">
+            <div class="home-container col-xs-6 pull-left">
+                <a href="/">
+                    <button class="btn btn-primary">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        Home
+                    </button>
+                </a>
+            </div>
+            <div class="userfunc-container pull-right col-xs-6">
                 <div th:if="${user}" class="loggedin-container">
                     <a id="userfunc-username" th:text="${user.name}" th:href="'/user/' + ${user.id}"></a>
-                    <a href="/upload"><button class="upload-button btn btn-info" th:if="${uploadpage}">Upload vehicle</button></a>
+                    <a href="/upload" th:if="${uploadpage}"><button class="upload-button btn btn-info">Upload vehicle</button></a>
                     <a href="/logout"><button class="logout-button btn btn-primary">Logout</button></a>
                 </div>
                 <div th:unless="${user}" class="login-container">
