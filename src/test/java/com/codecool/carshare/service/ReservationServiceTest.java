@@ -49,6 +49,9 @@ public class ReservationServiceTest {
     @MockBean
     Reservation reservation;
 
+    @MockBean
+    InitializerBean initializerBean;
+
     @Autowired
     ReservationService reservationService;
 

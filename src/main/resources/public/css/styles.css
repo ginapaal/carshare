@@ -36,7 +36,8 @@ body {
     text-align: center;
 }
 
-.filterbutton {
+.filterbutton,
+back-button {
     font-size: 1.2em;
     font-family: "Roboto", sans-serif;
     color: #fff;
@@ -446,7 +447,7 @@ a.card:hover {
     }
 }
 
-div#map-container {
+#map-container {
     min-width: 700px;
     overflow: hidden;
     height: 600px;
@@ -478,7 +479,6 @@ div#map-container {
     display: inline;
     text-align: center;
 }
-
 
 #card-sec-code {
     width: 3em;
@@ -522,4 +522,12 @@ div#map-container {
 
 #card-info {
     display: none;
+}
+
+.back-button {
+    margin: 0 10% 30px;
+}
+
+.home-container {
+    padding: 10px 10px;
 }

@@ -46,6 +46,12 @@ public class UserServiceTest {
     @MockBean
     SecurePassword securePassword;
 
+    @MockBean
+    ReservationService reservationService;
+
+    @MockBean
+    VehicleService vehicleService;
+
     @Test
     public void testRegisterIfEveryInputIsOK() throws InvalidKeySpecException, NoSuchAlgorithmException {
         String username = "gergo";

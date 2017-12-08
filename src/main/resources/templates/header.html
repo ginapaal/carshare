@@ -37,10 +37,18 @@
             <a id="logo" href="/"> Carshare </a>
         </div>
         <div class="row navcontent">
-            <div class="userfunc-container pull-right">
+            <div class="home-container col-xs-6 pull-left">
+                <a href="/">
+                    <button class="btn btn-primary">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        Home
+                    </button>
+                </a>
+            </div>
+            <div class="userfunc-container pull-right col-xs-6">
                 <div th:if="${user}" class="loggedin-container">
                     <a id="userfunc-username" th:text="${user.name}" th:href="'/user/' + ${user.id}"></a>
-                    <a href="/upload"><button class="upload-button btn btn-info" th:if="${uploadpage}">Upload vehicle</button></a>
+                    <a href="/upload" th:if="${uploadpage}"><button class="upload-button btn btn-info">Upload vehicle</button></a>
                     <a href="/logout"><button class="logout-button btn btn-primary">Logout</button></a>
                 </div>
                 <div th:unless="${user}" class="login-container">
